@@ -147,7 +147,7 @@ class CodeInterpreterTool:
                 'map': map,
                 'filter': filter,
                 'sum': sum,
-                'min': max,
+                'min': min,
                 'max': max,
                 'abs': abs,
                 'round': round,
@@ -168,6 +168,7 @@ class CodeInterpreterTool:
                 'reversed': reversed,
                 'any': any,
                 'all': all,
+                '__import__': __import__,  # Needed for import statements
             }
         }
 

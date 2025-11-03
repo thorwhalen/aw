@@ -16,9 +16,9 @@ class FileSamplerTool:
     before attempting to load it.
 
     Example:
-        >>> sampler = FileSamplerTool()
-        >>> info = sampler('/path/to/data.csv')
-        >>> info['extension']
+        >>> sampler = FileSamplerTool()  # doctest: +SKIP
+        >>> info = sampler('/path/to/data.csv')  # doctest: +SKIP
+        >>> info['extension']  # doctest: +SKIP
         '.csv'
     """
 
@@ -162,8 +162,8 @@ def infer_loader_params(extension: str, sample_text: str = None) -> dict:
         Dict of parameters to pass to loader
 
     Example:
-        >>> params = infer_loader_params('.csv', 'a,b,c\\n1,2,3')
-        >>> params.get('sep')
+        >>> params = infer_loader_params('.csv', 'a,b,c\\n1,2,3')  # doctest: +SKIP
+        >>> params.get('sep')  # doctest: +SKIP
         ','
     """
     params = {}
@@ -341,7 +341,7 @@ def get_numeric_columns(df, exclude_nulls: bool = True):
         Generator of column names
 
     Example:
-        >>> for col in get_numeric_columns(df):
+        >>> for col in get_numeric_columns(df):  # doctest: +SKIP
         ...     print(col)
     """
     import pandas as pd

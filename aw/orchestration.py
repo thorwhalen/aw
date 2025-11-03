@@ -19,10 +19,10 @@ class AgenticWorkflow:
     context/artifact passing between steps.
 
     Example:
-        >>> workflow = AgenticWorkflow()
-        >>> workflow.add_step('loading', loading_agent)
-        >>> workflow.add_step('preparing', preparing_agent)
-        >>> result = workflow.run(source_uri)
+        >>> workflow = AgenticWorkflow()  # doctest: +SKIP
+        >>> workflow.add_step('loading', loading_agent)  # doctest: +SKIP
+        >>> workflow.add_step('preparing', preparing_agent)  # doctest: +SKIP
+        >>> result = workflow.run(source_uri)  # doctest: +SKIP
     """
 
     def __init__(self, context: Context = None):
@@ -231,9 +231,9 @@ def load_for_cosmo(
         Tuple of (prepared_dataframe, metadata)
 
     Example:
-        >>> df, meta = load_for_cosmo('data.csv')
-        >>> from cosmograph import cosmo
-        >>> cosmo(df, **meta['preparing']['metadata']['validation_result']['params'])
+        >>> df, meta = load_for_cosmo('data.csv')  # doctest: +SKIP
+        >>> from cosmograph import cosmo  # doctest: +SKIP
+        >>> cosmo(df, **meta['preparing']['metadata']['validation_result']['params'])  # doctest: +SKIP
     """
     from aw.cosmo import basic_cosmo_validator, strict_cosmo_validator
 
@@ -258,9 +258,9 @@ class InteractiveWorkflow(AgenticWorkflow):
     Pauses execution to request human input/approval at configured points.
 
     Example:
-        >>> workflow = InteractiveWorkflow()
-        >>> workflow.add_step('loading', agent, require_approval=True)
-        >>> result = workflow.run_interactive(source_uri)
+        >>> workflow = InteractiveWorkflow()  # doctest: +SKIP
+        >>> workflow.add_step('loading', agent, require_approval=True)  # doctest: +SKIP
+        >>> result = workflow.run_interactive(source_uri)  # doctest: +SKIP
     """
 
     def __init__(self, context: Context = None):

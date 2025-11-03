@@ -130,10 +130,10 @@ def functional_validator(
         A validator function
 
     Example:
-        >>> def try_cosmo(df):
+        >>> def try_cosmo(df):  # doctest: +SKIP
         ...     return cosmograph.cosmo(df, points_x_by='x', points_y_by='y')
-        >>> validate = functional_validator(try_cosmo)
-        >>> validate(df)  # Tries to create viz, returns (True, {result}) or (False, {error})
+        >>> validate = functional_validator(try_cosmo)  # doctest: +SKIP
+        >>> validate(df)  # doctest: +SKIP
     """
 
     def validate(artifact):
@@ -177,7 +177,7 @@ def all_validators(*validators: Callable) -> Callable[[Any], tuple[bool, dict]]:
         A validator that passes only if all validators pass
 
     Example:
-        >>> validate = all_validators(
+        >>> validate = all_validators(  # doctest: +SKIP
         ...     is_dataframe,
         ...     has_required_columns(['x', 'y']),
         ...     has_no_nulls

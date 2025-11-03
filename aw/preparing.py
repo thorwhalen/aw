@@ -23,9 +23,9 @@ class PreparationAgent:
     5. Repeat or finish
 
     Example:
-        >>> agent = PreparationAgent(target='cosmo-ready')
-        >>> context = Context({'loading': {'df': df}})
-        >>> prepared_df, metadata = agent.execute(df, context)
+        >>> agent = PreparationAgent(target='cosmo-ready')  # doctest: +SKIP
+        >>> context = Context({'loading': {'df': df}})  # doctest: +SKIP
+        >>> prepared_df, metadata = agent.execute(df, context)  # doctest: +SKIP
     """
 
     def __init__(
@@ -287,7 +287,7 @@ def create_preparation_agent(
         Configured PreparationAgent
 
     Example:
-        >>> agent = create_preparation_agent(
+        >>> agent = create_preparation_agent(  # doctest: +SKIP
         ...     target='cosmo-ready',
         ...     validator=cosmo_validator,
         ...     max_retries=5

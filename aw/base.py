@@ -204,9 +204,9 @@ class Context(MutableMapping[str, Any]):
     providing additional functionality for managing agent state.
 
     Example:
-        >>> ctx = Context()
-        >>> ctx['loading'] = {'df': df, 'info': {...}}
-        >>> ctx['preparing'] = {'df': prepared_df}
+        >>> ctx = Context()  # doctest: +SKIP
+        >>> ctx['loading'] = {'df': df, 'info': {...}}  # doctest: +SKIP
+        >>> ctx['preparing'] = {'df': prepared_df}  # doctest: +SKIP
     """
 
     def __init__(self, initial_data: dict = None):

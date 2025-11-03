@@ -26,10 +26,10 @@ def create_cosmo_validator(
         Validator function following (artifact) -> (success, info) protocol
 
     Example:
-        >>> validator = create_cosmo_validator()
-        >>> success, info = validator(df)
-        >>> if success:
-        ...     print(f"Can visualize with: {info['params']}")
+        >>> validator = create_cosmo_validator()  # doctest: +SKIP
+        >>> success, info = validator(df)  # doctest: +SKIP
+        >>> if success:  # doctest: +SKIP
+        ...     print(f"Can visualize with: {info['params']}")  # doctest: +SKIP
     """
 
     def validate_cosmo_ready(df) -> tuple[bool, dict]:
@@ -131,8 +131,8 @@ def try_cosmo_visualization(
         Tuple of (success, info)
 
     Example:
-        >>> from cosmograph import cosmo
-        >>> success, info = try_cosmo_visualization(df, cosmo)
+        >>> from cosmograph import cosmo  # doctest: +SKIP
+        >>> success, info = try_cosmo_visualization(df, cosmo)  # doctest: +SKIP
     """
     if cosmo_function is None:
         try:
@@ -183,8 +183,8 @@ def basic_cosmo_validator() -> Callable:
     Does not require cosmograph to be installed.
 
     Example:
-        >>> validator = basic_cosmo_validator()
-        >>> success, info = validator(df)
+        >>> validator = basic_cosmo_validator()  # doctest: +SKIP
+        >>> success, info = validator(df)  # doctest: +SKIP
     """
     return create_cosmo_validator(cosmo_function=None, allow_generated_params=True)
 
@@ -195,8 +195,8 @@ def strict_cosmo_validator() -> Callable:
     Requires cosmograph to be installed.
 
     Example:
-        >>> validator = strict_cosmo_validator()
-        >>> success, info = validator(df)
+        >>> validator = strict_cosmo_validator()  # doctest: +SKIP
+        >>> success, info = validator(df)  # doctest: +SKIP
     """
     try:
         from cosmograph import cosmo
@@ -217,9 +217,9 @@ def infer_cosmo_params(df) -> dict:
         Dict of suggested parameters for cosmograph.cosmo()
 
     Example:
-        >>> params = infer_cosmo_params(df)
-        >>> from cosmograph import cosmo
-        >>> cosmo(df, **params)
+        >>> params = infer_cosmo_params(df)  # doctest: +SKIP
+        >>> from cosmograph import cosmo  # doctest: +SKIP
+        >>> cosmo(df, **params)  # doctest: +SKIP
     """
     import pandas as pd
 

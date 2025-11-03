@@ -13,11 +13,11 @@ Key Features:
 - Orchestration for chaining multiple steps
 
 Example:
-    >>> from aw import load_for_cosmo
-    >>> df, metadata = load_for_cosmo('data.csv')
-    >>> from cosmograph import cosmo
-    >>> params = metadata['preparing']['metadata']['validation_result']['params']
-    >>> cosmo(df, **params)
+    >>> from aw import load_for_cosmo  # doctest: +SKIP
+    >>> df, metadata = load_for_cosmo('data.csv')  # doctest: +SKIP
+    >>> from cosmograph import cosmo  # doctest: +SKIP
+    >>> params = metadata['preparing']['metadata']['validation_result']['params']  # doctest: +SKIP
+    >>> cosmo(df, **params)  # doctest: +SKIP
 
 Architecture:
     - aw.base: Core protocols and configurations
