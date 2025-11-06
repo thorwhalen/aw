@@ -25,6 +25,10 @@ jobs:
       - name: Install setuptools
         run: python -m pip install setuptools
 
+      # TODO: Just a patch, but config2py should do this automatically. Troubleshoot!
+      - name: Create aw data directory
+        run: mkdir -p /home/runner/.local/share/aw
+
       - name: Install Dependencies
         uses: i2mint/isee/actions/install-packages@master
         with:
