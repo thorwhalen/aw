@@ -5,8 +5,31 @@ Includes file sampling, LLM facades, and other common utilities.
 
 from typing import Any, Union, Callable
 from pathlib import Path
+from functools import partial
 import urllib.parse
 import io
+import os
+
+from config2py import get_app_data_folder, process_path
+
+# ============================================================================
+# Persistent Storage Configuration
+# ============================================================================
+
+# Get AW data directory from env var or use default app data folder
+# Users can override by setting AW_DATA_DIR environment variable
+# Default location follows XDG standards:
+#   - Linux/macOS: ~/.local/share/aw
+#   - Windows: %LOCALAPPDATA%/aw
+_aw_data_dir_raw = os.environ.get('AW_DATA_DIR') or get_app_data_folder('aw')
+
+# Process path and ensure it exists
+AW_DATA_DIR = process_path(_aw_data_dir_raw, ensure_dir_exists=True)
+
+# Convenience function to join paths relative to AW_DATA_DIR
+# Example: djoin('models', 'model1.pkl') -> '/Users/user/.local/share/aw/models/model1.pkl'
+djoin = partial(os.path.join, AW_DATA_DIR)
+djoin.rootdir = AW_DATA_DIR
 
 
 class FileSamplerTool:

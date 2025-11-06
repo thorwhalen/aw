@@ -61,7 +61,9 @@ from aw.tools import (
 )
 
 # Utilities
-from aw.utils import (
+from aw.util import (
+    AW_DATA_DIR,
+    djoin,
     FileSamplerTool,
     infer_loader_from_extension,
     infer_loader_params,
@@ -120,6 +122,8 @@ __all__ = [
     'ExecutionResult',
     'create_langchain_executor',
     # Utils
+    'AW_DATA_DIR',
+    'djoin',
     'FileSamplerTool',
     'infer_loader_from_extension',
     'infer_loader_params',

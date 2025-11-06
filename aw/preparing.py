@@ -8,7 +8,7 @@ from collections.abc import MutableMapping
 
 from aw.base import StepConfig, Context
 from aw.tools import CodeInterpreterTool
-from aw.utils import compute_dataframe_info, default_llm_factory
+from aw.util import compute_dataframe_info, default_llm_factory
 from aw.validation import functional_validator
 
 

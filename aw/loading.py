@@ -9,7 +9,7 @@ from collections.abc import MutableMapping
 
 from aw.base import StepConfig, Context
 from aw.tools import CodeInterpreterTool, ExecutionResult
-from aw.utils import (
+from aw.util import (
     FileSamplerTool,
     infer_loader_from_extension,
     infer_loader_params,
