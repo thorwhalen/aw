@@ -137,6 +137,62 @@ class FileSamplerTool:
             return {'uri': url, 'error': str(e)}
 
 
+# ----------------------------------------------------------------------------
+# Claude Desktop Configuration Store
+
+import os
+from pathlib import Path
+from config2py.sync_store import FileStore
+
+
+def claude_desktop_config(
+    key_path='mcpServers',
+    *,
+    config_dir=None,
+):
+    """
+    Get a FileStore interface to Claude Desktop's configuration.
+
+    By default, operates on the 'mcpServers' section.
+
+    Args:
+        key_path: Path to nested section (default: 'mcpServers')
+        config_dir: Override default config directory location
+
+    Returns:
+        FileStore interface to Claude Desktop config
+
+    Example:
+        >>> # Add/manage MCP servers
+        >>> mcp = claude_desktop_config()  # doctest: +SKIP
+        >>>
+        >>> # Add a new server
+        >>> mcp['download'] = {
+        ...     'command': 'python',
+        ...     'args': ['/path/to/agent.py']
+        ... }  # doctest: +SKIP
+        >>>
+        >>> # List configured servers
+        >>> list(mcp)  # doctest: +SKIP
+        >>>
+        >>> # Remove a server
+        >>> del mcp['old_server']  # doctest: +SKIP
+    """
+    if config_dir is None:
+        if os.name == 'nt':  # Windows
+            config_dir = os.path.expandvars(r'%APPDATA%\Claude')
+        else:  # macOS/Linux
+            config_dir = '~/Library/Application Support/Claude'
+
+    config_path = Path(config_dir).expanduser() / 'claude_desktop_config.json'
+    return FileStore(config_path, key_path=key_path)
+
+
+# ----------------------------------------------------------------------------
+# Loader Inference Utilities
+
+
+# TODO: This is a tabled tool. Merge and use?
 def infer_loader_from_extension(extension: str) -> str:
     """Infer pandas loader function from file extension.
 
@@ -210,9 +266,8 @@ def infer_loader_params(extension: str, sample_text: str = None) -> dict:
     return params
 
 
-# ============================================================================
+# ---------------------------------------------------------------------------
 # LLM Facades
-# ============================================================================
 
 
 def create_openai_chat(model: str = "gpt-4", **default_kwargs) -> Callable[[str], str]:
@@ -303,9 +358,8 @@ def default_llm_factory(model: Union[str, Callable] = "gpt-4") -> Callable[[str]
     return echo_llm
 
 
-# ============================================================================
+# ---------------------------------------------------------------------------
 # DataFrame Utilities
-# ============================================================================
 
 
 def compute_dataframe_info(df) -> dict:
