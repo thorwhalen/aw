@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aw.routing &mdash; aw 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="aw.tools" href="tools.html" />
+    <link rel="prev" title="aw.preparing" href="preparing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            aw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../aw.html">aw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base.html">aw.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loading.html">aw.loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orchestration.html">aw.orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preparing.html">aw.preparing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">aw.routing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#aw.routing.ConditionalRouter"><code class="docutils literal notranslate"><span class="pre">ConditionalRouter</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.routing.ExtensionContext"><code class="docutils literal notranslate"><span class="pre">ExtensionContext</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.routing.ExtensionRouter"><code class="docutils literal notranslate"><span class="pre">ExtensionRouter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.routing.ExtensionRouter.with_appended_strategy"><code class="docutils literal notranslate"><span class="pre">ExtensionRouter.with_appended_strategy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.routing.ExtensionRouter.with_prepended_strategy"><code class="docutils literal notranslate"><span class="pre">ExtensionRouter.with_prepended_strategy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.routing.MappingRouter"><code class="docutils literal notranslate"><span class="pre">MappingRouter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.routing.MappingRouter.copy"><code class="docutils literal notranslate"><span class="pre">MappingRouter.copy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.routing.MappingRouter.update"><code class="docutils literal notranslate"><span class="pre">MappingRouter.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.routing.PriorityRouter"><code class="docutils literal notranslate"><span class="pre">PriorityRouter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.routing.PriorityRouter.append"><code class="docutils literal notranslate"><span class="pre">PriorityRouter.append()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.routing.PriorityRouter.insert"><code class="docutils literal notranslate"><span class="pre">PriorityRouter.insert()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.routing.PriorityRouter.prepend"><code class="docutils literal notranslate"><span class="pre">PriorityRouter.prepend()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.routing.RoutingStrategy"><code class="docutils literal notranslate"><span class="pre">RoutingStrategy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.routing.detect_explicit"><code class="docutils literal notranslate"><span class="pre">detect_explicit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.routing.detect_from_url"><code class="docutils literal notranslate"><span class="pre">detect_from_url()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.routing.make_content_type_detector"><code class="docutils literal notranslate"><span class="pre">make_content_type_detector()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.routing.make_magic_bytes_detector"><code class="docutils literal notranslate"><span class="pre">make_magic_bytes_detector()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html">aw.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">aw.validation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">aw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">aw.routing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/aw/routing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-aw.routing">
+<span id="aw-routing"></span><h1>aw.routing<a class="headerlink" href="#module-aw.routing" title="Link to this heading"></a></h1>
+<p>Configurable routing and decision chains for agentic workflows.</p>
+<p>This module provides tools for building extensible, inspectable routing chains
+that follow the open-closed principle. Users can:
+- Use default configurations out of the box
+- Inspect all routing rules and mappings
+- Customize individual components
+- Extend with new routing strategies</p>
+<p>The key pattern is: provide sensible defaults, make them visible, keep them mutable.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.routing.ConditionalRouter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">ConditionalRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">strategies:</span> <span class="pre">list[~aw.routing.RoutingStrategy]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">short_circuit:</span> <span class="pre">~typing.Callable[[~typing.Any],</span> <span class="pre">bool]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#ConditionalRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ConditionalRouter" title="Link to this definition"></a></dt>
+<dd><p>Router with short-circuit conditions.</p>
+<p>Only accepts results that match the short-circuit condition,
+otherwise continues to next strategy.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">try_url</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url_ext&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">try_type</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;content_type_ext&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Only accept .pdf or .md, otherwise keep trying</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span> <span class="o">=</span> <span class="n">ConditionalRouter</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">try_url</span><span class="p">,</span> <span class="n">try_type</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">short_circuit</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;.pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;.md&#39;</span><span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># .pdf matches short-circuit, return immediately</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span><span class="p">({</span><span class="s1">&#39;url_ext&#39;</span><span class="p">:</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;content_type_ext&#39;</span><span class="p">:</span> <span class="s1">&#39;.html&#39;</span><span class="p">})</span>
+<span class="go">&#39;.pdf&#39;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># .jpg doesn&#39;t match, try next strategy, .md matches</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span><span class="p">({</span><span class="s1">&#39;url_ext&#39;</span><span class="p">:</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;content_type_ext&#39;</span><span class="p">:</span> <span class="s1">&#39;.md&#39;</span><span class="p">})</span>
+<span class="go">&#39;.md&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.routing.ExtensionContext">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">ExtensionContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explicit_extension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#ExtensionContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ExtensionContext" title="Link to this definition"></a></dt>
+<dd><p>Context for extension detection.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://example.com/file.pdf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">content</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;%PDF-1.5&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;text/html&#39;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span><span class="o">.</span><span class="n">url</span>
+<span class="go">&#39;https://example.com/file.pdf&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.routing.ExtensionRouter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">ExtensionRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority_extensions:</span> <span class="pre">frozenset</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type_map:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">magic_bytes_map:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#ExtensionRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ExtensionRouter" title="Link to this definition"></a></dt>
+<dd><p>Route extension detection through configurable strategies.</p>
+<p>This router implements the default logic for detecting file extensions,
+but every component is visible and customizable.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Use with defaults</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span> <span class="o">=</span> <span class="n">ExtensionRouter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="s1">&#39;https://example.com/file.pdf&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;%PDF-1.5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="go">&#39;.pdf&#39;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># URL without extension, falls back to magic bytes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="s1">&#39;https://example.com/download&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;%PDF-1.5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="go">&#39;.pdf&#39;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Priority extensions short-circuit</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="s1">&#39;https://example.com/file.pdf&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;&lt;html&gt;&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>  <span class="c1"># .pdf from URL wins even though content is HTML</span>
+<span class="go">&#39;.pdf&#39;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Customize content type mapping</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span><span class="o">.</span><span class="n">content_type_map</span><span class="p">[</span><span class="s1">&#39;.txt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;text/x-log&#39;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Add custom detector</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">my_detector</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span> <span class="k">return</span> <span class="s1">&#39;.custom&#39;</span> <span class="k">if</span> <span class="s1">&#39;special&#39;</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">url</span> <span class="k">else</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">with_prepended_strategy</span><span class="p">(</span><span class="n">my_detector</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.routing.ExtensionRouter.with_appended_strategy">
+<span class="sig-name descname"><span class="pre">with_appended_strategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#aw.routing.ExtensionContext" title="aw.routing.ExtensionContext"><span class="pre">ExtensionContext</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#aw.routing.ExtensionRouter" title="aw.routing.ExtensionRouter"><span class="pre">ExtensionRouter</span></a></span></span><a class="reference internal" href="../../_modules/aw/routing.html#ExtensionRouter.with_appended_strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ExtensionRouter.with_appended_strategy" title="Link to this definition"></a></dt>
+<dd><p>Create new router with added strategy at lowest priority.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.routing.ExtensionRouter.with_prepended_strategy">
+<span class="sig-name descname"><span class="pre">with_prepended_strategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#aw.routing.ExtensionContext" title="aw.routing.ExtensionContext"><span class="pre">ExtensionContext</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#aw.routing.ExtensionRouter" title="aw.routing.ExtensionRouter"><span class="pre">ExtensionRouter</span></a></span></span><a class="reference internal" href="../../_modules/aw/routing.html#ExtensionRouter.with_prepended_strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ExtensionRouter.with_prepended_strategy" title="Link to this definition"></a></dt>
+<dd><p>Create new router with added strategy at highest priority.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.routing.MappingRouter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">MappingRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mapping:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">default:</span> <span class="pre">~typing.Any</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">key_transform:</span> <span class="pre">~typing.Callable[[~typing.Any],</span> <span class="pre">~typing.Any]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#MappingRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.MappingRouter" title="Link to this definition"></a></dt>
+<dd><p>Router based on a lookup mapping.</p>
+<p>Provides a clean interface for switch-case style routing with:
+- Visible, mutable mapping
+- Optional default value or factory
+- Easy extension via dict interface</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Content-Type to extension mapping</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ct_map</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;application/pdf&#39;</span><span class="p">:</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;text/html&#39;</span><span class="p">:</span> <span class="s1">&#39;.html&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;application/json&#39;</span><span class="p">:</span> <span class="s1">&#39;.json&#39;</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span> <span class="o">=</span> <span class="n">MappingRouter</span><span class="p">(</span><span class="n">ct_map</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span><span class="p">(</span><span class="s1">&#39;application/pdf&#39;</span><span class="p">)</span>
+<span class="go">&#39;.pdf&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span><span class="p">(</span><span class="s1">&#39;text/plain&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>  <span class="c1"># No default</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># With default</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router_with_default</span> <span class="o">=</span> <span class="n">MappingRouter</span><span class="p">(</span><span class="n">ct_map</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;.bin&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router_with_default</span><span class="p">(</span><span class="s1">&#39;text/plain&#39;</span><span class="p">)</span>
+<span class="go">&#39;.bin&#39;</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.routing.MappingRouter.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#aw.routing.MappingRouter" title="aw.routing.MappingRouter"><span class="pre">MappingRouter</span></a></span></span><a class="reference internal" href="../../_modules/aw/routing.html#MappingRouter.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.MappingRouter.copy" title="Link to this definition"></a></dt>
+<dd><p>Create a copy with same configuration.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.routing.MappingRouter.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#MappingRouter.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.MappingRouter.update" title="Link to this definition"></a></dt>
+<dd><p>Update mapping.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.routing.PriorityRouter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">PriorityRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategies:</span> <span class="pre">list[~aw.routing.RoutingStrategy]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#PriorityRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.PriorityRouter" title="Link to this definition"></a></dt>
+<dd><p>Route through strategies in priority order, short-circuiting on first match.</p>
+<p>This is a simpler, more specialized version of i2.routing_forest that’s
+optimized for the common case of “try these in order, stop at first success”.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">try_a</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="s1">&#39;A&#39;</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="k">else</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">try_b</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="s1">&#39;B&#39;</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="k">else</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">try_c</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="s1">&#39;C&#39;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span> <span class="o">=</span> <span class="n">PriorityRouter</span><span class="p">([</span><span class="n">try_a</span><span class="p">,</span> <span class="n">try_b</span><span class="p">,</span> <span class="n">try_c</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="go">&#39;A&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="go">&#39;B&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">router</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">&#39;C&#39;</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.routing.PriorityRouter.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#aw.routing.RoutingStrategy" title="aw.routing.RoutingStrategy"><span class="pre">RoutingStrategy</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#aw.routing.PriorityRouter" title="aw.routing.PriorityRouter"><span class="pre">PriorityRouter</span></a></span></span><a class="reference internal" href="../../_modules/aw/routing.html#PriorityRouter.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.PriorityRouter.append" title="Link to this definition"></a></dt>
+<dd><p>Add a strategy at the end (lowest priority).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.routing.PriorityRouter.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#aw.routing.RoutingStrategy" title="aw.routing.RoutingStrategy"><span class="pre">RoutingStrategy</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#aw.routing.PriorityRouter" title="aw.routing.PriorityRouter"><span class="pre">PriorityRouter</span></a></span></span><a class="reference internal" href="../../_modules/aw/routing.html#PriorityRouter.insert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.PriorityRouter.insert" title="Link to this definition"></a></dt>
+<dd><p>Insert a strategy at a specific position.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.routing.PriorityRouter.prepend">
+<span class="sig-name descname"><span class="pre">prepend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#aw.routing.RoutingStrategy" title="aw.routing.RoutingStrategy"><span class="pre">RoutingStrategy</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#aw.routing.PriorityRouter" title="aw.routing.PriorityRouter"><span class="pre">PriorityRouter</span></a></span></span><a class="reference internal" href="../../_modules/aw/routing.html#PriorityRouter.prepend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.PriorityRouter.prepend" title="Link to this definition"></a></dt>
+<dd><p>Add a strategy at the beginning (highest priority).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.routing.RoutingStrategy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">RoutingStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#RoutingStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.RoutingStrategy" title="Link to this definition"></a></dt>
+<dd><p>Protocol for routing strategies.</p>
+<p>A routing strategy takes a context and returns a result or None.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.routing.detect_explicit">
+<span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">detect_explicit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#aw.routing.ExtensionContext" title="aw.routing.ExtensionContext"><span class="pre">ExtensionContext</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/aw/routing.html#detect_explicit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.detect_explicit" title="Link to this definition"></a></dt>
+<dd><p>Use explicit extension if provided.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">explicit_extension</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">detect_explicit</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="go">&#39;.pdf&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">explicit_extension</span><span class="o">=</span><span class="s1">&#39;.json&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">detect_explicit</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="go">&#39;.json&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.routing.detect_from_url">
+<span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">detect_from_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#aw.routing.ExtensionContext" title="aw.routing.ExtensionContext"><span class="pre">ExtensionContext</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/aw/routing.html#detect_from_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.detect_from_url" title="Link to this definition"></a></dt>
+<dd><p>Extract extension from URL path.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="s1">&#39;https://example.com/file.pdf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">detect_from_url</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="go">&#39;.pdf&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="s1">&#39;https://example.com/file&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">detect_from_url</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.routing.make_content_type_detector">
+<span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">make_content_type_detector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_type_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#aw.routing.ExtensionContext" title="aw.routing.ExtensionContext"><span class="pre">ExtensionContext</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/aw/routing.html#make_content_type_detector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.make_content_type_detector" title="Link to this definition"></a></dt>
+<dd><p>Factory for content-type based detection.</p>
+<p>Returns a detector function with the given mapping.
+Users can create custom detectors with different mappings.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Use default mapping</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">detector</span> <span class="o">=</span> <span class="n">make_content_type_detector</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;application/pdf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">detector</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="go">&#39;.pdf&#39;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Custom mapping</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">custom_map</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;text/plain&#39;</span><span class="p">:</span> <span class="s1">&#39;.log&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">custom_detector</span> <span class="o">=</span> <span class="n">make_content_type_detector</span><span class="p">(</span><span class="n">custom_map</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;text/plain&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">custom_detector</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="go">&#39;.log&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.routing.make_magic_bytes_detector">
+<span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">make_magic_bytes_detector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">magic_bytes_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#aw.routing.ExtensionContext" title="aw.routing.ExtensionContext"><span class="pre">ExtensionContext</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/aw/routing.html#make_magic_bytes_detector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.make_magic_bytes_detector" title="Link to this definition"></a></dt>
+<dd><p>Factory for magic bytes based detection.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">detector</span> <span class="o">=</span> <span class="n">make_magic_bytes_detector</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;%PDF-1.5...&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">detector</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="go">&#39;.pdf&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;&lt;html&gt;...&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">detector</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="go">&#39;.html&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="preparing.html" class="btn btn-neutral float-left" title="aw.preparing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tools.html" class="btn btn-neutral float-right" title="aw.tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

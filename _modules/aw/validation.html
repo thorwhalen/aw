@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aw.validation &mdash; aw 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            aw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw.html">aw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/base.html">aw.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/loading.html">aw.loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/orchestration.html">aw.orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/routing.html">aw.routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/util.html">aw.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/validation.html">aw.validation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">aw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aw.validation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aw.validation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Validation system supporting three flavors: schema, info-dict, and functional.</span>
+
+<span class="sd">This module provides validators that can be used to check if artifacts</span>
+<span class="sd">meet requirements. Validators follow the pattern:</span>
+<span class="sd">    validator(artifact) -&gt; (success: bool, info: dict)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_ensure_validator_protocol</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure a function returns (bool, dict) tuple.</span>
+
+<span class="sd">    Wraps functions that only return bool to add empty info dict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="c1"># If function only returns bool, add empty info dict</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="p">{}</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Flavor 1: Schema-Based Validators</span>
+<span class="c1"># ============================================================================</span>
+
+
+<div class="viewcode-block" id="schema_validator">
+<a class="viewcode-back" href="../../module_docs/aw/validation.html#aw.schema_validator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">schema_validator</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a validator from a schema (Pydantic, JSON Schema, etc.).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        schema: A schema object with validation capability</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A validator function</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from pydantic import BaseModel</span>
+<span class="sd">        &gt;&gt;&gt; class DataSchema(BaseModel):</span>
+<span class="sd">        ...     x: float</span>
+<span class="sd">        ...     y: float</span>
+<span class="sd">        &gt;&gt;&gt; validate = schema_validator(DataSchema)</span>
+<span class="sd">        &gt;&gt;&gt; validate({&#39;x&#39;: 1.0, &#39;y&#39;: 2.0})</span>
+<span class="sd">        (True, {&#39;validated&#39;: ...})</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Try Pydantic model validation</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="s1">&#39;model_validate&#39;</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;validated&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">}</span>
+            <span class="c1"># Try JSON schema validation</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="s1">&#39;validate&#39;</span><span class="p">):</span>
+                <span class="n">schema</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Unknown schema type&#39;</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="s1">&#39;exception_type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">validate</span></div>
+
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Flavor 2: Info-Dict Based Validators</span>
+<span class="c1"># ============================================================================</span>
+
+
+<div class="viewcode-block" id="info_dict_validator">
+<a class="viewcode-back" href="../../module_docs/aw/validation.html#aw.info_dict_validator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">info_dict_validator</span><span class="p">(</span>
+    <span class="n">compute_info</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">dict</span><span class="p">],</span> <span class="n">check_info</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">dict</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a validator that computes info then checks it.</span>
+
+<span class="sd">    This is a two-stage validator:</span>
+<span class="sd">    1. Compute information about the artifact (e.g., df.shape, df.dtypes)</span>
+<span class="sd">    2. Check if that information meets requirements</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        compute_info: Function to extract info from artifact</span>
+<span class="sd">        check_info: Function to check if info is acceptable</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A validator function</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; def compute_df_info(df):</span>
+<span class="sd">        ...     return {&#39;shape&#39;: df.shape, &#39;null_count&#39;: df.isnull().sum().sum()}</span>
+<span class="sd">        &gt;&gt;&gt; def check_df_info(info):</span>
+<span class="sd">        ...     if info[&#39;null_count&#39;] &gt; 10:</span>
+<span class="sd">        ...         return False, &quot;Too many nulls&quot;</span>
+<span class="sd">        ...     return True, &quot;OK&quot;</span>
+<span class="sd">        &gt;&gt;&gt; validate = info_dict_validator(compute_df_info, check_df_info)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">compute_info</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+            <span class="n">success</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">check_info</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="n">info</span><span class="p">,</span> <span class="s1">&#39;reason&#39;</span><span class="p">:</span> <span class="n">reason</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="s1">&#39;exception_type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">validate</span></div>
+
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Flavor 3: Functional/Try Validators (Try the Purpose)</span>
+<span class="c1"># ============================================================================</span>
+
+
+<div class="viewcode-block" id="functional_validator">
+<a class="viewcode-back" href="../../module_docs/aw/validation.html#aw.functional_validator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">functional_validator</span><span class="p">(</span>
+    <span class="n">try_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span> <span class="n">success_check</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a validator that tries to use the artifact for its purpose.</span>
+
+<span class="sd">    This validator actually attempts to use the artifact in the way it&#39;s</span>
+<span class="sd">    intended to be used (e.g., try to visualize the data, try to train a model).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        try_function: Function that tries to use the artifact</span>
+<span class="sd">        success_check: Optional function to check if result is acceptable</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A validator function</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; def try_cosmo(df):  # doctest: +SKIP</span>
+<span class="sd">        ...     return cosmograph.cosmo(df, points_x_by=&#39;x&#39;, points_y_by=&#39;y&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; validate = functional_validator(try_cosmo)  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; validate(df)  # doctest: +SKIP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">try_function</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+            <span class="c1"># If success_check provided, use it; otherwise any result = success</span>
+            <span class="k">if</span> <span class="n">success_check</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">success</span> <span class="o">=</span> <span class="n">success_check</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">success</span> <span class="o">=</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+                <span class="s1">&#39;exception_type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="s1">&#39;traceback&#39;</span><span class="p">:</span> <span class="n">_get_traceback_str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+            <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">validate</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_traceback_str</span><span class="p">(</span><span class="n">exception</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract traceback string from exception.&quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_tb</span><span class="p">(</span><span class="n">exception</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">))</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Composite Validators</span>
+<span class="c1"># ============================================================================</span>
+
+
+<div class="viewcode-block" id="all_validators">
+<a class="viewcode-back" href="../../module_docs/aw/validation.html#aw.all_validators">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">all_validators</span><span class="p">(</span><span class="o">*</span><span class="n">validators</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Combine multiple validators - all must pass.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        *validators: Validator functions to combine</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A validator that passes only if all validators pass</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; validate = all_validators(  # doctest: +SKIP</span>
+<span class="sd">        ...     is_dataframe,</span>
+<span class="sd">        ...     has_required_columns([&#39;x&#39;, &#39;y&#39;]),</span>
+<span class="sd">        ...     has_no_nulls</span>
+<span class="sd">        ... )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
+        <span class="n">all_info</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">validator</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">validators</span><span class="p">):</span>
+            <span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+            <span class="n">all_info</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;validator_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="n">info</span><span class="p">}</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">all_info</span>
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">all_info</span>
+
+    <span class="k">return</span> <span class="n">validate</span></div>
+
+
+
+<div class="viewcode-block" id="any_validator">
+<a class="viewcode-back" href="../../module_docs/aw/validation.html#aw.any_validator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">any_validator</span><span class="p">(</span><span class="o">*</span><span class="n">validators</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Combine multiple validators - at least one must pass.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        *validators: Validator functions to combine</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A validator that passes if any validator passes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
+        <span class="n">all_info</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">validator</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">validators</span><span class="p">):</span>
+            <span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+            <span class="n">all_info</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;validator_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="n">info</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">all_info</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">all_info</span>
+
+    <span class="k">return</span> <span class="n">validate</span></div>
+
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Common Validators (Building Blocks)</span>
+<span class="c1"># ============================================================================</span>
+
+
+<div class="viewcode-block" id="is_type">
+<a class="viewcode-back" href="../../module_docs/aw/validation.html#aw.is_type">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_type</span><span class="p">(</span><span class="n">expected_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validator that checks artifact type.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; validate = is_type(pd.DataFrame)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
+        <span class="n">success</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">artifact</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;expected_type&#39;</span><span class="p">:</span> <span class="n">expected_type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s1">&#39;actual_type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">validate</span></div>
+
+
+
+<div class="viewcode-block" id="is_not_empty">
+<a class="viewcode-back" href="../../module_docs/aw/validation.html#aw.is_not_empty">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_not_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validator that checks artifact is not empty.</span>
+
+<span class="sd">    Works for sequences, mappings, DataFrames, etc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">is_empty</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="ow">not</span> <span class="n">is_empty</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">artifact</span><span class="p">)}</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="c1"># Object has no len - consider non-empty if it exists</span>
+            <span class="k">return</span> <span class="n">artifact</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;has_length&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">validate</span></div>
+
+
+
+<div class="viewcode-block" id="has_attributes">
+<a class="viewcode-back" href="../../module_docs/aw/validation.html#aw.has_attributes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">has_attributes</span><span class="p">(</span><span class="o">**</span><span class="n">required_attrs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validator that checks artifact has required attributes.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; validate = has_attributes(shape=lambda s: len(s) == 2, columns=lambda c: len(c) &gt; 0)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">checker</span> <span class="ow">in</span> <span class="n">required_attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">artifact</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;missing_attribute&#39;</span><span class="p">:</span> <span class="n">attr_name</span><span class="p">,</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="n">info</span><span class="p">}</span>
+            <span class="n">attr_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">artifact</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">checker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">checker</span><span class="p">):</span>
+                    <span class="n">check_passed</span> <span class="o">=</span> <span class="n">checker</span><span class="p">(</span><span class="n">attr_value</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">check_passed</span> <span class="o">=</span> <span class="n">attr_value</span> <span class="o">==</span> <span class="n">checker</span>
+                <span class="n">info</span><span class="p">[</span><span class="n">attr_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">attr_value</span><span class="p">,</span> <span class="s1">&#39;check_passed&#39;</span><span class="p">:</span> <span class="n">check_passed</span><span class="p">}</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">check_passed</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">info</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">info</span><span class="p">[</span><span class="n">attr_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">attr_value</span><span class="p">}</span>
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">validate</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

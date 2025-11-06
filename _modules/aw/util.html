@@ -1,0 +1,590 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aw.util &mdash; aw 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            aw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw.html">aw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/base.html">aw.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/loading.html">aw.loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/orchestration.html">aw.orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/routing.html">aw.routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/util.html">aw.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/validation.html">aw.validation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">aw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aw.util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aw.util</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Utility tools and helper functions for agents.</span>
+
+<span class="sd">Includes file sampling, LLM facades, and other common utilities.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.parse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">config2py</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_app_data_folder</span><span class="p">,</span> <span class="n">process_path</span>
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Persistent Storage Configuration</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="c1"># Get AW data directory from env var or use default app data folder</span>
+<span class="c1"># Users can override by setting AW_DATA_DIR environment variable</span>
+<span class="c1"># Default location follows XDG standards:</span>
+<span class="c1">#   - Linux/macOS: ~/.local/share/aw</span>
+<span class="c1">#   - Windows: %LOCALAPPDATA%/aw</span>
+<span class="n">_aw_data_dir_raw</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;AW_DATA_DIR&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">get_app_data_folder</span><span class="p">(</span><span class="s1">&#39;aw&#39;</span><span class="p">)</span>
+
+<span class="c1"># Process path and ensure it exists</span>
+<span class="n">AW_DATA_DIR</span> <span class="o">=</span> <span class="n">process_path</span><span class="p">(</span><span class="n">_aw_data_dir_raw</span><span class="p">,</span> <span class="n">ensure_dir_exists</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Convenience function to join paths relative to AW_DATA_DIR</span>
+<span class="c1"># Example: djoin(&#39;models&#39;, &#39;model1.pkl&#39;) -&gt; &#39;/Users/user/.local/share/aw/models/model1.pkl&#39;</span>
+<span class="n">djoin</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">,</span> <span class="n">AW_DATA_DIR</span><span class="p">)</span>
+<span class="n">djoin</span><span class="o">.</span><span class="n">rootdir</span> <span class="o">=</span> <span class="n">AW_DATA_DIR</span>
+
+
+<div class="viewcode-block" id="FileSamplerTool">
+<a class="viewcode-back" href="../../module_docs/aw/util.html#aw.FileSamplerTool">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FileSamplerTool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tool to sample and analyze file metadata and content.</span>
+
+<span class="sd">    Helps agents understand what kind of data they&#39;re dealing with</span>
+<span class="sd">    before attempting to load it.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; sampler = FileSamplerTool()  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; info = sampler(&#39;/path/to/data.csv&#39;)  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; info[&#39;extension&#39;]  # doctest: +SKIP</span>
+<span class="sd">        &#39;.csv&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize file sampler.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sample_size: Number of bytes to sample from file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span> <span class="o">=</span> <span class="n">sample_size</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample file and return metadata.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            uri: File URI (local path or URL)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict with extension, sample_bytes, encoding, etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+
+        <span class="c1"># Determine if local or remote</span>
+        <span class="k">if</span> <span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_local</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">path</span> <span class="ow">or</span> <span class="n">uri</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">,</span> <span class="s1">&#39;https&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_remote</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;Unsupported URI scheme: </span><span class="si">{</span><span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sample_local</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample local file.&quot;&quot;&quot;</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;File not found: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;uri&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span>
+            <span class="s1">&#39;extension&#39;</span><span class="p">:</span> <span class="n">file_path</span><span class="o">.</span><span class="n">suffix</span><span class="p">,</span>
+            <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">file_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span><span class="p">,</span>
+            <span class="s1">&#39;exists&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Read sample</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">sample_bytes</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span><span class="p">)</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;sample_bytes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_bytes</span>
+
+            <span class="c1"># Try to decode as text</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">info</span><span class="p">[</span><span class="s1">&#39;sample_text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+                <span class="n">info</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
+            <span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
+                <span class="n">info</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;binary&#39;</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">info</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sample_remote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample remote file via HTTP.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+
+            <span class="c1"># Get headers</span>
+            <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;uri&#39;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+                    <span class="s1">&#39;content_type&#39;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;content_length&#39;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Content-Length&#39;</span><span class="p">),</span>
+                <span class="p">}</span>
+
+                <span class="c1"># Infer extension from URL or content-type</span>
+                <span class="n">parsed</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">path</span>
+                <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+                    <span class="n">info</span><span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="c1"># Read sample</span>
+                <span class="n">sample_bytes</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span><span class="p">)</span>
+                <span class="n">info</span><span class="p">[</span><span class="s1">&#39;sample_bytes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_bytes</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">info</span><span class="p">[</span><span class="s1">&#39;sample_text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+                    <span class="n">info</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
+                <span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
+                    <span class="n">info</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;binary&#39;</span>
+
+            <span class="k">return</span> <span class="n">info</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;uri&#39;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span></div>
+
+
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1"># Claude Desktop Configuration Store</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">config2py.sync_store</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileStore</span>
+
+
+<div class="viewcode-block" id="claude_desktop_config">
+<a class="viewcode-back" href="../../module_docs/aw/util.html#aw.claude_desktop_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">claude_desktop_config</span><span class="p">(</span>
+    <span class="n">key_path</span><span class="o">=</span><span class="s1">&#39;mcpServers&#39;</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">config_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a FileStore interface to Claude Desktop&#39;s configuration.</span>
+
+<span class="sd">    By default, operates on the &#39;mcpServers&#39; section.</span>
+
+<span class="sd">    Automatically creates the config file if it doesn&#39;t exist, and creates the</span>
+<span class="sd">    mcpServers section if it&#39;s missing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key_path: Path to nested section (default: &#39;mcpServers&#39;)</span>
+<span class="sd">        config_dir: Override default config directory location</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        FileStore interface to Claude Desktop config</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; # Add/manage MCP servers</span>
+<span class="sd">        &gt;&gt;&gt; mcp = claude_desktop_config()  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Add a new server</span>
+<span class="sd">        &gt;&gt;&gt; mcp[&#39;download&#39;] = {</span>
+<span class="sd">        ...     &#39;command&#39;: &#39;python&#39;,</span>
+<span class="sd">        ...     &#39;args&#39;: [&#39;/path/to/agent.py&#39;]</span>
+<span class="sd">        ... }  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # List configured servers</span>
+<span class="sd">        &gt;&gt;&gt; list(mcp)  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Remove a server</span>
+<span class="sd">        &gt;&gt;&gt; del mcp[&#39;old_server&#39;]  # doctest: +SKIP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">config_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>  <span class="c1"># Windows</span>
+            <span class="n">config_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;%APPDATA%\Claude&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># macOS/Linux</span>
+            <span class="n">config_dir</span> <span class="o">=</span> <span class="s1">&#39;~/Library/Application Support/Claude&#39;</span>
+
+    <span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_dir</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;claude_desktop_config.json&#39;</span>
+
+    <span class="c1"># Factory for creating empty file content</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_empty_config</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="c1"># Factory for creating empty mcpServers section</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_empty_servers</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="k">return</span> <span class="n">FileStore</span><span class="p">(</span>
+        <span class="n">config_path</span><span class="p">,</span>
+        <span class="n">key_path</span><span class="o">=</span><span class="n">key_path</span><span class="p">,</span>
+        <span class="n">create_file_content</span><span class="o">=</span><span class="n">create_empty_config</span><span class="p">,</span>
+        <span class="n">create_key_path_content</span><span class="o">=</span><span class="n">create_empty_servers</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1"># Loader Inference Utilities</span>
+
+
+<span class="c1"># TODO: This is a tabled tool. Merge and use?</span>
+<div class="viewcode-block" id="infer_loader_from_extension">
+<a class="viewcode-back" href="../../module_docs/aw/util.html#aw.infer_loader_from_extension">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">infer_loader_from_extension</span><span class="p">(</span><span class="n">extension</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Infer pandas loader function from file extension.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        extension: File extension (e.g., &#39;.csv&#39;, &#39;.json&#39;)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Name of pandas loader function</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; infer_loader_from_extension(&#39;.csv&#39;)</span>
+<span class="sd">        &#39;read_csv&#39;</span>
+<span class="sd">        &gt;&gt;&gt; infer_loader_from_extension(&#39;.xlsx&#39;)</span>
+<span class="sd">        &#39;read_excel&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ext_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;.csv&#39;</span><span class="p">:</span> <span class="s1">&#39;read_csv&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.tsv&#39;</span><span class="p">:</span> <span class="s1">&#39;read_csv&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.txt&#39;</span><span class="p">:</span> <span class="s1">&#39;read_csv&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.json&#39;</span><span class="p">:</span> <span class="s1">&#39;read_json&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.jsonl&#39;</span><span class="p">:</span> <span class="s1">&#39;read_json&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.xlsx&#39;</span><span class="p">:</span> <span class="s1">&#39;read_excel&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.xls&#39;</span><span class="p">:</span> <span class="s1">&#39;read_excel&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.parquet&#39;</span><span class="p">:</span> <span class="s1">&#39;read_parquet&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.feather&#39;</span><span class="p">:</span> <span class="s1">&#39;read_feather&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.hdf&#39;</span><span class="p">:</span> <span class="s1">&#39;read_hdf&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.h5&#39;</span><span class="p">:</span> <span class="s1">&#39;read_hdf&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.sql&#39;</span><span class="p">:</span> <span class="s1">&#39;read_sql&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.html&#39;</span><span class="p">:</span> <span class="s1">&#39;read_html&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.xml&#39;</span><span class="p">:</span> <span class="s1">&#39;read_xml&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.pickle&#39;</span><span class="p">:</span> <span class="s1">&#39;read_pickle&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.pkl&#39;</span><span class="p">:</span> <span class="s1">&#39;read_pickle&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">ext_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">extension</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s1">&#39;read_csv&#39;</span><span class="p">)</span>  <span class="c1"># Default to CSV</span></div>
+
+
+
+<div class="viewcode-block" id="infer_loader_params">
+<a class="viewcode-back" href="../../module_docs/aw/util.html#aw.infer_loader_params">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">infer_loader_params</span><span class="p">(</span><span class="n">extension</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sample_text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Infer parameters for pandas loader based on file characteristics.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        extension: File extension</span>
+<span class="sd">        sample_text: Optional sample of file content</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict of parameters to pass to loader</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; params = infer_loader_params(&#39;.csv&#39;, &#39;a,b,c\\n1,2,3&#39;)  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; params.get(&#39;sep&#39;)  # doctest: +SKIP</span>
+<span class="sd">        &#39;,&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Extension-based defaults</span>
+    <span class="k">if</span> <span class="n">extension</span> <span class="o">==</span> <span class="s1">&#39;.tsv&#39;</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;sep&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span>
+    <span class="k">elif</span> <span class="n">extension</span> <span class="o">==</span> <span class="s1">&#39;.jsonl&#39;</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;lines&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Sample-based inference</span>
+    <span class="k">if</span> <span class="n">sample_text</span><span class="p">:</span>
+        <span class="c1"># Check for common delimiters</span>
+        <span class="k">if</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">sample_text</span> <span class="ow">and</span> <span class="n">extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;.csv&#39;</span><span class="p">):</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;sep&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;;&#39;</span> <span class="ow">in</span> <span class="n">sample_text</span> <span class="ow">and</span> <span class="s1">&#39;,&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sample_text</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;sep&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;|&#39;</span> <span class="ow">in</span> <span class="n">sample_text</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;sep&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span>
+
+    <span class="k">return</span> <span class="n">params</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># LLM Facades</span>
+
+
+<div class="viewcode-block" id="create_openai_chat">
+<a class="viewcode-back" href="../../module_docs/aw/util.html#aw.create_openai_chat">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_openai_chat</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">default_kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a text-to-text chat function using OpenAI API.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: OpenAI model name</span>
+<span class="sd">        **default_kwargs: Default parameters for API calls</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A callable that takes a prompt and returns a response</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; chat = create_openai_chat(&quot;gpt-4&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; response = chat(&quot;What is 2+2?&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">chat</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">merged_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">default_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
+                <span class="o">**</span><span class="n">merged_kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+
+        <span class="k">return</span> <span class="n">chat</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+            <span class="s2">&quot;OpenAI package not available. Install with: pip install openai&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_oa_chat">
+<a class="viewcode-back" href="../../module_docs/aw/util.html#aw.create_oa_chat">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_oa_chat</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a chat function using the oa package.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A callable that takes a prompt and returns a response</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; chat = create_oa_chat()</span>
+<span class="sd">        &gt;&gt;&gt; response = chat(&quot;Hello!&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">oa</span><span class="w"> </span><span class="kn">import</span> <span class="n">chat</span> <span class="k">as</span> <span class="n">oa_chat</span>
+
+        <span class="k">return</span> <span class="n">oa_chat</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;oa package not available. Install with: pip install oa&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="default_llm_factory">
+<a class="viewcode-back" href="../../module_docs/aw/util.html#aw.default_llm_factory">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">default_llm_factory</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;gpt-4&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory to create LLM function from various specifications.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: Either a model name string, or a callable</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A callable text-to-text function</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; llm = default_llm_factory(&quot;gpt-4&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; llm = default_llm_factory(lambda p: f&quot;Echo: {p}&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">model</span>
+
+    <span class="c1"># Try to use oa package first (as specified in requirements)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">create_oa_chat</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Fall back to OpenAI</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">create_openai_chat</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Ultimate fallback - echo function</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">echo_llm</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[ECHO MODE - No LLM available] Received: </span><span class="si">{</span><span class="n">prompt</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">return</span> <span class="n">echo_llm</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># DataFrame Utilities</span>
+
+
+<div class="viewcode-block" id="compute_dataframe_info">
+<a class="viewcode-back" href="../../module_docs/aw/util.html#aw.compute_dataframe_info">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_dataframe_info</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute comprehensive info about a DataFrame.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df: pandas DataFrame</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict with shape, dtypes, null counts, sample rows, etc.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({&#39;a&#39;: [1, 2], &#39;b&#39;: [3, 4]})</span>
+<span class="sd">        &gt;&gt;&gt; info = compute_dataframe_info(df)</span>
+<span class="sd">        &gt;&gt;&gt; info[&#39;shape&#39;]</span>
+<span class="sd">        (2, 2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Not a DataFrame&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">}</span>
+
+    <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+        <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span>
+        <span class="s1">&#39;dtypes&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+        <span class="s1">&#39;null_counts&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+        <span class="s1">&#39;total_nulls&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+        <span class="s1">&#39;memory_usage&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">memory_usage</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Add numeric column info</span>
+    <span class="n">numeric_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">info</span><span class="p">[</span><span class="s1">&#39;numeric_columns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">numeric_cols</span><span class="p">)</span>
+    <span class="n">info</span><span class="p">[</span><span class="s1">&#39;num_numeric_columns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">numeric_cols</span><span class="p">)</span>
+
+    <span class="c1"># Add categorical column info</span>
+    <span class="n">categorical_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">info</span><span class="p">[</span><span class="s1">&#39;categorical_columns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">categorical_cols</span><span class="p">)</span>
+
+    <span class="c1"># Sample rows (as records for JSON serializability)</span>
+    <span class="n">info</span><span class="p">[</span><span class="s1">&#39;sample_rows&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
+
+<div class="viewcode-block" id="get_numeric_columns">
+<a class="viewcode-back" href="../../module_docs/aw/util.html#aw.get_numeric_columns">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_numeric_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">exclude_nulls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get numeric columns from DataFrame.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df: pandas DataFrame</span>
+<span class="sd">        exclude_nulls: Whether to exclude columns with null values</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Generator of column names</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; for col in get_numeric_columns(df):  # doctest: +SKIP</span>
+<span class="sd">        ...     print(col)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+    <span class="n">numeric_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">numeric_cols</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">exclude_nulls</span> <span class="ow">and</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">continue</span>
+        <span class="k">yield</span> <span class="n">col</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1264 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aw &mdash; aw 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="aw.base" href="aw/base.html" />
+    <link rel="prev" title="Welcome to aw’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            aw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">aw</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#aw.AgenticStep"><code class="docutils literal notranslate"><span class="pre">AgenticStep</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.AgenticStep.execute"><code class="docutils literal notranslate"><span class="pre">AgenticStep.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.AgenticWorkflow"><code class="docutils literal notranslate"><span class="pre">AgenticWorkflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.AgenticWorkflow.add_step"><code class="docutils literal notranslate"><span class="pre">AgenticWorkflow.add_step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.AgenticWorkflow.run"><code class="docutils literal notranslate"><span class="pre">AgenticWorkflow.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.AgenticWorkflow.run_partial"><code class="docutils literal notranslate"><span class="pre">AgenticWorkflow.run_partial()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.CodeInterpreterTool"><code class="docutils literal notranslate"><span class="pre">CodeInterpreterTool</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.Context"><code class="docutils literal notranslate"><span class="pre">Context</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.Context.history"><code class="docutils literal notranslate"><span class="pre">Context.history</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.Context.snapshot"><code class="docutils literal notranslate"><span class="pre">Context.snapshot()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.ExecutionResult"><code class="docutils literal notranslate"><span class="pre">ExecutionResult</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.ExecutionResult.success"><code class="docutils literal notranslate"><span class="pre">ExecutionResult.success</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.ExecutionResult.output"><code class="docutils literal notranslate"><span class="pre">ExecutionResult.output</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.ExecutionResult.error"><code class="docutils literal notranslate"><span class="pre">ExecutionResult.error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.ExecutionResult.traceback"><code class="docutils literal notranslate"><span class="pre">ExecutionResult.traceback</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.ExecutionResult.result"><code class="docutils literal notranslate"><span class="pre">ExecutionResult.result</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.ExecutionResult.locals"><code class="docutils literal notranslate"><span class="pre">ExecutionResult.locals</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.FileSamplerTool"><code class="docutils literal notranslate"><span class="pre">FileSamplerTool</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.GlobalConfig"><code class="docutils literal notranslate"><span class="pre">GlobalConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.GlobalConfig.override"><code class="docutils literal notranslate"><span class="pre">GlobalConfig.override()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.InteractiveWorkflow"><code class="docutils literal notranslate"><span class="pre">InteractiveWorkflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.InteractiveWorkflow.add_step"><code class="docutils literal notranslate"><span class="pre">InteractiveWorkflow.add_step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.InteractiveWorkflow.run_interactive"><code class="docutils literal notranslate"><span class="pre">InteractiveWorkflow.run_interactive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.InteractiveWorkflow.set_approval_callback"><code class="docutils literal notranslate"><span class="pre">InteractiveWorkflow.set_approval_callback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.LoadingAgent"><code class="docutils literal notranslate"><span class="pre">LoadingAgent</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.LoadingAgent.execute"><code class="docutils literal notranslate"><span class="pre">LoadingAgent.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.PreparationAgent"><code class="docutils literal notranslate"><span class="pre">PreparationAgent</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.PreparationAgent.execute"><code class="docutils literal notranslate"><span class="pre">PreparationAgent.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.SafeCodeInterpreter"><code class="docutils literal notranslate"><span class="pre">SafeCodeInterpreter</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.StepConfig"><code class="docutils literal notranslate"><span class="pre">StepConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aw.StepConfig.llm"><code class="docutils literal notranslate"><span class="pre">StepConfig.llm</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.StepConfig.validator"><code class="docutils literal notranslate"><span class="pre">StepConfig.validator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.StepConfig.tools"><code class="docutils literal notranslate"><span class="pre">StepConfig.tools</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.StepConfig.max_retries"><code class="docutils literal notranslate"><span class="pre">StepConfig.max_retries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.StepConfig.human_in_loop"><code class="docutils literal notranslate"><span class="pre">StepConfig.human_in_loop</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.StepConfig.resolve_llm"><code class="docutils literal notranslate"><span class="pre">StepConfig.resolve_llm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aw.StepConfig.resolve_validator"><code class="docutils literal notranslate"><span class="pre">StepConfig.resolve_validator()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.Tool"><code class="docutils literal notranslate"><span class="pre">Tool</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.Validator"><code class="docutils literal notranslate"><span class="pre">Validator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.all_validators"><code class="docutils literal notranslate"><span class="pre">all_validators()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.any_validator"><code class="docutils literal notranslate"><span class="pre">any_validator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.basic_cosmo_validator"><code class="docutils literal notranslate"><span class="pre">basic_cosmo_validator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.compute_dataframe_info"><code class="docutils literal notranslate"><span class="pre">compute_dataframe_info()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.create_cosmo_prep_workflow"><code class="docutils literal notranslate"><span class="pre">create_cosmo_prep_workflow()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.create_cosmo_validator"><code class="docutils literal notranslate"><span class="pre">create_cosmo_validator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.create_data_prep_workflow"><code class="docutils literal notranslate"><span class="pre">create_data_prep_workflow()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.create_langchain_executor"><code class="docutils literal notranslate"><span class="pre">create_langchain_executor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.create_loading_agent"><code class="docutils literal notranslate"><span class="pre">create_loading_agent()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.create_oa_chat"><code class="docutils literal notranslate"><span class="pre">create_oa_chat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.create_openai_chat"><code class="docutils literal notranslate"><span class="pre">create_openai_chat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.create_preparation_agent"><code class="docutils literal notranslate"><span class="pre">create_preparation_agent()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.default_llm_factory"><code class="docutils literal notranslate"><span class="pre">default_llm_factory()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.djoin"><code class="docutils literal notranslate"><span class="pre">djoin()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.functional_validator"><code class="docutils literal notranslate"><span class="pre">functional_validator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.get_numeric_columns"><code class="docutils literal notranslate"><span class="pre">get_numeric_columns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.has_attributes"><code class="docutils literal notranslate"><span class="pre">has_attributes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.infer_cosmo_params"><code class="docutils literal notranslate"><span class="pre">infer_cosmo_params()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.infer_loader_from_extension"><code class="docutils literal notranslate"><span class="pre">infer_loader_from_extension()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.infer_loader_params"><code class="docutils literal notranslate"><span class="pre">infer_loader_params()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.info_dict_validator"><code class="docutils literal notranslate"><span class="pre">info_dict_validator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.is_not_empty"><code class="docutils literal notranslate"><span class="pre">is_not_empty()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.is_type"><code class="docutils literal notranslate"><span class="pre">is_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.load_and_prepare"><code class="docutils literal notranslate"><span class="pre">load_and_prepare()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.load_for_cosmo"><code class="docutils literal notranslate"><span class="pre">load_for_cosmo()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.schema_validator"><code class="docutils literal notranslate"><span class="pre">schema_validator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.strict_cosmo_validator"><code class="docutils literal notranslate"><span class="pre">strict_cosmo_validator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.try_cosmo_visualization"><code class="docutils literal notranslate"><span class="pre">try_cosmo_visualization()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aw/base.html">aw.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aw/cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aw/loading.html">aw.loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aw/orchestration.html">aw.orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aw/preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aw/routing.html">aw.routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aw/tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aw/util.html">aw.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aw/validation.html">aw.validation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">aw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">aw</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/module_docs/aw.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-aw">
+<span id="aw"></span><h1>aw<a class="headerlink" href="#module-aw" title="Link to this heading"></a></h1>
+<p>aw - Agentic Workflows for Data Preparation</p>
+<p>An AI agent package for data preparation with a focus on loading and preparing
+data for various purposes (e.g., visualization with cosmograph).</p>
+<p>Key Features:
+- AgenticStep protocol for building modular agents
+- ReAct pattern (Reason-Act-Observe) with retry logic
+- Three validation flavors: schema, info-dict, and functional
+- Code execution with safe defaults and extensibility
+- Loading and Preparation agents for data workflows
+- Cosmograph-specific validators and utilities
+- Orchestration for chaining multiple steps</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_for_cosmo</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">load_for_cosmo</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">cosmograph</span><span class="w"> </span><span class="kn">import</span> <span class="n">cosmo</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;preparing&#39;</span><span class="p">][</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;validation_result&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">]</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cosmo</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>  
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Architecture:</dt><dd><ul class="simple">
+<li><p>aw.base: Core protocols and configurations</p></li>
+<li><p>aw.validation: Three validation flavors</p></li>
+<li><p>aw.tools: Code execution and agent tools</p></li>
+<li><p>aw.utils: Helper functions and facades</p></li>
+<li><p>aw.loading: LoadingAgent for data ingestion</p></li>
+<li><p>aw.preparing: PreparationAgent for data transformation</p></li>
+<li><p>aw.cosmo: Cosmograph-specific validators</p></li>
+<li><p>aw.orchestration: Workflow management</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.AgenticStep">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">AgenticStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/base.html#AgenticStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.AgenticStep" title="Link to this definition"></a></dt>
+<dd><p>Protocol defining the interface for any agentic step in a workflow.</p>
+<p>Each step follows the ReAct pattern:
+1. Reason (Thought): Analyze input and context
+2. Act (Action): Generate and execute code or use tools
+3. Observe: Capture results and validate
+4. Repeat or finish based on validation</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyAgent</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_data</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="c1"># Agent implementation</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">metadata</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.AgenticStep.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ArtifactType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/base.html#AgenticStep.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.AgenticStep.execute" title="Link to this definition"></a></dt>
+<dd><p>Execute the agentic step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_data</strong> – The input to process</p></li>
+<li><p><strong>context</strong> – Mutable mapping containing shared state and history</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (artifact, metadata) where artifact is the main output
+and metadata contains auxiliary information</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.AgenticWorkflow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">AgenticWorkflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="aw/base.html#aw.base.Context" title="aw.base.Context"><span class="pre">Context</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/orchestration.html#AgenticWorkflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.AgenticWorkflow" title="Link to this definition"></a></dt>
+<dd><p>Orchestrates a chain of agentic steps.</p>
+<p>Manages the execution of multiple steps in sequence, handling
+context/artifact passing between steps.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">workflow</span> <span class="o">=</span> <span class="n">AgenticWorkflow</span><span class="p">()</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">workflow</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="s1">&#39;loading&#39;</span><span class="p">,</span> <span class="n">loading_agent</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">workflow</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="s1">&#39;preparing&#39;</span><span class="p">,</span> <span class="n">preparing_agent</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">source_uri</span><span class="p">)</span>  
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.AgenticWorkflow.add_step">
+<span class="sig-name descname"><span class="pre">add_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="aw/base.html#aw.base.AgenticStep" title="aw.base.AgenticStep"><span class="pre">AgenticStep</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="aw/orchestration.html#aw.orchestration.AgenticWorkflow" title="aw.orchestration.AgenticWorkflow"><span class="pre">AgenticWorkflow</span></a></span></span><a class="reference internal" href="../_modules/aw/orchestration.html#AgenticWorkflow.add_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.AgenticWorkflow.add_step" title="Link to this definition"></a></dt>
+<dd><p>Add a step to the workflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name/identifier for the step</p></li>
+<li><p><strong>step</strong> – Agent or step implementation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Self for chaining</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.AgenticWorkflow.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/orchestration.html#AgenticWorkflow.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.AgenticWorkflow.run" title="Link to this definition"></a></dt>
+<dd><p>Execute the workflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>initial_input</strong> – Input to the first step</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (final_artifact, workflow_metadata)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.AgenticWorkflow.run_partial">
+<span class="sig-name descname"><span class="pre">run_partial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_after</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/orchestration.html#AgenticWorkflow.run_partial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.AgenticWorkflow.run_partial" title="Link to this definition"></a></dt>
+<dd><p>Run workflow up to a specific step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_input</strong> – Input to first step</p></li>
+<li><p><strong>stop_after</strong> – Name of step to stop after (runs all if None)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (artifact, metadata)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.CodeInterpreterTool">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">CodeInterpreterTool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allowed_modules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="aw/tools.html#aw.tools.ExecutionResult" title="aw.tools.ExecutionResult"><span class="pre">ExecutionResult</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/tools.html#CodeInterpreterTool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.CodeInterpreterTool" title="Link to this definition"></a></dt>
+<dd><p>Tool for executing Python code in a controlled environment.</p>
+<p>Provides a safe default implementation using exec() with limited namespace,
+and allows injection of more robust backends.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tool</span> <span class="o">=</span> <span class="n">CodeInterpreterTool</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">tool</span><span class="p">(</span><span class="s2">&quot;x = 5; y = x * 2; print(y)&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">success</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="go">&#39;10&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.Context">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">Context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/base.html#Context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.Context" title="Link to this definition"></a></dt>
+<dd><p>Context for sharing state and artifacts between agentic steps.</p>
+<p>Implements MutableMapping interface for dict-like behavior while
+providing additional functionality for managing agent state.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span><span class="p">[</span><span class="s1">&#39;loading&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;df&#39;</span><span class="p">:</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">}}</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span><span class="p">[</span><span class="s1">&#39;preparing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;df&#39;</span><span class="p">:</span> <span class="n">prepared_df</span><span class="p">}</span>  
+</pre></div>
+</div>
+<dl class="py property">
+<dt class="sig sig-object py" id="aw.Context.history">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">history</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#aw.Context.history" title="Link to this definition"></a></dt>
+<dd><p>Access the history of all context updates.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.Context.snapshot">
+<span class="sig-name descname"><span class="pre">snapshot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/base.html#Context.snapshot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.Context.snapshot" title="Link to this definition"></a></dt>
+<dd><p>Create a snapshot of current context state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dict copy of current context data</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.ExecutionResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">ExecutionResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">success</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locals_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/tools.html#ExecutionResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.ExecutionResult" title="Link to this definition"></a></dt>
+<dd><p>Result of code execution.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aw.ExecutionResult.success">
+<span class="sig-name descname"><span class="pre">success</span></span><a class="headerlink" href="#aw.ExecutionResult.success" title="Link to this definition"></a></dt>
+<dd><p>Whether execution succeeded without exceptions</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aw.ExecutionResult.output">
+<span class="sig-name descname"><span class="pre">output</span></span><a class="headerlink" href="#aw.ExecutionResult.output" title="Link to this definition"></a></dt>
+<dd><p>Standard output captured during execution</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aw.ExecutionResult.error">
+<span class="sig-name descname"><span class="pre">error</span></span><a class="headerlink" href="#aw.ExecutionResult.error" title="Link to this definition"></a></dt>
+<dd><p>Error message if execution failed</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aw.ExecutionResult.traceback">
+<span class="sig-name descname"><span class="pre">traceback</span></span><a class="headerlink" href="#aw.ExecutionResult.traceback" title="Link to this definition"></a></dt>
+<dd><p>Full traceback if execution failed</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aw.ExecutionResult.result">
+<span class="sig-name descname"><span class="pre">result</span></span><a class="headerlink" href="#aw.ExecutionResult.result" title="Link to this definition"></a></dt>
+<dd><p>The return value or final expression value</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aw.ExecutionResult.locals">
+<span class="sig-name descname"><span class="pre">locals</span></span><a class="headerlink" href="#aw.ExecutionResult.locals" title="Link to this definition"></a></dt>
+<dd><p>Local variables after execution</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.FileSamplerTool">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">FileSamplerTool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/util.html#FileSamplerTool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.FileSamplerTool" title="Link to this definition"></a></dt>
+<dd><p>Tool to sample and analyze file metadata and content.</p>
+<p>Helps agents understand what kind of data they’re dealing with
+before attempting to load it.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sampler</span> <span class="o">=</span> <span class="n">FileSamplerTool</span><span class="p">()</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">sampler</span><span class="p">(</span><span class="s1">&#39;/path/to/data.csv&#39;</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span>  
+<span class="go">&#39;.csv&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.GlobalConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">GlobalConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gpt-4'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_retries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">human_in_loop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/base.html#GlobalConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.GlobalConfig" title="Link to this definition"></a></dt>
+<dd><p>Global configuration with cascading defaults.</p>
+<p>Provides defaults that can be overridden at step or agent level.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">global_cfg</span> <span class="o">=</span> <span class="n">GlobalConfig</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">step_cfg</span> <span class="o">=</span> <span class="n">global_cfg</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.GlobalConfig.override">
+<span class="sig-name descname"><span class="pre">override</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="aw/base.html#aw.base.StepConfig" title="aw.base.StepConfig"><span class="pre">StepConfig</span></a></span></span><a class="reference internal" href="../_modules/aw/base.html#GlobalConfig.override"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.GlobalConfig.override" title="Link to this definition"></a></dt>
+<dd><p>Create a StepConfig with overridden values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> – Values to override from global defaults</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new StepConfig with merged configuration</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.InteractiveWorkflow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">InteractiveWorkflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="aw/base.html#aw.base.Context" title="aw.base.Context"><span class="pre">Context</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/orchestration.html#InteractiveWorkflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.InteractiveWorkflow" title="Link to this definition"></a></dt>
+<dd><p>Workflow with human-in-the-loop capabilities.</p>
+<p>Pauses execution to request human input/approval at configured points.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">workflow</span> <span class="o">=</span> <span class="n">InteractiveWorkflow</span><span class="p">()</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">workflow</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="s1">&#39;loading&#39;</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">require_approval</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">run_interactive</span><span class="p">(</span><span class="n">source_uri</span><span class="p">)</span>  
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.InteractiveWorkflow.add_step">
+<span class="sig-name descname"><span class="pre">add_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="aw/base.html#aw.base.AgenticStep" title="aw.base.AgenticStep"><span class="pre">AgenticStep</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">require_approval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="aw/orchestration.html#aw.orchestration.InteractiveWorkflow" title="aw.orchestration.InteractiveWorkflow"><span class="pre">InteractiveWorkflow</span></a></span></span><a class="reference internal" href="../_modules/aw/orchestration.html#InteractiveWorkflow.add_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.InteractiveWorkflow.add_step" title="Link to this definition"></a></dt>
+<dd><p>Add step with optional approval requirement.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.InteractiveWorkflow.run_interactive">
+<span class="sig-name descname"><span class="pre">run_interactive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/orchestration.html#InteractiveWorkflow.run_interactive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.InteractiveWorkflow.run_interactive" title="Link to this definition"></a></dt>
+<dd><p>Run workflow with human-in-loop checkpoints.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.InteractiveWorkflow.set_approval_callback">
+<span class="sig-name descname"><span class="pre">set_approval_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aw/orchestration.html#InteractiveWorkflow.set_approval_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.InteractiveWorkflow.set_approval_callback" title="Link to this definition"></a></dt>
+<dd><p>Set callback for human approval.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>callback</strong> – Function(step_name, artifact, metadata) -&gt; bool
+Returns True to continue, False to abort</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.LoadingAgent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">LoadingAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="aw/base.html#aw.base.StepConfig" title="aw.base.StepConfig"><span class="pre">StepConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/loading.html#LoadingAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.LoadingAgent" title="Link to this definition"></a></dt>
+<dd><p>Agent that loads data from various sources into pandas DataFrames.</p>
+<p>Uses ReAct loop:
+1. Thought: Analyze source (extension, sample) to choose loader
+2. Action: Generate code to load data
+3. Observe: Execute code and capture result/error
+4. Validate: Check if result is valid DataFrame
+5. Repeat or finish</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span> <span class="o">=</span> <span class="n">LoadingAgent</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">context</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;/path/to/data.csv&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.LoadingAgent.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/loading.html#LoadingAgent.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.LoadingAgent.execute" title="Link to this definition"></a></dt>
+<dd><p>Execute loading agent to load data from source.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_uri</strong> – URI of data source (file path or URL)</p></li>
+<li><p><strong>context</strong> – Context for storing intermediate results</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (dataframe, metadata)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.PreparationAgent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">PreparationAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="aw/base.html#aw.base.StepConfig" title="aw.base.StepConfig"><span class="pre">StepConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'generic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_validator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/preparing.html#PreparationAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.PreparationAgent" title="Link to this definition"></a></dt>
+<dd><p>Agent that prepares data to meet target requirements.</p>
+<p>Uses ReAct loop with functional validation:
+1. Thought: Analyze current data state vs. requirements
+2. Action: Generate transformation code
+3. Observe: Execute code and capture result
+4. Validate: Try to use data for its purpose (e.g., visualization)
+5. Repeat or finish</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span> <span class="o">=</span> <span class="n">PreparationAgent</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;cosmo-ready&#39;</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">context</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span><span class="s1">&#39;loading&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;df&#39;</span><span class="p">:</span> <span class="n">df</span><span class="p">}})</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prepared_df</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>  
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.PreparationAgent.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/preparing.html#PreparationAgent.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.PreparationAgent.execute" title="Link to this definition"></a></dt>
+<dd><p>Execute preparation agent to transform data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_df</strong> – Input DataFrame to prepare</p></li>
+<li><p><strong>context</strong> – Context for storing intermediate results</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (prepared_dataframe, metadata)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.SafeCodeInterpreter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">SafeCodeInterpreter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/tools.html#SafeCodeInterpreter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.SafeCodeInterpreter" title="Link to this definition"></a></dt>
+<dd><p>Extra-safe code interpreter with restricted operations.</p>
+<p>Disallows file I/O, network access, and other potentially dangerous operations.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.StepConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">StepConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">llm:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">~typing.Callable[[str],</span> <span class="pre">str]</span> <span class="pre">=</span> <span class="pre">'gpt-4',</span> <span class="pre">validator:</span> <span class="pre">~typing.Callable</span> <span class="pre">|</span> <span class="pre">~typing.Any</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">tools:</span> <span class="pre">list[~typing.Callable]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">max_retries:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">3,</span> <span class="pre">human_in_loop:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/base.html#StepConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.StepConfig" title="Link to this definition"></a></dt>
+<dd><p>Configuration for an AgenticStep.</p>
+<p>Supports both simple objects (strings, ints) and callables for maximum
+flexibility with dependency injection.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aw.StepConfig.llm">
+<span class="sig-name descname"><span class="pre">llm</span></span><a class="headerlink" href="#aw.StepConfig.llm" title="Link to this definition"></a></dt>
+<dd><p>Either a model name string or a text-to-text chat function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | Callable[[str], str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aw.StepConfig.validator">
+<span class="sig-name descname"><span class="pre">validator</span></span><a class="headerlink" href="#aw.StepConfig.validator" title="Link to this definition"></a></dt>
+<dd><p>Validation callable or schema object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable | Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aw.StepConfig.tools">
+<span class="sig-name descname"><span class="pre">tools</span></span><a class="headerlink" href="#aw.StepConfig.tools" title="Link to this definition"></a></dt>
+<dd><p>List of callable tools available to the agent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Callable]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aw.StepConfig.max_retries">
+<span class="sig-name descname"><span class="pre">max_retries</span></span><a class="headerlink" href="#aw.StepConfig.max_retries" title="Link to this definition"></a></dt>
+<dd><p>Maximum number of retry attempts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aw.StepConfig.human_in_loop">
+<span class="sig-name descname"><span class="pre">human_in_loop</span></span><a class="headerlink" href="#aw.StepConfig.human_in_loop" title="Link to this definition"></a></dt>
+<dd><p>Whether to require human approval/intervention</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">StepConfig</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">llm</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">validator</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="p">{}),</span>
+<span class="gp">... </span>    <span class="n">max_retries</span><span class="o">=</span><span class="mi">3</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.StepConfig.resolve_llm">
+<span class="sig-name descname"><span class="pre">resolve_llm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/base.html#StepConfig.resolve_llm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.StepConfig.resolve_llm" title="Link to this definition"></a></dt>
+<dd><p>Resolve llm to a callable function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A callable that takes a prompt string and returns a response string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aw.StepConfig.resolve_validator">
+<span class="sig-name descname"><span class="pre">resolve_validator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="aw/base.html#aw.base.Validator" title="aw.base.Validator"><span class="pre">Validator</span></a></span></span><a class="reference internal" href="../_modules/aw/base.html#StepConfig.resolve_validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.StepConfig.resolve_validator" title="Link to this definition"></a></dt>
+<dd><p>Resolve validator to a callable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A callable that validates artifacts</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.Tool">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">Tool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/base.html#Tool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.Tool" title="Link to this definition"></a></dt>
+<dd><p>Protocol for tools that agents can use.</p>
+<p>Tools are callable objects that perform specific actions like
+executing code, sampling files, or calling external APIs.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">FileSampler</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="c1"># Sample file logic</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;extension&#39;</span><span class="p">:</span> <span class="s1">&#39;.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;sample&#39;</span><span class="p">:</span> <span class="s1">&#39;...&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.Validator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">Validator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/base.html#Validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.Validator" title="Link to this definition"></a></dt>
+<dd><p>Protocol for validation functions.</p>
+<p>Validators check if an artifact meets requirements and return
+both a success indicator and detailed information.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">is_non_empty_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">success</span> <span class="o">=</span> <span class="n">df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+<span class="gp">... </span>    <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span> <span class="k">if</span> <span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">}</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="n">info</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.all_validators">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">all_validators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">validators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/validation.html#all_validators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.all_validators" title="Link to this definition"></a></dt>
+<dd><p>Combine multiple validators - all must pass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*validators</strong> – Validator functions to combine</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A validator that passes only if all validators pass</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validate</span> <span class="o">=</span> <span class="n">all_validators</span><span class="p">(</span>  
+<span class="gp">... </span>    <span class="n">is_dataframe</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">has_required_columns</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]),</span>
+<span class="gp">... </span>    <span class="n">has_no_nulls</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.any_validator">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">any_validator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">validators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/validation.html#any_validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.any_validator" title="Link to this definition"></a></dt>
+<dd><p>Combine multiple validators - at least one must pass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*validators</strong> – Validator functions to combine</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A validator that passes if any validator passes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.basic_cosmo_validator">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">basic_cosmo_validator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="../_modules/aw/cosmo.html#basic_cosmo_validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.basic_cosmo_validator" title="Link to this definition"></a></dt>
+<dd><p>Basic validator that checks structural requirements only.</p>
+<p>Does not require cosmograph to be installed.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validator</span> <span class="o">=</span> <span class="n">basic_cosmo_validator</span><span class="p">()</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>  
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.compute_dataframe_info">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">compute_dataframe_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/aw/util.html#compute_dataframe_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.compute_dataframe_info" title="Link to this definition"></a></dt>
+<dd><p>Compute comprehensive info about a DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> – pandas DataFrame</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict with shape, dtypes, null counts, sample rows, etc.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">compute_dataframe_info</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span>
+<span class="go">(2, 2)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.create_cosmo_prep_workflow">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">create_cosmo_prep_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cosmo_validator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_retries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="aw/orchestration.html#aw.orchestration.AgenticWorkflow" title="aw.orchestration.AgenticWorkflow"><span class="pre">AgenticWorkflow</span></a></span></span><a class="reference internal" href="../_modules/aw/orchestration.html#create_cosmo_prep_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.create_cosmo_prep_workflow" title="Link to this definition"></a></dt>
+<dd><p>Create a workflow specifically for cosmograph preparation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cosmo_validator</strong> – Custom cosmo validator (uses default if None)</p></li>
+<li><p><strong>max_retries</strong> – Maximum retries for each step</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured workflow</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">workflow</span> <span class="o">=</span> <span class="n">create_cosmo_prep_workflow</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prepared_df</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.create_cosmo_validator">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">create_cosmo_validator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cosmo_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_generated_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/cosmo.html#create_cosmo_validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.create_cosmo_validator" title="Link to this definition"></a></dt>
+<dd><p>Create a validator for cosmograph requirements.</p>
+<p>This validator attempts to actually call cosmograph.cosmo() with the
+DataFrame to see if it’s ready for visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cosmo_function</strong> – The cosmograph.cosmo function (imported if None)</p></li>
+<li><p><strong>required_columns</strong> – Minimum number of numeric columns needed</p></li>
+<li><p><strong>allow_generated_params</strong> – Whether to auto-infer x/y columns</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Validator function following (artifact) -&gt; (success, info) protocol</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validator</span> <span class="o">=</span> <span class="n">create_cosmo_validator</span><span class="p">()</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">success</span><span class="p">:</span>  
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can visualize with: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.create_data_prep_workflow">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">create_data_prep_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loading_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="aw/base.html#aw.base.StepConfig" title="aw.base.StepConfig"><span class="pre">StepConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preparing_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="aw/base.html#aw.base.StepConfig" title="aw.base.StepConfig"><span class="pre">StepConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'generic'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="aw/orchestration.html#aw.orchestration.AgenticWorkflow" title="aw.orchestration.AgenticWorkflow"><span class="pre">AgenticWorkflow</span></a></span></span><a class="reference internal" href="../_modules/aw/orchestration.html#create_data_prep_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.create_data_prep_workflow" title="Link to this definition"></a></dt>
+<dd><p>Factory to create a data preparation workflow.</p>
+<p>Creates a workflow with LoadingAgent -&gt; PreparationAgent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loading_config</strong> – Configuration for loading agent</p></li>
+<li><p><strong>preparing_config</strong> – Configuration for preparing agent</p></li>
+<li><p><strong>target</strong> – Target format for preparation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured workflow</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">workflow</span> <span class="o">=</span> <span class="n">create_data_prep_workflow</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;cosmo-ready&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;/path/to/data.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.create_langchain_executor">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">create_langchain_executor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="aw/tools.html#aw.tools.ExecutionResult" title="aw.tools.ExecutionResult"><span class="pre">ExecutionResult</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/tools.html#create_langchain_executor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.create_langchain_executor" title="Link to this definition"></a></dt>
+<dd><p>Create an executor using LangChain’s CodeInterpreter (if available).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Executor function compatible with CodeInterpreterTool</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">executor</span> <span class="o">=</span> <span class="n">create_langchain_executor</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">tool</span> <span class="o">=</span> <span class="n">CodeInterpreterTool</span><span class="p">(</span><span class="n">executor</span><span class="o">=</span><span class="n">executor</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="c1"># LangChain not available - use default</span>
+<span class="gp">... </span>    <span class="n">tool</span> <span class="o">=</span> <span class="n">CodeInterpreterTool</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.create_loading_agent">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">create_loading_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_retries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="aw/loading.html#aw.loading.LoadingAgent" title="aw.loading.LoadingAgent"><span class="pre">LoadingAgent</span></a></span></span><a class="reference internal" href="../_modules/aw/loading.html#create_loading_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.create_loading_agent" title="Link to this definition"></a></dt>
+<dd><p>Factory function to create a loading agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>llm</strong> – LLM model name or callable</p></li>
+<li><p><strong>validator</strong> – Custom validator (uses default if None)</p></li>
+<li><p><strong>max_retries</strong> – Maximum retry attempts</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured LoadingAgent</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span> <span class="o">=</span> <span class="n">create_loading_agent</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.create_oa_chat">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">create_oa_chat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/util.html#create_oa_chat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.create_oa_chat" title="Link to this definition"></a></dt>
+<dd><p>Create a chat function using the oa package.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A callable that takes a prompt and returns a response</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chat</span> <span class="o">=</span> <span class="n">create_oa_chat</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">response</span> <span class="o">=</span> <span class="n">chat</span><span class="p">(</span><span class="s2">&quot;Hello!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.create_openai_chat">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">create_openai_chat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gpt-4'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">default_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/util.html#create_openai_chat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.create_openai_chat" title="Link to this definition"></a></dt>
+<dd><p>Create a text-to-text chat function using OpenAI API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – OpenAI model name</p></li>
+<li><p><strong>**default_kwargs</strong> – Default parameters for API calls</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A callable that takes a prompt and returns a response</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chat</span> <span class="o">=</span> <span class="n">create_openai_chat</span><span class="p">(</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">response</span> <span class="o">=</span> <span class="n">chat</span><span class="p">(</span><span class="s2">&quot;What is 2+2?&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.create_preparation_agent">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">create_preparation_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'generic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_retries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="aw/preparing.html#aw.preparing.PreparationAgent" title="aw.preparing.PreparationAgent"><span class="pre">PreparationAgent</span></a></span></span><a class="reference internal" href="../_modules/aw/preparing.html#create_preparation_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.create_preparation_agent" title="Link to this definition"></a></dt>
+<dd><p>Factory function to create a preparation agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – Target format/purpose</p></li>
+<li><p><strong>validator</strong> – Custom validator function</p></li>
+<li><p><strong>llm</strong> – LLM model name or callable</p></li>
+<li><p><strong>max_retries</strong> – Maximum retry attempts</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured PreparationAgent</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span> <span class="o">=</span> <span class="n">create_preparation_agent</span><span class="p">(</span>  
+<span class="gp">... </span>    <span class="n">target</span><span class="o">=</span><span class="s1">&#39;cosmo-ready&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">validator</span><span class="o">=</span><span class="n">cosmo_validator</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.default_llm_factory">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">default_llm_factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gpt-4'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/util.html#default_llm_factory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.default_llm_factory" title="Link to this definition"></a></dt>
+<dd><p>Factory to create LLM function from various specifications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> – Either a model name string, or a callable</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A callable text-to-text function</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">llm</span> <span class="o">=</span> <span class="n">default_llm_factory</span><span class="p">(</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">llm</span> <span class="o">=</span> <span class="n">default_llm_factory</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Echo: </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.djoin">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">djoin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aw.djoin" title="Link to this definition"></a></dt>
+<dd><p>Join two or more pathname components, inserting ‘/’ as needed.
+If any component is an absolute path, all previous path components
+will be discarded.  An empty last part will result in a path that
+ends with a separator.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.functional_validator">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">functional_validator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">try_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">success_check</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/validation.html#functional_validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.functional_validator" title="Link to this definition"></a></dt>
+<dd><p>Create a validator that tries to use the artifact for its purpose.</p>
+<p>This validator actually attempts to use the artifact in the way it’s
+intended to be used (e.g., try to visualize the data, try to train a model).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>try_function</strong> – Function that tries to use the artifact</p></li>
+<li><p><strong>success_check</strong> – Optional function to check if result is acceptable</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A validator function</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">try_cosmo</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>  
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">cosmograph</span><span class="o">.</span><span class="n">cosmo</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">points_x_by</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">points_y_by</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validate</span> <span class="o">=</span> <span class="n">functional_validator</span><span class="p">(</span><span class="n">try_cosmo</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validate</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>  
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.get_numeric_columns">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">get_numeric_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_nulls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/util.html#get_numeric_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.get_numeric_columns" title="Link to this definition"></a></dt>
+<dd><p>Get numeric columns from DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – pandas DataFrame</p></li>
+<li><p><strong>exclude_nulls</strong> – Whether to exclude columns with null values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generator of column names</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">get_numeric_columns</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>  
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.has_attributes">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">has_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">required_attrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/validation.html#has_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.has_attributes" title="Link to this definition"></a></dt>
+<dd><p>Validator that checks artifact has required attributes.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validate</span> <span class="o">=</span> <span class="n">has_attributes</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.infer_cosmo_params">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">infer_cosmo_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/aw/cosmo.html#infer_cosmo_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.infer_cosmo_params" title="Link to this definition"></a></dt>
+<dd><p>Infer suitable cosmograph parameters from DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> – pandas DataFrame</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict of suggested parameters for cosmograph.cosmo()</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">infer_cosmo_params</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">cosmograph</span><span class="w"> </span><span class="kn">import</span> <span class="n">cosmo</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cosmo</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>  
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.infer_loader_from_extension">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">infer_loader_from_extension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/aw/util.html#infer_loader_from_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.infer_loader_from_extension" title="Link to this definition"></a></dt>
+<dd><p>Infer pandas loader function from file extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>extension</strong> – File extension (e.g., ‘.csv’, ‘.json’)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Name of pandas loader function</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">infer_loader_from_extension</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+<span class="go">&#39;read_csv&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">infer_loader_from_extension</span><span class="p">(</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">)</span>
+<span class="go">&#39;read_excel&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.infer_loader_params">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">infer_loader_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/aw/util.html#infer_loader_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.infer_loader_params" title="Link to this definition"></a></dt>
+<dd><p>Infer parameters for pandas loader based on file characteristics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>extension</strong> – File extension</p></li>
+<li><p><strong>sample_text</strong> – Optional sample of file content</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict of parameters to pass to loader</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">infer_loader_params</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;a,b,c</span><span class="se">\n</span><span class="s1">1,2,3&#39;</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sep&#39;</span><span class="p">)</span>  
+<span class="go">&#39;,&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.info_dict_validator">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">info_dict_validator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compute_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/validation.html#info_dict_validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.info_dict_validator" title="Link to this definition"></a></dt>
+<dd><p>Create a validator that computes info then checks it.</p>
+<p>This is a two-stage validator:
+1. Compute information about the artifact (e.g., df.shape, df.dtypes)
+2. Check if that information meets requirements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>compute_info</strong> – Function to extract info from artifact</p></li>
+<li><p><strong>check_info</strong> – Function to check if info is acceptable</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A validator function</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">compute_df_info</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;null_count&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">check_df_info</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;null_count&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Too many nulls&quot;</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;OK&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validate</span> <span class="o">=</span> <span class="n">info_dict_validator</span><span class="p">(</span><span class="n">compute_df_info</span><span class="p">,</span> <span class="n">check_df_info</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.is_not_empty">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">is_not_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/validation.html#is_not_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.is_not_empty" title="Link to this definition"></a></dt>
+<dd><p>Validator that checks artifact is not empty.</p>
+<p>Works for sequences, mappings, DataFrames, etc.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.is_type">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">is_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expected_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/validation.html#is_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.is_type" title="Link to this definition"></a></dt>
+<dd><p>Validator that checks artifact type.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validate</span> <span class="o">=</span> <span class="n">is_type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.load_and_prepare">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">load_and_prepare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'generic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_retries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/orchestration.html#load_and_prepare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.load_and_prepare" title="Link to this definition"></a></dt>
+<dd><p>Convenience function to load and prepare data in one call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_uri</strong> – URI of data source</p></li>
+<li><p><strong>target</strong> – Target format/purpose</p></li>
+<li><p><strong>validator</strong> – Optional custom validator</p></li>
+<li><p><strong>max_retries</strong> – Maximum retry attempts</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (prepared_dataframe, metadata)</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="n">load_and_prepare</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;cosmo-ready&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.load_for_cosmo">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">load_for_cosmo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_retries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/orchestration.html#load_for_cosmo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.load_for_cosmo" title="Link to this definition"></a></dt>
+<dd><p>Load and prepare data specifically for cosmograph visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_uri</strong> – URI of data source</p></li>
+<li><p><strong>max_retries</strong> – Maximum retry attempts</p></li>
+<li><p><strong>strict</strong> – If True, actually calls cosmograph for validation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (prepared_dataframe, metadata)</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="n">load_for_cosmo</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">cosmograph</span><span class="w"> </span><span class="kn">import</span> <span class="n">cosmo</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cosmo</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="o">**</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;preparing&#39;</span><span class="p">][</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;validation_result&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>  
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.schema_validator">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">schema_validator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/validation.html#schema_validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.schema_validator" title="Link to this definition"></a></dt>
+<dd><p>Create a validator from a schema (Pydantic, JSON Schema, etc.).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>schema</strong> – A schema object with validation capability</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A validator function</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">DataSchema</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">x</span><span class="p">:</span> <span class="nb">float</span>
+<span class="gp">... </span>    <span class="n">y</span><span class="p">:</span> <span class="nb">float</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validate</span> <span class="o">=</span> <span class="n">schema_validator</span><span class="p">(</span><span class="n">DataSchema</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validate</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">})</span>
+<span class="go">(True, {&#39;validated&#39;: ...})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.strict_cosmo_validator">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">strict_cosmo_validator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="../_modules/aw/cosmo.html#strict_cosmo_validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.strict_cosmo_validator" title="Link to this definition"></a></dt>
+<dd><p>Strict validator that actually calls cosmograph.</p>
+<p>Requires cosmograph to be installed.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validator</span> <span class="o">=</span> <span class="n">strict_cosmo_validator</span><span class="p">()</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>  
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.try_cosmo_visualization">
+<span class="sig-prename descclassname"><span class="pre">aw.</span></span><span class="sig-name descname"><span class="pre">try_cosmo_visualization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cosmo_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cosmo_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aw/cosmo.html#try_cosmo_visualization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.try_cosmo_visualization" title="Link to this definition"></a></dt>
+<dd><p>Try to create a cosmograph visualization.</p>
+<p>This is a functional validator that actually attempts the visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – DataFrame to visualize</p></li>
+<li><p><strong>cosmo_function</strong> – The cosmograph.cosmo function</p></li>
+<li><p><strong>**cosmo_kwargs</strong> – Additional arguments for cosmo</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (success, info)</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">cosmograph</span><span class="w"> </span><span class="kn">import</span> <span class="n">cosmo</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">try_cosmo_visualization</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cosmo</span><span class="p">)</span>  
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to aw’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="aw/base.html" class="btn btn-neutral float-right" title="aw.base" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

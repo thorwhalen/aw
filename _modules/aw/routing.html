@@ -1,0 +1,639 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aw.routing &mdash; aw 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            aw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw.html">aw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/base.html">aw.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/loading.html">aw.loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/orchestration.html">aw.orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/routing.html">aw.routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/util.html">aw.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/validation.html">aw.validation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">aw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aw.routing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aw.routing</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Configurable routing and decision chains for agentic workflows.</span>
+
+<span class="sd">This module provides tools for building extensible, inspectable routing chains</span>
+<span class="sd">that follow the open-closed principle. Users can:</span>
+<span class="sd">- Use default configurations out of the box</span>
+<span class="sd">- Inspect all routing rules and mappings</span>
+<span class="sd">- Customize individual components</span>
+<span class="sd">- Extend with new routing strategies</span>
+
+<span class="sd">The key pattern is: provide sensible defaults, make them visible, keep them mutable.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Protocol</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span>
+
+
+<div class="viewcode-block" id="RoutingStrategy">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.RoutingStrategy">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RoutingStrategy</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol for routing strategies.</span>
+
+<span class="sd">    A routing strategy takes a context and returns a result or None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply routing logic to context.&quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+
+
+<div class="viewcode-block" id="PriorityRouter">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.PriorityRouter">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PriorityRouter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Route through strategies in priority order, short-circuiting on first match.</span>
+
+<span class="sd">    This is a simpler, more specialized version of i2.routing_forest that&#39;s</span>
+<span class="sd">    optimized for the common case of &quot;try these in order, stop at first success&quot;.</span>
+
+<span class="sd">    &gt;&gt;&gt; def try_a(x): return &#39;A&#39; if x &gt; 10 else None</span>
+<span class="sd">    &gt;&gt;&gt; def try_b(x): return &#39;B&#39; if x &gt; 5 else None</span>
+<span class="sd">    &gt;&gt;&gt; def try_c(x): return &#39;C&#39;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; router = PriorityRouter([try_a, try_b, try_c])</span>
+<span class="sd">    &gt;&gt;&gt; router(15)</span>
+<span class="sd">    &#39;A&#39;</span>
+<span class="sd">    &gt;&gt;&gt; router(8)</span>
+<span class="sd">    &#39;B&#39;</span>
+<span class="sd">    &gt;&gt;&gt; router(3)</span>
+<span class="sd">    &#39;C&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">strategies</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">RoutingStrategy</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Route through strategies in order, return first non-None result.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">strategy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">strategy</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="PriorityRouter.prepend">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.PriorityRouter.prepend">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">RoutingStrategy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;PriorityRouter&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a strategy at the beginning (highest priority).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PriorityRouter</span><span class="p">([</span><span class="n">strategy</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PriorityRouter.append">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.PriorityRouter.append">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">RoutingStrategy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;PriorityRouter&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a strategy at the end (lowest priority).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PriorityRouter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">strategies</span> <span class="o">+</span> <span class="p">[</span><span class="n">strategy</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="PriorityRouter.insert">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.PriorityRouter.insert">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">RoutingStrategy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;PriorityRouter&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Insert a strategy at a specific position.&quot;&quot;&quot;</span>
+        <span class="n">new_strategies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">new_strategies</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">strategy</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">PriorityRouter</span><span class="p">(</span><span class="n">new_strategies</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConditionalRouter">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.ConditionalRouter">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConditionalRouter</span><span class="p">(</span><span class="n">PriorityRouter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Router with short-circuit conditions.</span>
+
+<span class="sd">    Only accepts results that match the short-circuit condition,</span>
+<span class="sd">    otherwise continues to next strategy.</span>
+
+<span class="sd">    &gt;&gt;&gt; def try_url(x): return x.get(&#39;url_ext&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; def try_type(x): return x.get(&#39;content_type_ext&#39;)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # Only accept .pdf or .md, otherwise keep trying</span>
+<span class="sd">    &gt;&gt;&gt; router = ConditionalRouter(</span>
+<span class="sd">    ...     [try_url, try_type],</span>
+<span class="sd">    ...     short_circuit=lambda r: r in {&#39;.pdf&#39;, &#39;.md&#39;}</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # .pdf matches short-circuit, return immediately</span>
+<span class="sd">    &gt;&gt;&gt; router({&#39;url_ext&#39;: &#39;.pdf&#39;, &#39;content_type_ext&#39;: &#39;.html&#39;})</span>
+<span class="sd">    &#39;.pdf&#39;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # .jpg doesn&#39;t match, try next strategy, .md matches</span>
+<span class="sd">    &gt;&gt;&gt; router({&#39;url_ext&#39;: &#39;.jpg&#39;, &#39;content_type_ext&#39;: &#39;.md&#39;})</span>
+<span class="sd">    &#39;.md&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">short_circuit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Route with short-circuit logic.</span>
+
+<span class="sd">        If short_circuit is defined:</span>
+<span class="sd">        - Results matching the condition are returned immediately</span>
+<span class="sd">        - Results not matching are ignored, and next strategy is tried</span>
+
+<span class="sd">        If no short_circuit is defined, behaves like PriorityRouter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">strategy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">strategy</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># If no short-circuit function, return first result (PriorityRouter behavior)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_circuit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">result</span>
+                <span class="c1"># If short-circuit matches, return immediately</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_circuit</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">result</span>
+                <span class="c1"># Otherwise, ignore this result and try next strategy</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="MappingRouter">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.MappingRouter">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MappingRouter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Router based on a lookup mapping.</span>
+
+<span class="sd">    Provides a clean interface for switch-case style routing with:</span>
+<span class="sd">    - Visible, mutable mapping</span>
+<span class="sd">    - Optional default value or factory</span>
+<span class="sd">    - Easy extension via dict interface</span>
+
+<span class="sd">    &gt;&gt;&gt; # Content-Type to extension mapping</span>
+<span class="sd">    &gt;&gt;&gt; ct_map = {</span>
+<span class="sd">    ...     &#39;application/pdf&#39;: &#39;.pdf&#39;,</span>
+<span class="sd">    ...     &#39;text/html&#39;: &#39;.html&#39;,</span>
+<span class="sd">    ...     &#39;application/json&#39;: &#39;.json&#39;,</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; router = MappingRouter(ct_map)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; router(&#39;application/pdf&#39;)</span>
+<span class="sd">    &#39;.pdf&#39;</span>
+<span class="sd">    &gt;&gt;&gt; router(&#39;text/plain&#39;) is None  # No default</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # With default</span>
+<span class="sd">    &gt;&gt;&gt; router_with_default = MappingRouter(ct_map, default=&#39;.bin&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; router_with_default(&#39;text/plain&#39;)</span>
+<span class="sd">    &#39;.bin&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">key_transform</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Look up key in mapping.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_transform</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_transform</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Access mapping directly.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update mapping directly.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="MappingRouter.update">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.MappingRouter.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update mapping.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MappingRouter.copy">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.MappingRouter.copy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;MappingRouter&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a copy with same configuration.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">MappingRouter</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">key_transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">key_transform</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Extension Detection - Concrete Application</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="ExtensionContext">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.ExtensionContext">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExtensionContext</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Context for extension detection.</span>
+
+<span class="sd">    &gt;&gt;&gt; ctx = ExtensionContext(</span>
+<span class="sd">    ...     url=&#39;https://example.com/file.pdf&#39;,</span>
+<span class="sd">    ...     content=b&#39;%PDF-1.5&#39;,</span>
+<span class="sd">    ...     content_type=&#39;text/html&#39;</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; ctx.url</span>
+<span class="sd">    &#39;https://example.com/file.pdf&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">content</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+    <span class="n">content_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">explicit_extension</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<span class="c1"># Default Content-Type mapping (visible and mutable)</span>
+<span class="n">DEFAULT_CONTENT_TYPE_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;application/pdf&#39;</span><span class="p">:</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;text/html&#39;</span><span class="p">:</span> <span class="s1">&#39;.html&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;text/markdown&#39;</span><span class="p">:</span> <span class="s1">&#39;.md&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;text/plain&#39;</span><span class="p">:</span> <span class="s1">&#39;.txt&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;application/json&#39;</span><span class="p">:</span> <span class="s1">&#39;.json&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;application/xml&#39;</span><span class="p">:</span> <span class="s1">&#39;.xml&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;text/csv&#39;</span><span class="p">:</span> <span class="s1">&#39;.csv&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;image/png&#39;</span><span class="p">:</span> <span class="s1">&#39;.png&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;image/jpeg&#39;</span><span class="p">:</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;image/gif&#39;</span><span class="p">:</span> <span class="s1">&#39;.gif&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;image/webp&#39;</span><span class="p">:</span> <span class="s1">&#39;.webp&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;image/svg+xml&#39;</span><span class="p">:</span> <span class="s1">&#39;.svg&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;application/zip&#39;</span><span class="p">:</span> <span class="s1">&#39;.zip&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;application/gzip&#39;</span><span class="p">:</span> <span class="s1">&#39;.gz&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;application/x-tar&#39;</span><span class="p">:</span> <span class="s1">&#39;.tar&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="c1"># Default magic bytes patterns (visible and mutable)</span>
+<span class="n">DEFAULT_MAGIC_BYTES_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sa">b</span><span class="s1">&#39;%PDF&#39;</span><span class="p">:</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s1">&#39;&lt;!DOCTYPE html&#39;</span><span class="p">:</span> <span class="s1">&#39;.html&#39;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s1">&#39;&lt;!doctype html&#39;</span><span class="p">:</span> <span class="s1">&#39;.html&#39;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s1">&#39;&lt;html&#39;</span><span class="p">:</span> <span class="s1">&#39;.html&#39;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x89</span><span class="s1">PNG&#39;</span><span class="p">:</span> <span class="s1">&#39;.png&#39;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\xff\xd8\xff</span><span class="s1">&#39;</span><span class="p">:</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s1">&#39;GIF87a&#39;</span><span class="p">:</span> <span class="s1">&#39;.gif&#39;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s1">&#39;GIF89a&#39;</span><span class="p">:</span> <span class="s1">&#39;.gif&#39;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s1">&#39;PK</span><span class="se">\x03\x04</span><span class="s1">&#39;</span><span class="p">:</span> <span class="s1">&#39;.zip&#39;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x1f\x8b</span><span class="s1">&#39;</span><span class="p">:</span> <span class="s1">&#39;.gz&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="detect_from_url">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.detect_from_url">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">detect_from_url</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">ExtensionContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract extension from URL path.</span>
+
+<span class="sd">    &gt;&gt;&gt; ctx = ExtensionContext(&#39;https://example.com/file.pdf&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; detect_from_url(ctx)</span>
+<span class="sd">    &#39;.pdf&#39;</span>
+<span class="sd">    &gt;&gt;&gt; ctx = ExtensionContext(&#39;https://example.com/file&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; detect_from_url(ctx) is None</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlparse</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+    <span class="n">url_path</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">path</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">url_path</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="c1"># Validate extension looks reasonable</span>
+    <span class="k">if</span> <span class="n">ext</span> <span class="ow">and</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">ext</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">isalnum</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">ext</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="make_content_type_detector">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.make_content_type_detector">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_content_type_detector</span><span class="p">(</span>
+    <span class="n">content_type_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ExtensionContext</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory for content-type based detection.</span>
+
+<span class="sd">    Returns a detector function with the given mapping.</span>
+<span class="sd">    Users can create custom detectors with different mappings.</span>
+
+<span class="sd">    &gt;&gt;&gt; # Use default mapping</span>
+<span class="sd">    &gt;&gt;&gt; detector = make_content_type_detector()</span>
+<span class="sd">    &gt;&gt;&gt; ctx = ExtensionContext(&#39;&#39;, content_type=&#39;application/pdf&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; detector(ctx)</span>
+<span class="sd">    &#39;.pdf&#39;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # Custom mapping</span>
+<span class="sd">    &gt;&gt;&gt; custom_map = {&#39;text/plain&#39;: &#39;.log&#39;}</span>
+<span class="sd">    &gt;&gt;&gt; custom_detector = make_content_type_detector(custom_map)</span>
+<span class="sd">    &gt;&gt;&gt; ctx = ExtensionContext(&#39;&#39;, content_type=&#39;text/plain&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; custom_detector(ctx)</span>
+<span class="sd">    &#39;.log&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">content_type_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">content_type_map</span> <span class="o">=</span> <span class="n">DEFAULT_CONTENT_TYPE_MAP</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">ExtensionContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">content_type</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># Clean content type (remove charset, etc.)</span>
+        <span class="n">content_type</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">content_type</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">content_type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">content_type</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">detect</span></div>
+
+
+
+<div class="viewcode-block" id="make_magic_bytes_detector">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.make_magic_bytes_detector">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_magic_bytes_detector</span><span class="p">(</span>
+    <span class="n">magic_bytes_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ExtensionContext</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory for magic bytes based detection.</span>
+
+<span class="sd">    &gt;&gt;&gt; detector = make_magic_bytes_detector()</span>
+<span class="sd">    &gt;&gt;&gt; ctx = ExtensionContext(&#39;&#39;, content=b&#39;%PDF-1.5...&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; detector(ctx)</span>
+<span class="sd">    &#39;.pdf&#39;</span>
+<span class="sd">    &gt;&gt;&gt; ctx = ExtensionContext(&#39;&#39;, content=b&#39;&lt;html&gt;...&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; detector(ctx)</span>
+<span class="sd">    &#39;.html&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">magic_bytes_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">magic_bytes_map</span> <span class="o">=</span> <span class="n">DEFAULT_MAGIC_BYTES_MAP</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">ExtensionContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">content</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">content</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># Check against magic byte patterns</span>
+        <span class="n">content_lower</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">content</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">magic</span><span class="p">,</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">magic_bytes_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">content_lower</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">magic</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
+                <span class="k">return</span> <span class="n">ext</span>
+
+        <span class="c1"># Try imghdr for images</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">imghdr</span>
+
+            <span class="n">img_ext</span> <span class="o">=</span> <span class="n">imghdr</span><span class="o">.</span><span class="n">what</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">content</span><span class="p">[:</span><span class="mi">50</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">img_ext</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="n">img_ext</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">detect</span></div>
+
+
+
+<div class="viewcode-block" id="detect_explicit">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.detect_explicit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">detect_explicit</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">ExtensionContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Use explicit extension if provided.</span>
+
+<span class="sd">    &gt;&gt;&gt; ctx = ExtensionContext(&#39;&#39;, explicit_extension=&#39;pdf&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; detect_explicit(ctx)</span>
+<span class="sd">    &#39;.pdf&#39;</span>
+<span class="sd">    &gt;&gt;&gt; ctx = ExtensionContext(&#39;&#39;, explicit_extension=&#39;.json&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; detect_explicit(ctx)</span>
+<span class="sd">    &#39;.json&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">explicit_extension</span><span class="p">:</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">explicit_extension</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ext</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="n">ext</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="ExtensionRouter">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.ExtensionRouter">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExtensionRouter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Route extension detection through configurable strategies.</span>
+
+<span class="sd">    This router implements the default logic for detecting file extensions,</span>
+<span class="sd">    but every component is visible and customizable.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; # Use with defaults</span>
+<span class="sd">        &gt;&gt;&gt; router = ExtensionRouter()</span>
+<span class="sd">        &gt;&gt;&gt; ctx = ExtensionContext(&#39;https://example.com/file.pdf&#39;, b&#39;%PDF-1.5&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; router(ctx)</span>
+<span class="sd">        &#39;.pdf&#39;</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # URL without extension, falls back to magic bytes</span>
+<span class="sd">        &gt;&gt;&gt; ctx = ExtensionContext(&#39;https://example.com/download&#39;, b&#39;%PDF-1.5&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; router(ctx)</span>
+<span class="sd">        &#39;.pdf&#39;</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Priority extensions short-circuit</span>
+<span class="sd">        &gt;&gt;&gt; ctx = ExtensionContext(&#39;https://example.com/file.pdf&#39;, b&#39;&lt;html&gt;&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; router(ctx)  # .pdf from URL wins even though content is HTML</span>
+<span class="sd">        &#39;.pdf&#39;</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Customize content type mapping</span>
+<span class="sd">        &gt;&gt;&gt; router.content_type_map[&#39;.txt&#39;] = &#39;text/x-log&#39;</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Add custom detector</span>
+<span class="sd">        &gt;&gt;&gt; def my_detector(ctx): return &#39;.custom&#39; if &#39;special&#39; in ctx.url else None</span>
+<span class="sd">        &gt;&gt;&gt; router = router.with_prepended_strategy(my_detector)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Priority extensions that short-circuit other checks</span>
+    <span class="n">priority_extensions</span><span class="p">:</span> <span class="nb">frozenset</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">([</span><span class="s1">&#39;.pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;.md&#39;</span><span class="p">,</span> <span class="s1">&#39;.json&#39;</span><span class="p">])</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Configurable mappings (users can modify these)</span>
+    <span class="n">content_type_map</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">DEFAULT_CONTENT_TYPE_MAP</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">magic_bytes_map</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">DEFAULT_MAGIC_BYTES_MAP</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Detection strategies (built in __post_init__)</span>
+    <span class="n">router</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConditionalRouter</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the routing chain.&quot;&quot;&quot;</span>
+        <span class="c1"># Create detectors with current mappings</span>
+        <span class="n">content_type_detector</span> <span class="o">=</span> <span class="n">make_content_type_detector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content_type_map</span><span class="p">)</span>
+        <span class="n">magic_bytes_detector</span> <span class="o">=</span> <span class="n">make_magic_bytes_detector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_bytes_map</span><span class="p">)</span>
+
+        <span class="c1"># Build strategy chain: explicit → URL → content-type → magic bytes</span>
+        <span class="n">strategies</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">detect_explicit</span><span class="p">,</span>
+            <span class="n">detect_from_url</span><span class="p">,</span>
+            <span class="n">content_type_detector</span><span class="p">,</span>
+            <span class="n">magic_bytes_detector</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Short-circuit on priority extensions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">router</span> <span class="o">=</span> <span class="n">ConditionalRouter</span><span class="p">(</span>
+            <span class="n">strategies</span><span class="p">,</span> <span class="n">short_circuit</span><span class="o">=</span><span class="k">lambda</span> <span class="n">ext</span><span class="p">:</span> <span class="n">ext</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority_extensions</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">content_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">explicit_extension</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect extension from context.</span>
+
+<span class="sd">        Can be called with ExtensionContext or individual args.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Support both context object and individual args</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">ExtensionContext</span><span class="p">):</span>
+            <span class="n">ctx</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">content_type</span><span class="p">,</span> <span class="n">explicit_extension</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">router</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span> <span class="k">if</span> <span class="n">result</span> <span class="k">else</span> <span class="s1">&#39;.bin&#39;</span>
+
+<div class="viewcode-block" id="ExtensionRouter.with_prepended_strategy">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.ExtensionRouter.with_prepended_strategy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">with_prepended_strategy</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ExtensionContext</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ExtensionRouter&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create new router with added strategy at highest priority.&quot;&quot;&quot;</span>
+        <span class="n">new_router</span> <span class="o">=</span> <span class="n">ExtensionRouter</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">priority_extensions</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">content_type_map</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">magic_bytes_map</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="n">new_router</span><span class="o">.</span><span class="n">router</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">router</span><span class="o">.</span><span class="n">prepend</span><span class="p">(</span><span class="n">strategy</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_router</span></div>
+
+
+<div class="viewcode-block" id="ExtensionRouter.with_appended_strategy">
+<a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.ExtensionRouter.with_appended_strategy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">with_appended_strategy</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ExtensionContext</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ExtensionRouter&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create new router with added strategy at lowest priority.&quot;&quot;&quot;</span>
+        <span class="n">new_router</span> <span class="o">=</span> <span class="n">ExtensionRouter</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">priority_extensions</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">content_type_map</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">magic_bytes_map</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="n">new_router</span><span class="o">.</span><span class="n">router</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">router</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">strategy</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_router</span></div>
+</div>
+
+
+
+<span class="c1"># Default instance for convenience</span>
+<span class="n">extension_router</span> <span class="o">=</span> <span class="n">ExtensionRouter</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

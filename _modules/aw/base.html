@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aw.base &mdash; aw 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            aw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw.html">aw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/base.html">aw.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/loading.html">aw.loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/orchestration.html">aw.orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/routing.html">aw.routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/util.html">aw.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/validation.html">aw.validation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">aw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aw.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aw.base</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Core protocols and base classes for agentic workflows.</span>
+
+<span class="sd">This module provides the foundational abstractions for building AI agents</span>
+<span class="sd">that follow the AgenticStep protocol with ReAct pattern (Reason-Act-Observe).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">MutableMapping</span>
+
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+<span class="n">ArtifactType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;ArtifactType&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AgenticStep">
+<a class="viewcode-back" href="../../module_docs/aw/base.html#aw.AgenticStep">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AgenticStep</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">ArtifactType</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol defining the interface for any agentic step in a workflow.</span>
+
+<span class="sd">    Each step follows the ReAct pattern:</span>
+<span class="sd">    1. Reason (Thought): Analyze input and context</span>
+<span class="sd">    2. Act (Action): Generate and execute code or use tools</span>
+<span class="sd">    3. Observe: Capture results and validate</span>
+<span class="sd">    4. Repeat or finish based on validation</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; class MyAgent:</span>
+<span class="sd">        ...     def execute(self, input_data, context):</span>
+<span class="sd">        ...         # Agent implementation</span>
+<span class="sd">        ...         return result, metadata</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AgenticStep.execute">
+<a class="viewcode-back" href="../../module_docs/aw/base.html#aw.AgenticStep.execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">input_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ArtifactType</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the agentic step.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_data: The input to process</span>
+<span class="sd">            context: Mutable mapping containing shared state and history</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple of (artifact, metadata) where artifact is the main output</span>
+<span class="sd">            and metadata contains auxiliary information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Validator">
+<a class="viewcode-back" href="../../module_docs/aw/base.html#aw.Validator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Validator</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol for validation functions.</span>
+
+<span class="sd">    Validators check if an artifact meets requirements and return</span>
+<span class="sd">    both a success indicator and detailed information.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; def is_non_empty_dataframe(df):</span>
+<span class="sd">        ...     success = df is not None and len(df) &gt; 0</span>
+<span class="sd">        ...     info = {&#39;shape&#39;: df.shape if success else None}</span>
+<span class="sd">        ...     return success, info</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">artifact</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate an artifact.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            artifact: The artifact to validate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple of (success, info) where success is True if validation</span>
+<span class="sd">            passed and info contains details about the validation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+
+
+<div class="viewcode-block" id="Tool">
+<a class="viewcode-back" href="../../module_docs/aw/base.html#aw.Tool">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Tool</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol for tools that agents can use.</span>
+
+<span class="sd">    Tools are callable objects that perform specific actions like</span>
+<span class="sd">    executing code, sampling files, or calling external APIs.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; class FileSampler:</span>
+<span class="sd">        ...     def __call__(self, uri):</span>
+<span class="sd">        ...         # Sample file logic</span>
+<span class="sd">        ...         return {&#39;extension&#39;: &#39;.csv&#39;, &#39;sample&#39;: &#39;...&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the tool.&quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+
+
+<div class="viewcode-block" id="StepConfig">
+<a class="viewcode-back" href="../../module_docs/aw/base.html#aw.StepConfig">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StepConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for an AgenticStep.</span>
+
+<span class="sd">    Supports both simple objects (strings, ints) and callables for maximum</span>
+<span class="sd">    flexibility with dependency injection.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        llm: Either a model name string or a text-to-text chat function</span>
+<span class="sd">        validator: Validation callable or schema object</span>
+<span class="sd">        tools: List of callable tools available to the agent</span>
+<span class="sd">        max_retries: Maximum number of retry attempts</span>
+<span class="sd">        human_in_loop: Whether to require human approval/intervention</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; config = StepConfig(</span>
+<span class="sd">        ...     llm=&quot;gpt-4&quot;,</span>
+<span class="sd">        ...     validator=lambda x: (True, {}),</span>
+<span class="sd">        ...     max_retries=3</span>
+<span class="sd">        ... )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">llm</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;gpt-4&quot;</span>
+    <span class="n">validator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">tools</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">human_in_loop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="StepConfig.resolve_llm">
+<a class="viewcode-back" href="../../module_docs/aw/base.html#aw.StepConfig.resolve_llm">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_llm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve llm to a callable function.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A callable that takes a prompt string and returns a response string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm</span>
+        <span class="c1"># Default implementation - will be replaced by actual LLM</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Response to: </span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="StepConfig.resolve_validator">
+<a class="viewcode-back" href="../../module_docs/aw/base.html#aw.StepConfig.resolve_validator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Validator</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve validator to a callable.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A callable that validates artifacts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Default validator - always passes</span>
+            <span class="k">return</span> <span class="k">lambda</span> <span class="n">artifact</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validator</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">validator</span>
+        <span class="c1"># Handle schema-based validators (Pydantic, etc.)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_schema_to_validator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validator</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_schema_to_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Validator</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a schema object to a validator function.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try Pydantic model validation</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="s1">&#39;model_validate&#39;</span><span class="p">):</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;validated&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">}</span>
+                <span class="c1"># Try JSON schema validation</span>
+                <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="s1">&#39;validate&#39;</span><span class="p">):</span>
+                    <span class="n">schema</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Unknown schema type - pass through</span>
+                    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{}</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+
+        <span class="k">return</span> <span class="n">validate</span></div>
+
+
+
+<div class="viewcode-block" id="GlobalConfig">
+<a class="viewcode-back" href="../../module_docs/aw/base.html#aw.GlobalConfig">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GlobalConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Global configuration with cascading defaults.</span>
+
+<span class="sd">    Provides defaults that can be overridden at step or agent level.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; global_cfg = GlobalConfig(llm=&quot;gpt-4&quot;, max_retries=5)</span>
+<span class="sd">        &gt;&gt;&gt; step_cfg = global_cfg.override(llm=&quot;gpt-3.5-turbo&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">llm</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;gpt-4&quot;</span>
+    <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">human_in_loop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="GlobalConfig.override">
+<a class="viewcode-back" href="../../module_docs/aw/base.html#aw.GlobalConfig.override">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">override</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StepConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a StepConfig with overridden values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs: Values to override from global defaults</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A new StepConfig with merged configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;llm&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="p">,</span>
+            <span class="s1">&#39;max_retries&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_retries</span><span class="p">,</span>
+            <span class="s1">&#39;human_in_loop&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">human_in_loop</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">defaults</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">StepConfig</span><span class="p">(</span><span class="o">**</span><span class="n">defaults</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Context">
+<a class="viewcode-back" href="../../module_docs/aw/base.html#aw.Context">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Context</span><span class="p">(</span><span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Context for sharing state and artifacts between agentic steps.</span>
+
+<span class="sd">    Implements MutableMapping interface for dict-like behavior while</span>
+<span class="sd">    providing additional functionality for managing agent state.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; ctx = Context()  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; ctx[&#39;loading&#39;] = {&#39;df&#39;: df, &#39;info&#39;: {...}}  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; ctx[&#39;preparing&#39;] = {&#39;df&#39;: prepared_df}  # doctest: +SKIP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">initial_data</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Access the history of all context updates.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_history</span>
+
+<div class="viewcode-block" id="Context.snapshot">
+<a class="viewcode-back" href="../../module_docs/aw/base.html#aw.Context.snapshot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a snapshot of current context state.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A dict copy of current context data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

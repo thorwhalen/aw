@@ -1,0 +1,372 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aw.loading &mdash; aw 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            aw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw.html">aw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/base.html">aw.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/loading.html">aw.loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/orchestration.html">aw.orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/routing.html">aw.routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/util.html">aw.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/validation.html">aw.validation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">aw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aw.loading</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aw.loading</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Loading agent for converting data sources to pandas DataFrames.</span>
+
+<span class="sd">Implements the ReAct pattern to iteratively try different loading strategies</span>
+<span class="sd">until successful or max retries reached.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">MutableMapping</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aw.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">StepConfig</span><span class="p">,</span> <span class="n">Context</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aw.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">CodeInterpreterTool</span><span class="p">,</span> <span class="n">ExecutionResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aw.util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FileSamplerTool</span><span class="p">,</span>
+    <span class="n">infer_loader_from_extension</span><span class="p">,</span>
+    <span class="n">infer_loader_params</span><span class="p">,</span>
+    <span class="n">compute_dataframe_info</span><span class="p">,</span>
+    <span class="n">default_llm_factory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aw.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_type</span><span class="p">,</span> <span class="n">is_not_empty</span><span class="p">,</span> <span class="n">all_validators</span>
+
+
+<div class="viewcode-block" id="LoadingAgent">
+<a class="viewcode-back" href="../../module_docs/aw/loading.html#aw.LoadingAgent">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LoadingAgent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Agent that loads data from various sources into pandas DataFrames.</span>
+
+<span class="sd">    Uses ReAct loop:</span>
+<span class="sd">    1. Thought: Analyze source (extension, sample) to choose loader</span>
+<span class="sd">    2. Action: Generate code to load data</span>
+<span class="sd">    3. Observe: Execute code and capture result/error</span>
+<span class="sd">    4. Validate: Check if result is valid DataFrame</span>
+<span class="sd">    5. Repeat or finish</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; agent = LoadingAgent()</span>
+<span class="sd">        &gt;&gt;&gt; context = Context()</span>
+<span class="sd">        &gt;&gt;&gt; df, metadata = agent.execute(&#39;/path/to/data.csv&#39;, context)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">StepConfig</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize loading agent.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config: Configuration for the agent (LLM, validator, tools, etc.)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">StepConfig</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">llm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">resolve_llm</span><span class="p">()</span>
+
+        <span class="c1"># Set up tools</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_sampler</span> <span class="o">=</span> <span class="n">FileSamplerTool</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code_interpreter</span> <span class="o">=</span> <span class="n">CodeInterpreterTool</span><span class="p">()</span>
+
+        <span class="c1"># Set up validator (DataFrame type + not empty)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">validator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">validator</span> <span class="o">=</span> <span class="n">all_validators</span><span class="p">(</span><span class="n">is_type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">),</span> <span class="n">is_not_empty</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">resolve_validator</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LoadingAgent.execute">
+<a class="viewcode-back" href="../../module_docs/aw/loading.html#aw.LoadingAgent.execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">source_uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute loading agent to load data from source.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source_uri: URI of data source (file path or URL)</span>
+<span class="sd">            context: Context for storing intermediate results</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple of (dataframe, metadata)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize attempt history</span>
+        <span class="n">attempts</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Step 1: Sample the file</span>
+        <span class="n">file_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_sampler</span><span class="p">(</span><span class="n">source_uri</span><span class="p">)</span>
+        <span class="n">attempts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="s1">&#39;file_sample&#39;</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">file_info</span><span class="p">})</span>
+
+        <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">file_info</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">file_info</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;attempts&#39;</span><span class="p">:</span> <span class="n">attempts</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="c1"># Try to load with increasingly sophisticated approaches</span>
+        <span class="k">for</span> <span class="n">attempt_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_retries</span><span class="p">):</span>
+            <span class="c1"># Step 2: Generate loading code</span>
+            <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_loading_code</span><span class="p">(</span><span class="n">file_info</span><span class="p">,</span> <span class="n">attempts</span><span class="p">,</span> <span class="n">attempt_num</span><span class="p">)</span>
+
+            <span class="n">attempts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s1">&#39;attempt&#39;</span><span class="p">:</span> <span class="n">attempt_num</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="s1">&#39;generate_code&#39;</span><span class="p">,</span> <span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="n">code</span><span class="p">}</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Step 3: Execute code</span>
+            <span class="n">exec_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_interpreter</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+            <span class="n">attempts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s1">&#39;attempt&#39;</span><span class="p">:</span> <span class="n">attempt_num</span><span class="p">,</span>
+                    <span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="s1">&#39;execute&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="n">exec_result</span><span class="o">.</span><span class="n">success</span><span class="p">,</span>
+                    <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="n">exec_result</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
+                    <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">exec_result</span><span class="o">.</span><span class="n">error</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">exec_result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+                <span class="c1"># Execution failed - try again with error info</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Get the DataFrame from execution result</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">exec_result</span><span class="o">.</span><span class="n">locals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;df&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Step 4: Validate</span>
+            <span class="n">is_valid</span><span class="p">,</span> <span class="n">validation_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validator</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="n">attempts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s1">&#39;attempt&#39;</span><span class="p">:</span> <span class="n">attempt_num</span><span class="p">,</span>
+                    <span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="s1">&#39;validate&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="n">is_valid</span><span class="p">,</span>
+                    <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="n">validation_info</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">is_valid</span><span class="p">:</span>
+                <span class="c1"># Success! Compute metadata and return</span>
+                <span class="n">df_info</span> <span class="o">=</span> <span class="n">compute_dataframe_info</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s1">&#39;source_uri&#39;</span><span class="p">:</span> <span class="n">source_uri</span><span class="p">,</span>
+                    <span class="s1">&#39;file_info&#39;</span><span class="p">:</span> <span class="n">file_info</span><span class="p">,</span>
+                    <span class="s1">&#39;df_info&#39;</span><span class="p">:</span> <span class="n">df_info</span><span class="p">,</span>
+                    <span class="s1">&#39;attempts&#39;</span><span class="p">:</span> <span class="n">attempts</span><span class="p">,</span>
+                    <span class="s1">&#39;num_attempts&#39;</span><span class="p">:</span> <span class="n">attempt_num</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="p">}</span>
+
+                <span class="c1"># Store in context</span>
+                <span class="n">context</span><span class="p">[</span><span class="s1">&#39;loading&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;df&#39;</span><span class="p">:</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">}</span>
+
+                <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">metadata</span>
+
+        <span class="c1"># All attempts failed</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Max retries exceeded&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;attempts&#39;</span><span class="p">:</span> <span class="n">attempts</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_loading_code</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">file_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">attempts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">attempt_num</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate Python code to load the data.</span>
+
+<span class="sd">        Uses LLM for sophisticated reasoning, or falls back to heuristics.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_info: Information about the file</span>
+<span class="sd">            attempts: History of previous attempts</span>
+<span class="sd">            attempt_num: Current attempt number</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Python code string to execute</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># For first attempt, use simple heuristics</span>
+        <span class="k">if</span> <span class="n">attempt_num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_initial_code</span><span class="p">(</span><span class="n">file_info</span><span class="p">)</span>
+
+        <span class="c1"># For subsequent attempts, use LLM or refined heuristics</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_retry_code</span><span class="p">(</span><span class="n">file_info</span><span class="p">,</span> <span class="n">attempts</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_initial_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate initial loading code based on file info.&quot;&quot;&quot;</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="n">file_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extension&#39;</span><span class="p">,</span> <span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="n">file_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;uri&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Infer loader and params</span>
+        <span class="n">loader_func</span> <span class="o">=</span> <span class="n">infer_loader_from_extension</span><span class="p">(</span><span class="n">extension</span><span class="p">)</span>
+        <span class="n">sample_text</span> <span class="o">=</span> <span class="n">file_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sample_text&#39;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">infer_loader_params</span><span class="p">(</span><span class="n">extension</span><span class="p">,</span> <span class="n">sample_text</span><span class="p">)</span>
+
+        <span class="c1"># Build params string</span>
+        <span class="n">params_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">params_str</span><span class="p">:</span>
+            <span class="n">params_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="n">params_str</span>
+
+        <span class="n">code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;import pandas as pd</span>
+<span class="s2">df = pd.</span><span class="si">{</span><span class="n">loader_func</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span><span class="si">}{</span><span class="n">params_str</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">code</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_retry_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">attempts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate retry code based on previous failures.</span>
+
+<span class="sd">        Analyzes error messages to adjust parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get last error</span>
+        <span class="n">last_exec</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">attempts</span> <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;step&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;execute&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="n">last_exec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">extension</span> <span class="o">=</span> <span class="n">file_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extension&#39;</span><span class="p">,</span> <span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="n">file_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;uri&#39;</span><span class="p">)</span>
+        <span class="n">loader_func</span> <span class="o">=</span> <span class="n">infer_loader_from_extension</span><span class="p">(</span><span class="n">extension</span><span class="p">)</span>
+
+        <span class="c1"># Adjust parameters based on error</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="s1">&#39;UnicodeDecodeError&#39;</span> <span class="ow">in</span> <span class="n">error_msg</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;latin-1&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;ParserError&#39;</span> <span class="ow">in</span> <span class="n">error_msg</span> <span class="ow">or</span> <span class="s1">&#39;delimiter&#39;</span> <span class="ow">in</span> <span class="n">error_msg</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="c1"># Try different delimiter</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;sep&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">t&#39;</span> <span class="k">if</span> <span class="s1">&#39;sep=,&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">attempts</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;;&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;FileNotFoundError&#39;</span> <span class="ow">in</span> <span class="n">error_msg</span><span class="p">:</span>
+            <span class="c1"># Try with different path interpretation</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Try with error_bad_lines parameter for problematic CSVs</span>
+        <span class="k">if</span> <span class="n">loader_func</span> <span class="o">==</span> <span class="s1">&#39;read_csv&#39;</span> <span class="ow">and</span> <span class="s1">&#39;ParserError&#39;</span> <span class="ow">in</span> <span class="n">error_msg</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;on_bad_lines&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;skip&#39;</span>
+
+        <span class="n">params_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">params_str</span><span class="p">:</span>
+            <span class="n">params_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="n">params_str</span>
+
+        <span class="n">code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;import pandas as pd</span>
+<span class="s2">df = pd.</span><span class="si">{</span><span class="n">loader_func</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span><span class="si">}{</span><span class="n">params_str</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">code</span></div>
+
+
+
+<div class="viewcode-block" id="create_loading_agent">
+<a class="viewcode-back" href="../../module_docs/aw/loading.html#aw.create_loading_agent">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_loading_agent</span><span class="p">(</span>
+    <span class="n">llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">validator</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LoadingAgent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function to create a loading agent.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        llm: LLM model name or callable</span>
+<span class="sd">        validator: Custom validator (uses default if None)</span>
+<span class="sd">        max_retries: Maximum retry attempts</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Configured LoadingAgent</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; agent = create_loading_agent(llm=&quot;gpt-4&quot;, max_retries=5)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">StepConfig</span><span class="p">(</span>
+        <span class="n">llm</span><span class="o">=</span><span class="n">llm</span> <span class="ow">or</span> <span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">validator</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="n">max_retries</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">LoadingAgent</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
