@@ -154,7 +154,7 @@ def claude_desktop_config(
     Get a FileStore interface to Claude Desktop's configuration.
 
     By default, operates on the 'mcpServers' section.
-    
+
     Automatically creates the config file if it doesn't exist, and creates the
     mcpServers section if it's missing.
 
@@ -188,15 +188,15 @@ def claude_desktop_config(
             config_dir = '~/Library/Application Support/Claude'
 
     config_path = Path(config_dir).expanduser() / 'claude_desktop_config.json'
-    
+
     # Factory for creating empty file content
     def create_empty_config():
         return {}
-    
+
     # Factory for creating empty mcpServers section
     def create_empty_servers():
         return {}
-    
+
     return FileStore(
         config_path,
         key_path=key_path,
