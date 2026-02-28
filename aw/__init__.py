@@ -97,6 +97,21 @@ from aw.orchestration import (
     load_for_cosmo,
 )
 
+# Translators
+from aw.translators import (
+    AgentSpec,
+    ToolSpec,
+    ValidatorSpec,
+    extract_agent_spec,
+    to_claude_skill,
+    write_skill_directory,
+    workflow_to_skills,
+    to_crewai_yaml,
+    workflow_to_crewai_yaml,
+    to_openai_tools,
+    to_openai_assistant,
+)
+
 __version__ = "0.1.0"
 
 __all__ = [
@@ -150,4 +165,16 @@ __all__ = [
     'create_cosmo_prep_workflow',
     'load_and_prepare',
     'load_for_cosmo',
+    # Translators
+    'AgentSpec',
+    'ToolSpec',
+    'ValidatorSpec',
+    'extract_agent_spec',
+    'to_claude_skill',
+    'write_skill_directory',
+    'workflow_to_skills',
+    'to_crewai_yaml',
+    'workflow_to_crewai_yaml',
+    'to_openai_tools',
+    'to_openai_assistant',
 ]
