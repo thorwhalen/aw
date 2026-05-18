@@ -1,0 +1,213 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aw.func_calling &mdash; aw 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="aw.loading" href="loading.html" />
+    <link rel="prev" title="aw.cosmo" href="cosmo.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            aw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../aw.html">aw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base.html">aw.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">aw.func_calling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#aw.func_calling.extract_function_from_code"><code class="docutils literal notranslate"><span class="pre">extract_function_from_code()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.func_calling.make_code_generator"><code class="docutils literal notranslate"><span class="pre">make_code_generator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.func_calling.task_to_function"><code class="docutils literal notranslate"><span class="pre">task_to_function()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="loading.html">aw.loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orchestration.html">aw.orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_gen.html">aw.py_gen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routing.html">aw.routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translators.html">aw.translators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html">aw.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">aw.validation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">aw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">aw.func_calling</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/aw/func_calling.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-aw.func_calling">
+<span id="aw-func-calling"></span><h1>aw.func_calling<a class="headerlink" href="#module-aw.func_calling" title="Link to this heading"></a></h1>
+<p>This module provides robust templates for creating (python) code-generating functions
+that can translate natural language task descriptions into executable Python code.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.func_calling.extract_function_from_code">
+<span class="sig-prename descclassname"><span class="pre">aw.func_calling.</span></span><span class="sig-name descname"><span class="pre">extract_function_from_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code_str_for_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_picklable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">callable</span></span></span><a class="reference internal" href="../../_modules/aw/func_calling.html#extract_function_from_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.func_calling.extract_function_from_code" title="Link to this definition"></a></dt>
+<dd><p>Extract a function from a string of Python code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code_str_for_func</strong> – String containing a Python function definition</p></li>
+<li><p><strong>make_picklable</strong> – If True, make the function picklable by adding it to __main__</p></li>
+<li><p><strong>strict</strong> – If True, enforce strict validation (no multiple functions, no syntax errors)</p></li>
+<li><p><strong>verbose</strong> – If True, print status messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The function object</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If no function is found or multiple functions exist</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">... </span><span class="s1">def add(a: int, b: int) -&gt; dict:</span>
+<span class="gp">... </span><span class="s1">    return {&quot;sum&quot;: a + b}</span>
+<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span> <span class="o">=</span> <span class="n">extract_function_from_code</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">{&#39;sum&#39;: 5}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.func_calling.make_code_generator">
+<span class="sig-prename descclassname"><span class="pre">aw.func_calling.</span></span><span class="sig-name descname"><span class="pre">make_code_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'\nYou</span> <span class="pre">are</span> <span class="pre">a</span> <span class="pre">Python</span> <span class="pre">code</span> <span class="pre">generator.</span> <span class="pre">Your</span> <span class="pre">task</span> <span class="pre">is</span> <span class="pre">to</span> <span class="pre">create</span> <span class="pre">a</span> <span class="pre">complete,</span> <span class="pre">executable</span> <span class="pre">Python</span> <span class="pre">function.\n\n##</span> <span class="pre">TASK</span> <span class="pre">DESCRIPTION\n{task}\n\n##</span> <span class="pre">OUTPUT</span> <span class="pre">SCHEMA\nThe</span> <span class="pre">function</span> <span class="pre">should</span> <span class="pre">return</span> <span class="pre">a</span> <span class="pre">value</span> <span class="pre">that</span> <span class="pre">conforms</span> <span class="pre">to</span> <span class="pre">this</span> <span class="pre">JSON</span> <span class="pre">schema:\n```json\n{output_schema}\n```\n\nIf</span> <span class="pre">output_schema</span> <span class="pre">is</span> <span class="pre">null</span> <span class="pre">or</span> <span class="pre">empty,</span> <span class="pre">the</span> <span class="pre">function</span> <span class="pre">can</span> <span class="pre">return</span> <span class="pre">any</span> <span class="pre">appropriate</span> <span class="pre">value.\n\n##</span> <span class="pre">REQUIREMENTS\n\n###</span> <span class="pre">Function</span> <span class="pre">Signature\n-</span> <span class="pre">Function</span> <span class="pre">name:</span> <span class="pre">`{name}`\n-</span> <span class="pre">Parameters:</span> <span class="pre">Extract</span> <span class="pre">from</span> <span class="pre">the</span> <span class="pre">task</span> <span class="pre">description</span> <span class="pre">(indicated</span> <span class="pre">by</span> <span class="pre">{{braces}})\n-</span> <span class="pre">All</span> <span class="pre">parameters</span> <span class="pre">should</span> <span class="pre">have</span> <span class="pre">type</span> <span class="pre">hints</span> <span class="pre">where</span> <span class="pre">possible\n-</span> <span class="pre">Use</span> <span class="pre">clear,</span> <span class="pre">descriptive</span> <span class="pre">parameter</span> <span class="pre">names\n\n###</span> <span class="pre">Code</span> <span class="pre">Quality\n-</span> <span class="pre">Write</span> <span class="pre">ONLY</span> <span class="pre">the</span> <span class="pre">function</span> <span class="pre">definition</span> <span class="pre">(no</span> <span class="pre">imports</span> <span class="pre">in</span> <span class="pre">function</span> <span class="pre">body,</span> <span class="pre">no</span> <span class="pre">examples,</span> <span class="pre">no</span> <span class="pre">explanations)\n-</span> <span class="pre">Include</span> <span class="pre">a</span> <span class="pre">minimal</span> <span class="pre">docstring</span> <span class="pre">(one</span> <span class="pre">line</span> <span class="pre">describing</span> <span class="pre">what</span> <span class="pre">it</span> <span class="pre">does)\n-</span> <span class="pre">Use</span> <span class="pre">type</span> <span class="pre">hints</span> <span class="pre">for</span> <span class="pre">parameters</span> <span class="pre">and</span> <span class="pre">return</span> <span class="pre">value\n-</span> <span class="pre">Handle</span> <span class="pre">edge</span> <span class="pre">cases</span> <span class="pre">appropriately</span> <span class="pre">(e.g.,</span> <span class="pre">empty</span> <span class="pre">inputs,</span> <span class="pre">None</span> <span class="pre">values)\n-</span> <span class="pre">Use</span> <span class="pre">built-in</span> <span class="pre">functions</span> <span class="pre">and</span> <span class="pre">standard</span> <span class="pre">library</span> <span class="pre">where</span> <span class="pre">possible\n-</span> <span class="pre">Keep</span> <span class="pre">the</span> <span class="pre">code</span> <span class="pre">simple</span> <span class="pre">and</span> <span class="pre">readable\n\n###</span> <span class="pre">Output</span> <span class="pre">Format\n-</span> <span class="pre">If</span> <span class="pre">returning</span> <span class="pre">a</span> <span class="pre">dict</span> <span class="pre">matching</span> <span class="pre">a</span> <span class="pre">schema,</span> <span class="pre">ensure</span> <span class="pre">all</span> <span class="pre">required</span> <span class="pre">fields</span> <span class="pre">are</span> <span class="pre">present\n-</span> <span class="pre">If</span> <span class="pre">the</span> <span class="pre">schema</span> <span class="pre">specifies</span> <span class="pre">types,</span> <span class="pre">ensure</span> <span class="pre">they</span> <span class="pre">match</span> <span class="pre">(e.g.,</span> <span class="pre">&quot;number&quot;</span> <span class="pre">→</span> <span class="pre">int</span> <span class="pre">or</span> <span class="pre">float)\n-</span> <span class="pre">Return</span> <span class="pre">values</span> <span class="pre">directly</span> <span class="pre">without</span> <span class="pre">unnecessary</span> <span class="pre">wrapping\n\n###</span> <span class="pre">Code</span> <span class="pre">Style\n-</span> <span class="pre">Follow</span> <span class="pre">PEP</span> <span class="pre">8</span> <span class="pre">conventions\n-</span> <span class="pre">Use</span> <span class="pre">meaningful</span> <span class="pre">variable</span> <span class="pre">names\n-</span> <span class="pre">Prefer</span> <span class="pre">comprehensions</span> <span class="pre">over</span> <span class="pre">loops</span> <span class="pre">where</span> <span class="pre">readable\n-</span> <span class="pre">No</span> <span class="pre">print</span> <span class="pre">statements</span> <span class="pre">or</span> <span class="pre">side</span> <span class="pre">effects</span> <span class="pre">unless</span> <span class="pre">the</span> <span class="pre">task</span> <span class="pre">requires</span> <span class="pre">them\n\n##</span> <span class="pre">CRITICAL</span> <span class="pre">INSTRUCTIONS\n-</span> <span class="pre">Respond</span> <span class="pre">with</span> <span class="pre">ONLY</span> <span class="pre">the</span> <span class="pre">function</span> <span class="pre">definition\n-</span> <span class="pre">Do</span> <span class="pre">NOT</span> <span class="pre">include:</span> <span class="pre">imports,</span> <span class="pre">examples,</span> <span class="pre">explanations,</span> <span class="pre">markdown</span> <span class="pre">formatting,</span> <span class="pre">or</span> <span class="pre">test</span> <span class="pre">code\n-</span> <span class="pre">Do</span> <span class="pre">NOT</span> <span class="pre">wrap</span> <span class="pre">the</span> <span class="pre">code</span> <span class="pre">in</span> <span class="pre">markdown</span> <span class="pre">code</span> <span class="pre">blocks\n-</span> <span class="pre">The</span> <span class="pre">response</span> <span class="pre">must</span> <span class="pre">be</span> <span class="pre">valid</span> <span class="pre">Python</span> <span class="pre">that</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">directly</span> <span class="pre">executed</span> <span class="pre">with</span> <span class="pre">`exec()`\n\n##</span> <span class="pre">EXAMPLE</span> <span class="pre">FORMAT</span> <span class="pre">(for</span> <span class="pre">reference</span> <span class="pre">only,</span> <span class="pre">do</span> <span class="pre">not</span> <span class="pre">include</span> <span class="pre">this</span> <span class="pre">in</span> <span class="pre">your</span> <span class="pre">response)\n```python\ndef</span> <span class="pre">example_function(param1:</span> <span class="pre">int,</span> <span class="pre">param2:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">dict:\n</span>&#160;&#160;&#160; <span class="pre">&quot;&quot;&quot;Brief</span> <span class="pre">description</span> <span class="pre">of</span> <span class="pre">what</span> <span class="pre">this</span> <span class="pre">does.&quot;&quot;&quot;\n</span>&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">function</span> <span class="pre">body\n</span>&#160;&#160;&#160; <span class="pre">return</span> <span class="pre">{{&quot;result&quot;:</span> <span class="pre">param1}}\n```\n\nNOW</span> <span class="pre">GENERATE</span> <span class="pre">THE</span> <span class="pre">FUNCTION.\n'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'name':</span> <span class="pre">'generated_python_function',</span> <span class="pre">'schema':</span> <span class="pre">{'properties':</span> <span class="pre">{'code':</span> <span class="pre">{'description':</span> <span class="pre">'Complete</span> <span class="pre">Python</span> <span class="pre">function</span> <span class="pre">definition</span> <span class="pre">as</span> <span class="pre">a</span> <span class="pre">string',</span> <span class="pre">'type':</span> <span class="pre">'string'}},</span> <span class="pre">'required':</span> <span class="pre">['code'],</span> <span class="pre">'type':</span> <span class="pre">'object'}}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt_json_function_maker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/func_calling.html#make_code_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.func_calling.make_code_generator" title="Link to this definition"></a></dt>
+<dd><p>Create a code generation function from a template and schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – The prompt template for code generation</p></li>
+<li><p><strong>code_schema</strong> – JSON schema defining the output format</p></li>
+<li><p><strong>prompt_json_function_maker</strong> – Factory function (defaults to oa.prompt_json_function)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A function that generates code from task descriptions</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The returned function requires all template variables to be provided.
+See CODE_WRITING_TEMPLATE for required variables (task, output_schema, name).</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.func_calling.task_to_function">
+<span class="sig-prename descclassname"><span class="pre">aw.func_calling.</span></span><span class="sig-name descname"><span class="pre">task_to_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'generated_function'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_generator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">generator_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">callable</span></span></span><a class="reference internal" href="../../_modules/aw/func_calling.html#task_to_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.func_calling.task_to_function" title="Link to this definition"></a></dt>
+<dd><p>End-to-end: Convert a task description to an executable function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>task</strong> – Natural language description of the function’s purpose</p></li>
+<li><p><strong>output_schema</strong> – JSON schema for the return value (optional)</p></li>
+<li><p><strong>name</strong> – Name for the generated function</p></li>
+<li><p><strong>code_generator</strong> – Code generation function (creates one if None)</p></li>
+<li><p><strong>**generator_kwargs</strong> – Additional arguments for code generator</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Executable Python function</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function requires an LLM backend (via code_generator or the ‘oa’ package).
+Cannot be tested in doctests without mocking the LLM calls.</p>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cosmo.html" class="btn btn-neutral float-left" title="aw.cosmo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="loading.html" class="btn btn-neutral float-right" title="aw.loading" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

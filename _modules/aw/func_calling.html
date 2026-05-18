@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aw.func_calling &mdash; aw 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            aw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw.html">aw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/base.html">aw.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/func_calling.html">aw.func_calling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/loading.html">aw.loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/orchestration.html">aw.orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/py_gen.html">aw.py_gen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/routing.html">aw.routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/translators.html">aw.translators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/util.html">aw.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/validation.html">aw.validation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">aw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aw.func_calling</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aw.func_calling</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides robust templates for creating (python) code-generating functions</span>
+<span class="sd">that can translate natural language task descriptions into executable Python code.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Code Writing Template</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">CODE_WRITING_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are a Python code generator. Your task is to create a complete, executable Python function.</span>
+
+<span class="s2">## TASK DESCRIPTION</span>
+<span class="si">{task}</span>
+
+<span class="s2">## OUTPUT SCHEMA</span>
+<span class="s2">The function should return a value that conforms to this JSON schema:</span>
+<span class="s2">```json</span>
+<span class="si">{output_schema}</span>
+<span class="s2">```</span>
+
+<span class="s2">If output_schema is null or empty, the function can return any appropriate value.</span>
+
+<span class="s2">## REQUIREMENTS</span>
+
+<span class="s2">### Function Signature</span>
+<span class="s2">- Function name: `</span><span class="si">{name}</span><span class="s2">`</span>
+<span class="s2">- Parameters: Extract from the task description (indicated by {{braces}})</span>
+<span class="s2">- All parameters should have type hints where possible</span>
+<span class="s2">- Use clear, descriptive parameter names</span>
+
+<span class="s2">### Code Quality</span>
+<span class="s2">- Write ONLY the function definition (no imports in function body, no examples, no explanations)</span>
+<span class="s2">- Include a minimal docstring (one line describing what it does)</span>
+<span class="s2">- Use type hints for parameters and return value</span>
+<span class="s2">- Handle edge cases appropriately (e.g., empty inputs, None values)</span>
+<span class="s2">- Use built-in functions and standard library where possible</span>
+<span class="s2">- Keep the code simple and readable</span>
+
+<span class="s2">### Output Format</span>
+<span class="s2">- If returning a dict matching a schema, ensure all required fields are present</span>
+<span class="s2">- If the schema specifies types, ensure they match (e.g., &quot;number&quot; → int or float)</span>
+<span class="s2">- Return values directly without unnecessary wrapping</span>
+
+<span class="s2">### Code Style</span>
+<span class="s2">- Follow PEP 8 conventions</span>
+<span class="s2">- Use meaningful variable names</span>
+<span class="s2">- Prefer comprehensions over loops where readable</span>
+<span class="s2">- No print statements or side effects unless the task requires them</span>
+
+<span class="s2">## CRITICAL INSTRUCTIONS</span>
+<span class="s2">- Respond with ONLY the function definition</span>
+<span class="s2">- Do NOT include: imports, examples, explanations, markdown formatting, or test code</span>
+<span class="s2">- Do NOT wrap the code in markdown code blocks</span>
+<span class="s2">- The response must be valid Python that can be directly executed with `exec()`</span>
+
+<span class="s2">## EXAMPLE FORMAT (for reference only, do not include this in your response)</span>
+<span class="s2">```python</span>
+<span class="s2">def example_function(param1: int, param2: str) -&gt; dict:</span>
+<span class="s2">    </span><span class="se">\&quot;\&quot;\&quot;</span><span class="s2">Brief description of what this does.</span><span class="se">\&quot;\&quot;\&quot;</span>
+<span class="s2">    # function body</span>
+<span class="s2">    return {{&quot;result&quot;: param1}}</span>
+<span class="s2">```</span>
+
+<span class="s2">NOW GENERATE THE FUNCTION.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># ALTERNATIVE: More Structured Template with Better Guidance</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">STRUCTURED_CODE_WRITING_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2"># Python Function Generator</span>
+
+<span class="s2">You will generate a single Python function based on specifications below.</span>
+
+<span class="s2">## 1. TASK</span>
+<span class="si">{task}</span>
+
+<span class="s2">## 2. SPECIFICATIONS</span>
+<span class="s2">- **Function Name**: `</span><span class="si">{name}</span><span class="s2">`</span>
+<span class="s2">- **Input Parameters**: Identified by `{{variable}}` patterns in task description</span>
+<span class="s2">- **Output Format**: Must conform to this JSON schema:</span>
+<span class="s2">```json</span>
+<span class="si">{output_schema}</span>
+<span class="s2">```</span>
+<span class="s2">(If schema is null/empty, return type can be determined from task context)</span>
+
+<span class="s2">## 3. IMPLEMENTATION GUIDE</span>
+
+<span class="s2">### Parameter Extraction</span>
+<span class="s2">Scan the task description for {{variable_name}} patterns. These become function parameters.</span>
+<span class="s2">Example: &quot;Add {{a}} and {{b}}&quot; → parameters are `a` and `b`</span>
+
+<span class="s2">### Type Hints</span>
+<span class="s2">- Add type hints to all parameters (int, str, float, list, dict, Any, etc.)</span>
+<span class="s2">- Add return type hint based on output schema:</span>
+<span class="s2">  * Schema &quot;type&quot;: &quot;object&quot; → return type `dict`</span>
+<span class="s2">  * Schema &quot;type&quot;: &quot;array&quot; → return type `list`</span>
+<span class="s2">  * Schema &quot;type&quot;: &quot;string&quot; → return type `str`</span>
+<span class="s2">  * Schema &quot;type&quot;: &quot;number&quot; or &quot;integer&quot; → return type `int` or `float`</span>
+<span class="s2">  * No schema → use `Any` or infer from task</span>
+
+<span class="s2">### Output Schema Conformance</span>
+<span class="s2">When a JSON schema is provided:</span>
+<span class="s2">1. Return value must match the schema structure exactly</span>
+<span class="s2">2. Include all &quot;required&quot; fields from schema</span>
+<span class="s2">3. Use correct Python types for each field:</span>
+<span class="s2">   - JSON &quot;string&quot; → Python str</span>
+<span class="s2">   - JSON &quot;number&quot;/&quot;integer&quot; → Python int/float</span>
+<span class="s2">   - JSON &quot;boolean&quot; → Python bool</span>
+<span class="s2">   - JSON &quot;array&quot; → Python list</span>
+<span class="s2">   - JSON &quot;object&quot; → Python dict</span>
+<span class="s2">4. For nested structures, preserve the hierarchy</span>
+
+<span class="s2">### Code Quality Standards</span>
+<span class="s2">✓ Single function definition only (no external helpers or imports)</span>
+<span class="s2">✓ One-line docstring summarizing purpose</span>
+<span class="s2">✓ Type hints on parameters and return value</span>
+<span class="s2">✓ Handle edge cases (None, empty collections, type mismatches)</span>
+<span class="s2">✓ Return value matching schema requirements</span>
+<span class="s2">✓ No debugging print(), comments outside function, or example calls</span>
+<span class="s2">✓ Valid Python syntax (must pass compile())</span>
+<span class="s2">✓ PEP 8 compliant naming and style</span>
+
+<span class="s2">## 4. CRITICAL OUTPUT REQUIREMENTS</span>
+<span class="s2">Return ONLY the function definition as plain Python code.</span>
+
+<span class="s2">DO NOT INCLUDE:</span>
+<span class="s2">- Markdown code fences (```) or formatting</span>
+<span class="s2">- Import statements (unless absolutely essential)</span>
+<span class="s2">- Example usage or test code</span>
+<span class="s2">- Explanatory comments or documentation outside the function</span>
+<span class="s2">- Multiple function definitions</span>
+
+<span class="s2">The output must be executable with `exec()` and should define exactly one function.</span>
+
+<span class="s2">---</span>
+<span class="s2">GENERATE THE FUNCTION:</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># MINIMAL: Concise Template for Simple Cases</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">MINIMAL_CODE_WRITING_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Write a Python function that does: </span><span class="si">{task}</span>
+
+<span class="s2">Requirements:</span>
+<span class="s2">- Function name: </span><span class="si">{name}</span>
+<span class="s2">- Parameters: Extract from {{variable}} patterns</span>
+<span class="s2">- Return format: </span><span class="si">{output_schema}</span>
+<span class="s2">- Include type hints and docstring</span>
+<span class="s2">- Return only the function definition (no examples, imports, or markdown)</span>
+
+<span class="s2">Generate the function:</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Schema Definitions for Code Output</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="c1"># Simple schema: just the code string</span>
+<span class="n">CODE_DEFINITION_SCHEMA</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;generated_python_function&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;schema&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Complete Python function definition as a string&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="c1"># Detailed schema: includes metadata</span>
+<span class="n">DETAILED_CODE_DEFINITION_SCHEMA</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;detailed_python_function&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;schema&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Complete Python function definition&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;function_name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Name of the function&#39;</span><span class="p">},</span>
+            <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;List of parameter names&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;docstring&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The function docstring&#39;</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="s1">&#39;function_name&#39;</span><span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Helper Functions</span>
+<span class="c1"># ============================================================================</span>
+
+
+<div class="viewcode-block" id="extract_function_from_code">
+<a class="viewcode-back" href="../../module_docs/aw/func_calling.html#aw.func_calling.extract_function_from_code">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_function_from_code</span><span class="p">(</span>
+    <span class="n">code_str_for_func</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">make_picklable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># NEW: toggle strict validation</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># NEW: toggle print statements</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">callable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract a function from a string of Python code.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        code_str_for_func: String containing a Python function definition</span>
+<span class="sd">        make_picklable: If True, make the function picklable by adding it to __main__</span>
+<span class="sd">        strict: If True, enforce strict validation (no multiple functions, no syntax errors)</span>
+<span class="sd">        verbose: If True, print status messages</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The function object</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If no function is found or multiple functions exist</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">        &gt;&gt;&gt; code = &#39;&#39;&#39;</span>
+<span class="sd">        ... def add(a: int, b: int) -&gt; dict:</span>
+<span class="sd">        ...     return {&quot;sum&quot;: a + b}</span>
+<span class="sd">        ... &#39;&#39;&#39;</span>
+<span class="sd">        &gt;&gt;&gt; func = extract_function_from_code(code, verbose=False)</span>
+<span class="sd">        &gt;&gt;&gt; func(2, 3)</span>
+<span class="sd">        {&#39;sum&#39;: 5}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
+        <span class="c1"># Pre-compile check</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">compile</span><span class="p">(</span><span class="n">code_str_for_func</span><span class="p">,</span> <span class="s1">&#39;&lt;generated&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">SyntaxError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated code has syntax error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">namespace</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">exec</span><span class="p">(</span><span class="n">code_str_for_func</span><span class="p">,</span> <span class="nb">globals</span><span class="p">(),</span> <span class="n">namespace</span><span class="p">)</span>
+
+    <span class="n">functions</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">namespace</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">(</span><span class="n">obj</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">functions</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No function found in code string&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">strict</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">functions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Multiple functions: </span><span class="si">{</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">functions</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">func</span> <span class="o">=</span> <span class="n">functions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">make_picklable</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: Overwriting &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; in __main__&quot;</span><span class="p">)</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded function: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> (picklable)&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded function: </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> (not picklable)&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">func</span></div>
+
+
+
+<div class="viewcode-block" id="make_code_generator">
+<a class="viewcode-back" href="../../module_docs/aw/func_calling.html#aw.func_calling.make_code_generator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_code_generator</span><span class="p">(</span>
+    <span class="n">template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">CODE_WRITING_TEMPLATE</span><span class="p">,</span>
+    <span class="n">code_schema</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">CODE_DEFINITION_SCHEMA</span><span class="p">,</span>
+    <span class="n">prompt_json_function_maker</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a code generation function from a template and schema.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        template: The prompt template for code generation</span>
+<span class="sd">        code_schema: JSON schema defining the output format</span>
+<span class="sd">        prompt_json_function_maker: Factory function (defaults to oa.prompt_json_function)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A function that generates code from task descriptions</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The returned function requires all template variables to be provided.</span>
+<span class="sd">        See CODE_WRITING_TEMPLATE for required variables (task, output_schema, name).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">prompt_json_function_maker</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Try to import from oa</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">oa</span><span class="w"> </span><span class="kn">import</span> <span class="n">prompt_json_function</span>
+
+            <span class="n">prompt_json_function_maker</span> <span class="o">=</span> <span class="n">prompt_json_function</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Must provide prompt_json_function_maker or have &#39;oa&#39; package installed&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">prompt_json_function_maker</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">json_schema</span><span class="o">=</span><span class="n">code_schema</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="task_to_function">
+<a class="viewcode-back" href="../../module_docs/aw/func_calling.html#aw.func_calling.task_to_function">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">task_to_function</span><span class="p">(</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">output_schema</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;generated_function&#39;</span><span class="p">,</span>
+    <span class="n">code_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">generator_kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">callable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    End-to-end: Convert a task description to an executable function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        task: Natural language description of the function&#39;s purpose</span>
+<span class="sd">        output_schema: JSON schema for the return value (optional)</span>
+<span class="sd">        name: Name for the generated function</span>
+<span class="sd">        code_generator: Code generation function (creates one if None)</span>
+<span class="sd">        **generator_kwargs: Additional arguments for code generator</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Executable Python function</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This function requires an LLM backend (via code_generator or the &#39;oa&#39; package).</span>
+<span class="sd">        Cannot be tested in doctests without mocking the LLM calls.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">code_generator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">code_generator</span> <span class="o">=</span> <span class="n">make_code_generator</span><span class="p">()</span>
+
+    <span class="c1"># Format the output schema as JSON string if it&#39;s a dict</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_schema</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">output_schema_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">output_schema</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output_schema_str</span> <span class="o">=</span> <span class="n">output_schema</span> <span class="ow">or</span> <span class="s1">&#39;null&#39;</span>
+
+    <span class="c1"># Generate code</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">code_generator</span><span class="p">(</span>
+        <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span> <span class="n">output_schema</span><span class="o">=</span><span class="n">output_schema_str</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">generator_kwargs</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Extract function from generated code</span>
+    <span class="n">code_str</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">extract_function_from_code</span><span class="p">(</span><span class="n">code_str</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Demonstration</span>
+<span class="c1"># ============================================================================</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_demo</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show example of how to use the templates.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RECOMMENDED TEMPLATE:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">CODE_WRITING_TEMPLATE</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CODE DEFINITION SCHEMA:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">CODE_DEFINITION_SCHEMA</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;USAGE EXAMPLE:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">from oa import prompt_json_function</span>
+<span class="sd">from code_generation_improved import CODE_WRITING_TEMPLATE, CODE_DEFINITION_SCHEMA</span>
+
+<span class="sd"># Create the code generator</span>
+<span class="sd">write_code = prompt_json_function(</span>
+<span class="sd">    CODE_WRITING_TEMPLATE,</span>
+<span class="sd">    json_schema=CODE_DEFINITION_SCHEMA</span>
+<span class="sd">)</span>
+
+<span class="sd"># Generate code for a task</span>
+<span class="sd">task = &#39;Add numbers {a} and {b}&#39;</span>
+<span class="sd">output_schema = {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {&quot;sum&quot;: {&quot;type&quot;: &quot;number&quot;}}}</span>
+<span class="sd">result = write_code(</span>
+<span class="sd">    task=task,</span>
+<span class="sd">    output_schema=json.dumps(output_schema),</span>
+<span class="sd">    name=&#39;add_numbers&#39;</span>
+<span class="sd">)</span>
+
+<span class="sd"># Execute the generated code</span>
+<span class="sd">func = extract_function_from_code(result[&#39;code&#39;])</span>
+<span class="sd">print(func(2, 3))  # {&#39;sum&#39;: 5}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">_demo</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

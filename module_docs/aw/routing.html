@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>aw.routing &mdash; aw 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
@@ -16,8 +16,8 @@
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="aw.tools" href="tools.html" />
-    <link rel="prev" title="aw.preparing" href="preparing.html" /> 
+    <link rel="prev" title="aw.py_gen" href="py_gen.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,9 +52,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../aw.html">aw</a></li>
 <li class="toctree-l1"><a class="reference internal" href="base.html">aw.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="func_calling.html">aw.func_calling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="loading.html">aw.loading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orchestration.html">aw.orchestration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_gen.html">aw.py_gen</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">aw.routing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#aw.routing.ConditionalRouter"><code class="docutils literal notranslate"><span class="pre">ConditionalRouter</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aw.routing.ExtensionContext"><code class="docutils literal notranslate"><span class="pre">ExtensionContext</span></code></a></li>
@@ -82,6 +84,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translators.html">aw.translators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="util.html">aw.util</a></li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">aw.validation</a></li>
 </ul>
@@ -122,7 +125,7 @@ that follow the open-closed principle. Users can:
 <p>The key pattern is: provide sensible defaults, make them visible, keep them mutable.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="aw.routing.ConditionalRouter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">ConditionalRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">strategies:</span> <span class="pre">list[~aw.routing.RoutingStrategy]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">short_circuit:</span> <span class="pre">~typing.Callable[[~typing.Any],</span> <span class="pre">bool]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#ConditionalRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ConditionalRouter" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">ConditionalRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">strategies:</span> <span class="pre">list[~aw.routing.RoutingStrategy]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">short_circuit:</span> <span class="pre">~typing.Callable[[~typing.Any],</span> <span class="pre">bool]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#ConditionalRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ConditionalRouter" title="Link to this definition"></a></dt>
 <dd><p>Router with short-circuit conditions.</p>
 <p>Only accepts results that match the short-circuit condition,
 otherwise continues to next strategy.</p>
@@ -148,7 +151,7 @@ otherwise continues to next strategy.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="aw.routing.ExtensionContext">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">ExtensionContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explicit_extension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#ExtensionContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ExtensionContext" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">ExtensionContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explicit_extension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#ExtensionContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ExtensionContext" title="Link to this definition"></a></dt>
 <dd><p>Context for extension detection.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://example.com/file.pdf&#39;</span><span class="p">,</span>
@@ -163,7 +166,7 @@ otherwise continues to next strategy.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="aw.routing.ExtensionRouter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">ExtensionRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority_extensions:</span> <span class="pre">frozenset</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type_map:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">magic_bytes_map:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#ExtensionRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ExtensionRouter" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">ExtensionRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority_extensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">frozenset</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">magic_bytes_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#ExtensionRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ExtensionRouter" title="Link to this definition"></a></dt>
 <dd><p>Route extension detection through configurable strategies.</p>
 <p>This router implements the default logic for detecting file extensions,
 but every component is visible and customizable.</p>
@@ -208,7 +211,7 @@ but every component is visible and customizable.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="aw.routing.MappingRouter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">MappingRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mapping:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">default:</span> <span class="pre">~typing.Any</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">key_transform:</span> <span class="pre">~typing.Callable[[~typing.Any],</span> <span class="pre">~typing.Any]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#MappingRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.MappingRouter" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">MappingRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mapping:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">default:</span> <span class="pre">~typing.Any</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">key_transform:</span> <span class="pre">~typing.Callable[[~typing.Any],</span> <span class="pre">~typing.Any]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#MappingRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.MappingRouter" title="Link to this definition"></a></dt>
 <dd><p>Router based on a lookup mapping.</p>
 <p>Provides a clean interface for switch-case style routing with:
 - Visible, mutable mapping
@@ -249,7 +252,7 @@ but every component is visible and customizable.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="aw.routing.PriorityRouter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">PriorityRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategies:</span> <span class="pre">list[~aw.routing.RoutingStrategy]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#PriorityRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.PriorityRouter" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">PriorityRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#aw.routing.RoutingStrategy" title="aw.routing.RoutingStrategy"><span class="pre">RoutingStrategy</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#PriorityRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.PriorityRouter" title="Link to this definition"></a></dt>
 <dd><p>Route through strategies in priority order, short-circuiting on first match.</p>
 <p>This is a simpler, more specialized version of i2.routing_forest that’s
 optimized for the common case of “try these in order, stop at first success”.</p>
@@ -288,7 +291,7 @@ optimized for the common case of “try these in order, stop at first success”
 
 <dl class="py class">
 <dt class="sig sig-object py" id="aw.routing.RoutingStrategy">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">RoutingStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#RoutingStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.RoutingStrategy" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">RoutingStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/routing.html#RoutingStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.RoutingStrategy" title="Link to this definition"></a></dt>
 <dd><p>Protocol for routing strategies.</p>
 <p>A routing strategy takes a context and returns a result or None.</p>
 </dd></dl>
@@ -364,7 +367,7 @@ Users can create custom detectors with different mappings.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="preparing.html" class="btn btn-neutral float-left" title="aw.preparing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="py_gen.html" class="btn btn-neutral float-left" title="aw.py_gen" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="tools.html" class="btn btn-neutral float-right" title="aw.tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

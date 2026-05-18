@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome to aw’s documentation! &mdash; aw 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
 
@@ -16,8 +16,8 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=a58bc63e"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="_static/copybutton.js?v=f281be69"></script>
@@ -51,11 +51,14 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw.html">aw</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/base.html">aw.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/aw/func_calling.html">aw.func_calling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/loading.html">aw.loading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/orchestration.html">aw.orchestration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/aw/py_gen.html">aw.py_gen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/routing.html">aw.routing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/aw/translators.html">aw.translators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/util.html">aw.util</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/validation.html">aw.validation</a></li>
 </ul>
@@ -90,6 +93,7 @@
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw.html">aw</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.AgentSpec"><code class="docutils literal notranslate"><span class="pre">AgentSpec</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.AgenticStep"><code class="docutils literal notranslate"><span class="pre">AgenticStep</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.AgenticWorkflow"><code class="docutils literal notranslate"><span class="pre">AgenticWorkflow</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.CodeInterpreterTool"><code class="docutils literal notranslate"><span class="pre">CodeInterpreterTool</span></code></a></li>
@@ -103,7 +107,9 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.SafeCodeInterpreter"><code class="docutils literal notranslate"><span class="pre">SafeCodeInterpreter</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.StepConfig"><code class="docutils literal notranslate"><span class="pre">StepConfig</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.Tool"><code class="docutils literal notranslate"><span class="pre">Tool</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.ToolSpec"><code class="docutils literal notranslate"><span class="pre">ToolSpec</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.Validator"><code class="docutils literal notranslate"><span class="pre">Validator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.ValidatorSpec"><code class="docutils literal notranslate"><span class="pre">ValidatorSpec</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.all_validators"><code class="docutils literal notranslate"><span class="pre">all_validators()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.any_validator"><code class="docutils literal notranslate"><span class="pre">any_validator()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.basic_cosmo_validator"><code class="docutils literal notranslate"><span class="pre">basic_cosmo_validator()</span></code></a></li>
@@ -118,6 +124,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.create_preparation_agent"><code class="docutils literal notranslate"><span class="pre">create_preparation_agent()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.default_llm_factory"><code class="docutils literal notranslate"><span class="pre">default_llm_factory()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.djoin"><code class="docutils literal notranslate"><span class="pre">djoin()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.extract_agent_spec"><code class="docutils literal notranslate"><span class="pre">extract_agent_spec()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.functional_validator"><code class="docutils literal notranslate"><span class="pre">functional_validator()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.get_numeric_columns"><code class="docutils literal notranslate"><span class="pre">get_numeric_columns()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.has_attributes"><code class="docutils literal notranslate"><span class="pre">has_attributes()</span></code></a></li>
@@ -131,7 +138,14 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.load_for_cosmo"><code class="docutils literal notranslate"><span class="pre">load_for_cosmo()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.schema_validator"><code class="docutils literal notranslate"><span class="pre">schema_validator()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.strict_cosmo_validator"><code class="docutils literal notranslate"><span class="pre">strict_cosmo_validator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.to_claude_skill"><code class="docutils literal notranslate"><span class="pre">to_claude_skill()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.to_crewai_yaml"><code class="docutils literal notranslate"><span class="pre">to_crewai_yaml()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.to_openai_assistant"><code class="docutils literal notranslate"><span class="pre">to_openai_assistant()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.to_openai_tools"><code class="docutils literal notranslate"><span class="pre">to_openai_tools()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.try_cosmo_visualization"><code class="docutils literal notranslate"><span class="pre">try_cosmo_visualization()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.workflow_to_crewai_yaml"><code class="docutils literal notranslate"><span class="pre">workflow_to_crewai_yaml()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.workflow_to_skills"><code class="docutils literal notranslate"><span class="pre">workflow_to_skills()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw.html#aw.write_skill_directory"><code class="docutils literal notranslate"><span class="pre">write_skill_directory()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/base.html">aw.base</a><ul>
@@ -149,6 +163,12 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw/cosmo.html#aw.cosmo.infer_cosmo_params"><code class="docutils literal notranslate"><span class="pre">infer_cosmo_params()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw/cosmo.html#aw.cosmo.strict_cosmo_validator"><code class="docutils literal notranslate"><span class="pre">strict_cosmo_validator()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw/cosmo.html#aw.cosmo.try_cosmo_visualization"><code class="docutils literal notranslate"><span class="pre">try_cosmo_visualization()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/aw/func_calling.html">aw.func_calling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/func_calling.html#aw.func_calling.extract_function_from_code"><code class="docutils literal notranslate"><span class="pre">extract_function_from_code()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/func_calling.html#aw.func_calling.make_code_generator"><code class="docutils literal notranslate"><span class="pre">make_code_generator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/func_calling.html#aw.func_calling.task_to_function"><code class="docutils literal notranslate"><span class="pre">task_to_function()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/loading.html">aw.loading</a><ul>
@@ -170,6 +190,12 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw/preparing.html#aw.preparing.create_preparation_agent"><code class="docutils literal notranslate"><span class="pre">create_preparation_agent()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/aw/py_gen.html">aw.py_gen</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/py_gen.html#aw.py_gen.extract_function_from_code"><code class="docutils literal notranslate"><span class="pre">extract_function_from_code()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/py_gen.html#aw.py_gen.make_code_generator"><code class="docutils literal notranslate"><span class="pre">make_code_generator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/py_gen.html#aw.py_gen.task_to_function"><code class="docutils literal notranslate"><span class="pre">task_to_function()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/routing.html">aw.routing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw/routing.html#aw.routing.ConditionalRouter"><code class="docutils literal notranslate"><span class="pre">ConditionalRouter</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw/routing.html#aw.routing.ExtensionContext"><code class="docutils literal notranslate"><span class="pre">ExtensionContext</span></code></a></li>
@@ -189,6 +215,20 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw/tools.html#aw.tools.SafeCodeInterpreter"><code class="docutils literal notranslate"><span class="pre">SafeCodeInterpreter</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw/tools.html#aw.tools.create_dspy_executor"><code class="docutils literal notranslate"><span class="pre">create_dspy_executor()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/aw/tools.html#aw.tools.create_langchain_executor"><code class="docutils literal notranslate"><span class="pre">create_langchain_executor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/aw/translators.html">aw.translators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/translators.html#aw.translators.AgentSpec"><code class="docutils literal notranslate"><span class="pre">AgentSpec</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/translators.html#aw.translators.ToolSpec"><code class="docutils literal notranslate"><span class="pre">ToolSpec</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/translators.html#aw.translators.ValidatorSpec"><code class="docutils literal notranslate"><span class="pre">ValidatorSpec</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/translators.html#aw.translators.extract_agent_spec"><code class="docutils literal notranslate"><span class="pre">extract_agent_spec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/translators.html#aw.translators.to_claude_skill"><code class="docutils literal notranslate"><span class="pre">to_claude_skill()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/translators.html#aw.translators.to_crewai_yaml"><code class="docutils literal notranslate"><span class="pre">to_crewai_yaml()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/translators.html#aw.translators.to_openai_assistant"><code class="docutils literal notranslate"><span class="pre">to_openai_assistant()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/translators.html#aw.translators.to_openai_tools"><code class="docutils literal notranslate"><span class="pre">to_openai_tools()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/translators.html#aw.translators.workflow_to_crewai_yaml"><code class="docutils literal notranslate"><span class="pre">workflow_to_crewai_yaml()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/translators.html#aw.translators.workflow_to_skills"><code class="docutils literal notranslate"><span class="pre">workflow_to_skills()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/aw/translators.html#aw.translators.write_skill_directory"><code class="docutils literal notranslate"><span class="pre">write_skill_directory()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/util.html">aw.util</a><ul>
@@ -225,7 +265,7 @@
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
 <p>Release: 0.1.1</p>
-<p>Last change: Nov 06, 2025</p>
+<p>Last change: May 18, 2026</p>
 </section>
 
 

@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aw.translators &mdash; aw 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="aw.util" href="util.html" />
+    <link rel="prev" title="aw.tools" href="tools.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            aw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../aw.html">aw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base.html">aw.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="func_calling.html">aw.func_calling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loading.html">aw.loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orchestration.html">aw.orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_gen.html">aw.py_gen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routing.html">aw.routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">aw.tools</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">aw.translators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#aw.translators.AgentSpec"><code class="docutils literal notranslate"><span class="pre">AgentSpec</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.translators.ToolSpec"><code class="docutils literal notranslate"><span class="pre">ToolSpec</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.translators.ValidatorSpec"><code class="docutils literal notranslate"><span class="pre">ValidatorSpec</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.translators.extract_agent_spec"><code class="docutils literal notranslate"><span class="pre">extract_agent_spec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.translators.to_claude_skill"><code class="docutils literal notranslate"><span class="pre">to_claude_skill()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.translators.to_crewai_yaml"><code class="docutils literal notranslate"><span class="pre">to_crewai_yaml()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.translators.to_openai_assistant"><code class="docutils literal notranslate"><span class="pre">to_openai_assistant()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.translators.to_openai_tools"><code class="docutils literal notranslate"><span class="pre">to_openai_tools()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.translators.workflow_to_crewai_yaml"><code class="docutils literal notranslate"><span class="pre">workflow_to_crewai_yaml()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.translators.workflow_to_skills"><code class="docutils literal notranslate"><span class="pre">workflow_to_skills()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aw.translators.write_skill_directory"><code class="docutils literal notranslate"><span class="pre">write_skill_directory()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="util.html">aw.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">aw.validation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">aw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">aw.translators</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/aw/translators.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-aw.translators">
+<span id="aw-translators"></span><h1>aw.translators<a class="headerlink" href="#module-aw.translators" title="Link to this heading"></a></h1>
+<p>Translators from aw agent specifications to other agent formats.</p>
+<p>Supports:
+- Claude Code Skills / Agent Skills Open Standard (SKILL.md + scripts/)
+- CrewAI (YAML agent/task configs)
+- OpenAI tool schemas (JSON)</p>
+<p>The core pattern is:
+1. extract_agent_spec() introspects an aw agent into a normalized dict
+2. Format-specific renderers convert the spec to target formats</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoadingAgent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw.translators</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_claude_skill</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">agent</span> <span class="o">=</span> <span class="n">LoadingAgent</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">skill_md</span> <span class="o">=</span> <span class="n">to_claude_skill</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;data-loading&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">skill_md</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Write a complete skill directory</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw.translators</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_skill_directory</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_skill_directory</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s1">&#39;/path/to/skills/data-loading&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.translators.AgentSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aw.translators.</span></span><span class="sig-name descname"><span class="pre">AgentSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instructions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tools</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_retries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">human_in_loop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/translators.html#AgentSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.translators.AgentSpec" title="Link to this definition"></a></dt>
+<dd><p>Normalized, format-agnostic description of an aw agent.</p>
+<p>This is the intermediate representation that all translators consume.
+It captures the essential components of an agent without being tied
+to any specific framework.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoadingAgent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="n">extract_agent_spec</span><span class="p">(</span><span class="n">LoadingAgent</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span><span class="o">.</span><span class="n">name</span>
+<span class="go">&#39;LoadingAgent&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.translators.ToolSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aw.translators.</span></span><span class="sig-name descname"><span class="pre">ToolSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/translators.html#ToolSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.translators.ToolSpec" title="Link to this definition"></a></dt>
+<dd><p>Normalized description of a tool.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aw.translators.ValidatorSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aw.translators.</span></span><span class="sig-name descname"><span class="pre">ValidatorSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aw/translators.html#ValidatorSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.translators.ValidatorSpec" title="Link to this definition"></a></dt>
+<dd><p>Normalized description of a validator.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.translators.extract_agent_spec">
+<span class="sig-prename descclassname"><span class="pre">aw.translators.</span></span><span class="sig-name descname"><span class="pre">extract_agent_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#aw.translators.AgentSpec" title="aw.translators.AgentSpec"><span class="pre">AgentSpec</span></a></span></span><a class="reference internal" href="../../_modules/aw/translators.html#extract_agent_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.translators.extract_agent_spec" title="Link to this definition"></a></dt>
+<dd><p>Extract a normalized AgentSpec from any aw agent.</p>
+<p>Introspects the agent’s class, config, tools, and validators
+to build a format-agnostic intermediate representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – An aw agent instance (LoadingAgent, PreparationAgent, etc.)</p></li>
+<li><p><strong>name</strong> – Override name (defaults to class name)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>AgentSpec with all extractable information</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoadingAgent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="n">extract_agent_spec</span><span class="p">(</span><span class="n">LoadingAgent</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span><span class="o">.</span><span class="n">name</span>
+<span class="go">&#39;LoadingAgent&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">tools</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.translators.to_claude_skill">
+<span class="sig-prename descclassname"><span class="pre">aw.translators.</span></span><span class="sig-name descname"><span class="pre">to_claude_skill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_tools</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_model_invocation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/aw/translators.html#to_claude_skill"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.translators.to_claude_skill" title="Link to this definition"></a></dt>
+<dd><p>Translate an aw agent to a Claude Code SKILL.md string.</p>
+<p>Generates a complete SKILL.md file with YAML frontmatter and
+markdown instructions, compatible with both Claude Code skills
+and the Agent Skills Open Standard (agentskills.io).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – An aw agent instance</p></li>
+<li><p><strong>name</strong> – Override skill name (defaults to kebab-case of class name)</p></li>
+<li><p><strong>description</strong> – Override description</p></li>
+<li><p><strong>extra_tools</strong> – Additional Claude Code tools to allow</p></li>
+<li><p><strong>disable_model_invocation</strong> – If True, skill is manual-only (/name)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Complete SKILL.md content as a string</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoadingAgent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">skill</span> <span class="o">=</span> <span class="n">to_claude_skill</span><span class="p">(</span><span class="n">LoadingAgent</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;data-loading&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;---&#39;</span> <span class="ow">in</span> <span class="n">skill</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;data-loading&#39;</span> <span class="ow">in</span> <span class="n">skill</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.translators.to_crewai_yaml">
+<span class="sig-prename descclassname"><span class="pre">aw.translators.</span></span><span class="sig-name descname"><span class="pre">to_crewai_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backstory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/aw/translators.html#to_crewai_yaml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.translators.to_crewai_yaml" title="Link to this definition"></a></dt>
+<dd><p>Translate an aw agent to a CrewAI agent YAML config dict.</p>
+<p>CrewAI agents are defined with role, goal, backstory, and tools.
+This function maps aw’s AgentSpec to that structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – An aw agent instance</p></li>
+<li><p><strong>name</strong> – Override agent name</p></li>
+<li><p><strong>role</strong> – Override role (defaults to agent description)</p></li>
+<li><p><strong>goal</strong> – Override goal</p></li>
+<li><p><strong>backstory</strong> – Override backstory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict suitable for YAML serialization as a CrewAI agent config</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoadingAgent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">to_crewai_yaml</span><span class="p">(</span><span class="n">LoadingAgent</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;data_loader&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;role&#39;</span><span class="p">]</span>
+<span class="go">&#39;Data Loading Specialist&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.translators.to_openai_assistant">
+<span class="sig-prename descclassname"><span class="pre">aw.translators.</span></span><span class="sig-name descname"><span class="pre">to_openai_assistant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gpt-4'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/aw/translators.html#to_openai_assistant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.translators.to_openai_assistant" title="Link to this definition"></a></dt>
+<dd><p>Translate an aw agent to an OpenAI Assistant-style config dict.</p>
+<p>Generates a configuration suitable for creating an OpenAI Assistant
+(or Responses API agent) via the API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – An aw agent instance</p></li>
+<li><p><strong>name</strong> – Override name</p></li>
+<li><p><strong>model</strong> – Override model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict with assistant configuration</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoadingAgent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">to_openai_assistant</span><span class="p">(</span><span class="n">LoadingAgent</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;instructions&#39;</span> <span class="ow">in</span> <span class="n">config</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.translators.to_openai_tools">
+<span class="sig-prename descclassname"><span class="pre">aw.translators.</span></span><span class="sig-name descname"><span class="pre">to_openai_tools</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../../_modules/aw/translators.html#to_openai_tools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.translators.to_openai_tools" title="Link to this definition"></a></dt>
+<dd><p>Translate an aw agent’s tools to OpenAI function-calling tool schemas.</p>
+<p>Generates JSON-Schema-based tool definitions compatible with the
+OpenAI Chat Completions API and Responses API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent</strong> – An aw agent instance</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tool definition dicts in OpenAI format</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoadingAgent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tools</span> <span class="o">=</span> <span class="n">to_openai_tools</span><span class="p">(</span><span class="n">LoadingAgent</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">all</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;function&#39;</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.translators.workflow_to_crewai_yaml">
+<span class="sig-prename descclassname"><span class="pre">aw.translators.</span></span><span class="sig-name descname"><span class="pre">workflow_to_crewai_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/aw/translators.html#workflow_to_crewai_yaml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.translators.workflow_to_crewai_yaml" title="Link to this definition"></a></dt>
+<dd><p>Translate an AgenticWorkflow to CrewAI agents.yaml + tasks.yaml.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>workflow</strong> – An AgenticWorkflow instance</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict with ‘agents’ and ‘tasks’ keys, each containing
+YAML-serializable config dicts</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_cosmo_prep_workflow</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">workflow</span> <span class="o">=</span> <span class="n">create_cosmo_prep_workflow</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">workflow_to_crewai_yaml</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;agents&#39;</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">and</span> <span class="s1">&#39;tasks&#39;</span> <span class="ow">in</span> <span class="n">config</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.translators.workflow_to_skills">
+<span class="sig-prename descclassname"><span class="pre">aw.translators.</span></span><span class="sig-name descname"><span class="pre">workflow_to_skills</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../../_modules/aw/translators.html#workflow_to_skills"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.translators.workflow_to_skills" title="Link to this definition"></a></dt>
+<dd><p>Translate an AgenticWorkflow into a set of Claude Code skills.</p>
+<p>Each step in the workflow becomes a separate skill directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>workflow</strong> – An AgenticWorkflow instance</p></li>
+<li><p><strong>output_dir</strong> – Parent directory for all skill directories</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of Paths to created skill directories</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_cosmo_prep_workflow</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">workflow</span> <span class="o">=</span> <span class="n">create_cosmo_prep_workflow</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">paths</span> <span class="o">=</span> <span class="n">workflow_to_skills</span><span class="p">(</span><span class="n">workflow</span><span class="p">,</span> <span class="s1">&#39;/tmp/skills&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aw.translators.write_skill_directory">
+<span class="sig-prename descclassname"><span class="pre">aw.translators.</span></span><span class="sig-name descname"><span class="pre">write_skill_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_scripts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="../../_modules/aw/translators.html#write_skill_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.translators.write_skill_directory" title="Link to this definition"></a></dt>
+<dd><p>Write a complete Claude Code skill directory.</p>
+<dl>
+<dt>Creates:</dt><dd><p>output_dir/
+├── SKILL.md
+└── scripts/          (if include_scripts and agent has tools)</p>
+<blockquote>
+<div><p>└── validate.py   (validator wrapper script)</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – An aw agent instance</p></li>
+<li><p><strong>output_dir</strong> – Directory to write the skill to</p></li>
+<li><p><strong>name</strong> – Override skill name</p></li>
+<li><p><strong>description</strong> – Override description</p></li>
+<li><p><strong>include_scripts</strong> – Whether to generate helper scripts</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the created directory</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aw</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoadingAgent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="n">write_skill_directory</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">LoadingAgent</span><span class="p">(),</span> <span class="s1">&#39;/tmp/test-skill&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;data-loading&#39;</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tools.html" class="btn btn-neutral float-left" title="aw.tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="util.html" class="btn btn-neutral float-right" title="aw.util" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

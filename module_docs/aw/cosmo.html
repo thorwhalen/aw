@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>aw.cosmo &mdash; aw 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
@@ -16,15 +16,15 @@
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="aw.loading" href="loading.html" />
+    <link rel="next" title="aw.func_calling" href="func_calling.html" />
     <link rel="prev" title="aw.base" href="base.html" /> 
 </head>
 
@@ -59,11 +59,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#aw.cosmo.try_cosmo_visualization"><code class="docutils literal notranslate"><span class="pre">try_cosmo_visualization()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="func_calling.html">aw.func_calling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="loading.html">aw.loading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orchestration.html">aw.orchestration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_gen.html">aw.py_gen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="routing.html">aw.routing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translators.html">aw.translators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="util.html">aw.util</a></li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">aw.validation</a></li>
 </ul>
@@ -102,15 +105,15 @@
 <dd><p>Basic validator that checks structural requirements only.</p>
 <p>Does not require cosmograph to be installed.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validator</span> <span class="o">=</span> <span class="n">basic_cosmo_validator</span><span class="p">()</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>  
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validator</span> <span class="o">=</span> <span class="n">basic_cosmo_validator</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aw.cosmo.create_cosmo_validator">
-<span class="sig-prename descclassname"><span class="pre">aw.cosmo.</span></span><span class="sig-name descname"><span class="pre">create_cosmo_validator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cosmo_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_generated_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/aw/cosmo.html#create_cosmo_validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.cosmo.create_cosmo_validator" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">aw.cosmo.</span></span><span class="sig-name descname"><span class="pre">create_cosmo_validator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cosmo_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_generated_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/aw/cosmo.html#create_cosmo_validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.cosmo.create_cosmo_validator" title="Link to this definition"></a></dt>
 <dd><p>Create a validator for cosmograph requirements.</p>
 <p>This validator attempts to actually call cosmograph.cosmo() with the
 DataFrame to see if it’s ready for visualization.</p>
@@ -127,10 +130,10 @@ DataFrame to see if it’s ready for visualization.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validator</span> <span class="o">=</span> <span class="n">create_cosmo_validator</span><span class="p">()</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">success</span><span class="p">:</span>  
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can visualize with: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validator</span> <span class="o">=</span> <span class="n">create_cosmo_validator</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can visualize with: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -148,9 +151,9 @@ DataFrame to see if it’s ready for visualization.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">infer_cosmo_params</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">cosmograph</span><span class="w"> </span><span class="kn">import</span> <span class="n">cosmo</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cosmo</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>  
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">infer_cosmo_params</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">cosmograph</span><span class="w"> </span><span class="kn">import</span> <span class="n">cosmo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cosmo</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -161,15 +164,15 @@ DataFrame to see if it’s ready for visualization.</p>
 <dd><p>Strict validator that actually calls cosmograph.</p>
 <p>Requires cosmograph to be installed.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validator</span> <span class="o">=</span> <span class="n">strict_cosmo_validator</span><span class="p">()</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>  
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validator</span> <span class="o">=</span> <span class="n">strict_cosmo_validator</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aw.cosmo.try_cosmo_visualization">
-<span class="sig-prename descclassname"><span class="pre">aw.cosmo.</span></span><span class="sig-name descname"><span class="pre">try_cosmo_visualization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cosmo_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cosmo_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/aw/cosmo.html#try_cosmo_visualization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.cosmo.try_cosmo_visualization" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">aw.cosmo.</span></span><span class="sig-name descname"><span class="pre">try_cosmo_visualization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cosmo_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cosmo_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/aw/cosmo.html#try_cosmo_visualization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.cosmo.try_cosmo_visualization" title="Link to this definition"></a></dt>
 <dd><p>Try to create a cosmograph visualization.</p>
 <p>This is a functional validator that actually attempts the visualization.</p>
 <dl class="field-list simple">
@@ -185,8 +188,8 @@ DataFrame to see if it’s ready for visualization.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">cosmograph</span><span class="w"> </span><span class="kn">import</span> <span class="n">cosmo</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">try_cosmo_visualization</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cosmo</span><span class="p">)</span>  
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">cosmograph</span><span class="w"> </span><span class="kn">import</span> <span class="n">cosmo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">try_cosmo_visualization</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cosmo</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -198,7 +201,7 @@ DataFrame to see if it’s ready for visualization.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="base.html" class="btn btn-neutral float-left" title="aw.base" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="loading.html" class="btn btn-neutral float-right" title="aw.loading" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="func_calling.html" class="btn btn-neutral float-right" title="aw.func_calling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

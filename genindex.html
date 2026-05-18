@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Index &mdash; aw 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
 
@@ -15,8 +15,8 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=a58bc63e"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="_static/copybutton.js?v=f281be69"></script>
@@ -49,11 +49,14 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw.html">aw</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/base.html">aw.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/aw/func_calling.html">aw.func_calling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/loading.html">aw.loading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/orchestration.html">aw.orchestration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/aw/py_gen.html">aw.py_gen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/routing.html">aw.routing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/aw/translators.html">aw.translators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/util.html">aw.util</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/aw/validation.html">aw.validation</a></li>
 </ul>
@@ -131,6 +134,12 @@
         <li><a href="module_docs/aw/orchestration.html#aw.orchestration.AgenticWorkflow">(class in aw.orchestration)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/aw.html#aw.AgentSpec">AgentSpec (class in aw)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#aw.translators.AgentSpec">(class in aw.translators)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/aw.html#aw.all_validators">all_validators() (in module aw)</a>
 
       <ul>
@@ -159,13 +168,20 @@
         <li><a href="module_docs/aw/base.html#module-aw.base">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     aw.cosmo
 
       <ul>
         <li><a href="module_docs/aw/cosmo.html#module-aw.cosmo">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    aw.func_calling
+
+      <ul>
+        <li><a href="module_docs/aw/func_calling.html#module-aw.func_calling">module</a>
 </li>
       </ul></li>
       <li>
@@ -190,6 +206,13 @@
 </li>
       </ul></li>
       <li>
+    aw.py_gen
+
+      <ul>
+        <li><a href="module_docs/aw/py_gen.html#module-aw.py_gen">module</a>
+</li>
+      </ul></li>
+      <li>
     aw.routing
 
       <ul>
@@ -201,6 +224,13 @@
 
       <ul>
         <li><a href="module_docs/aw/tools.html#module-aw.tools">module</a>
+</li>
+      </ul></li>
+      <li>
+    aw.translators
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#module-aw.translators">module</a>
 </li>
       </ul></li>
       <li>
@@ -369,6 +399,18 @@
 </li>
       <li><a href="module_docs/aw/routing.html#aw.routing.ExtensionRouter">ExtensionRouter (class in aw.routing)</a>
 </li>
+      <li><a href="module_docs/aw.html#aw.extract_agent_spec">extract_agent_spec() (in module aw)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#aw.translators.extract_agent_spec">(in module aw.translators)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/aw/func_calling.html#aw.func_calling.extract_function_from_code">extract_function_from_code() (in module aw.func_calling)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/py_gen.html#aw.py_gen.extract_function_from_code">(in module aw.py_gen)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -531,6 +573,12 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/aw/func_calling.html#aw.func_calling.make_code_generator">make_code_generator() (in module aw.func_calling)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/py_gen.html#aw.py_gen.make_code_generator">(in module aw.py_gen)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/aw/routing.html#aw.routing.make_content_type_detector">make_content_type_detector() (in module aw.routing)</a>
 </li>
       <li><a href="module_docs/aw/routing.html#aw.routing.make_magic_bytes_detector">make_magic_bytes_detector() (in module aw.routing)</a>
@@ -553,15 +601,21 @@
 </li>
         <li><a href="module_docs/aw/cosmo.html#module-aw.cosmo">aw.cosmo</a>
 </li>
+        <li><a href="module_docs/aw/func_calling.html#module-aw.func_calling">aw.func_calling</a>
+</li>
         <li><a href="module_docs/aw/loading.html#module-aw.loading">aw.loading</a>
 </li>
         <li><a href="module_docs/aw/orchestration.html#module-aw.orchestration">aw.orchestration</a>
 </li>
         <li><a href="module_docs/aw/preparing.html#module-aw.preparing">aw.preparing</a>
 </li>
+        <li><a href="module_docs/aw/py_gen.html#module-aw.py_gen">aw.py_gen</a>
+</li>
         <li><a href="module_docs/aw/routing.html#module-aw.routing">aw.routing</a>
 </li>
         <li><a href="module_docs/aw/tools.html#module-aw.tools">aw.tools</a>
+</li>
+        <li><a href="module_docs/aw/translators.html#module-aw.translators">aw.translators</a>
 </li>
         <li><a href="module_docs/aw/util.html#module-aw.util">aw.util</a>
 </li>
@@ -708,6 +762,38 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/aw/func_calling.html#aw.func_calling.task_to_function">task_to_function() (in module aw.func_calling)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/py_gen.html#aw.py_gen.task_to_function">(in module aw.py_gen)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/aw.html#aw.to_claude_skill">to_claude_skill() (in module aw)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#aw.translators.to_claude_skill">(in module aw.translators)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/aw.html#aw.to_crewai_yaml">to_crewai_yaml() (in module aw)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#aw.translators.to_crewai_yaml">(in module aw.translators)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/aw.html#aw.to_openai_assistant">to_openai_assistant() (in module aw)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#aw.translators.to_openai_assistant">(in module aw.translators)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/aw.html#aw.to_openai_tools">to_openai_tools() (in module aw)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#aw.translators.to_openai_tools">(in module aw.translators)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/aw.html#aw.Tool">Tool (class in aw)</a>
 
       <ul>
@@ -720,8 +806,12 @@
         <li><a href="module_docs/aw.html#aw.StepConfig.tools">(aw.StepConfig attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/aw.html#aw.ToolSpec">ToolSpec (class in aw)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#aw.translators.ToolSpec">(class in aw.translators)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/aw.html#aw.ExecutionResult.traceback">traceback (aw.ExecutionResult attribute)</a>
 
       <ul>
@@ -754,12 +844,18 @@
         <li><a href="module_docs/aw.html#aw.StepConfig.validator">(aw.StepConfig attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/aw.html#aw.Validator">Validator (class in aw)</a>
 
       <ul>
         <li><a href="module_docs/aw/base.html#aw.base.Validator">(class in aw.base)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/aw.html#aw.ValidatorSpec">ValidatorSpec (class in aw)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#aw.translators.ValidatorSpec">(class in aw.translators)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -770,10 +866,28 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/aw/routing.html#aw.routing.ExtensionRouter.with_appended_strategy">with_appended_strategy() (aw.routing.ExtensionRouter method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/aw/routing.html#aw.routing.ExtensionRouter.with_prepended_strategy">with_prepended_strategy() (aw.routing.ExtensionRouter method)</a>
 </li>
+      <li><a href="module_docs/aw.html#aw.workflow_to_crewai_yaml">workflow_to_crewai_yaml() (in module aw)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#aw.translators.workflow_to_crewai_yaml">(in module aw.translators)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/aw.html#aw.workflow_to_skills">workflow_to_skills() (in module aw)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#aw.translators.workflow_to_skills">(in module aw.translators)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/aw.html#aw.write_skill_directory">write_skill_directory() (in module aw)</a>
+
+      <ul>
+        <li><a href="module_docs/aw/translators.html#aw.translators.write_skill_directory">(in module aw.translators)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 

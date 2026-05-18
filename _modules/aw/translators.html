@@ -1,0 +1,1014 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aw.translators &mdash; aw 0.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            aw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw.html">aw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/base.html">aw.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/func_calling.html">aw.func_calling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/loading.html">aw.loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/orchestration.html">aw.orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/preparing.html">aw.preparing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/py_gen.html">aw.py_gen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/routing.html">aw.routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/tools.html">aw.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/translators.html">aw.translators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/util.html">aw.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/aw/validation.html">aw.validation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">aw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aw.translators</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aw.translators</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Translators from aw agent specifications to other agent formats.</span>
+
+<span class="sd">Supports:</span>
+<span class="sd">- Claude Code Skills / Agent Skills Open Standard (SKILL.md + scripts/)</span>
+<span class="sd">- CrewAI (YAML agent/task configs)</span>
+<span class="sd">- OpenAI tool schemas (JSON)</span>
+
+<span class="sd">The core pattern is:</span>
+<span class="sd">1. extract_agent_spec() introspects an aw agent into a normalized dict</span>
+<span class="sd">2. Format-specific renderers convert the spec to target formats</span>
+
+<span class="sd">Example:</span>
+<span class="sd">    &gt;&gt;&gt; from aw import LoadingAgent</span>
+<span class="sd">    &gt;&gt;&gt; from aw.translators import to_claude_skill</span>
+<span class="sd">    &gt;&gt;&gt; agent = LoadingAgent()</span>
+<span class="sd">    &gt;&gt;&gt; skill_md = to_claude_skill(agent, name=&#39;data-loading&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(skill_md)  # doctest: +SKIP</span>
+
+<span class="sd">    &gt;&gt;&gt; # Write a complete skill directory</span>
+<span class="sd">    &gt;&gt;&gt; from aw.translators import write_skill_directory</span>
+<span class="sd">    &gt;&gt;&gt; write_skill_directory(agent, &#39;/path/to/skills/data-loading&#39;)  # doctest: +SKIP</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">asdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Intermediate representation: AgentSpec</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="ToolSpec">
+<a class="viewcode-back" href="../../module_docs/aw/translators.html#aw.ToolSpec">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ToolSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalized description of a tool.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="c1"># For tools that can be rendered as scripts</span>
+    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="ValidatorSpec">
+<a class="viewcode-back" href="../../module_docs/aw/translators.html#aw.ValidatorSpec">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ValidatorSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalized description of a validator.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">checks</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="AgentSpec">
+<a class="viewcode-back" href="../../module_docs/aw/translators.html#aw.AgentSpec">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalized, format-agnostic description of an aw agent.</span>
+
+<span class="sd">    This is the intermediate representation that all translators consume.</span>
+<span class="sd">    It captures the essential components of an agent without being tied</span>
+<span class="sd">    to any specific framework.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from aw import LoadingAgent</span>
+<span class="sd">        &gt;&gt;&gt; spec = extract_agent_spec(LoadingAgent())</span>
+<span class="sd">        &gt;&gt;&gt; spec.name</span>
+<span class="sd">        &#39;LoadingAgent&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">instructions</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">tools</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># list[ToolSpec]</span>
+    <span class="n">validators</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># list[ValidatorSpec]</span>
+    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">human_in_loop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">source_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Extraction: aw agent -&gt; AgentSpec</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_extract_tool_spec</span><span class="p">(</span><span class="n">tool</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ToolSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract a ToolSpec from a callable tool object.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="s1">&#39;__class__&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">tool</span><span class="p">))</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;function&#39;</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="s1">&#39;unknown_tool&#39;</span><span class="p">)</span>
+
+    <span class="n">doc</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="s1">&#39;__doc__&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tool</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">:</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">cleandoc</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="s1">&#39;__class__&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tool</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">:</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">cleandoc</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+
+    <span class="c1"># Extract first paragraph as description</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">doc</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="c1"># Try to extract parameter info</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="s1">&#39;__init__&#39;</span><span class="p">):</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pname</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">pname</span> <span class="o">==</span> <span class="s1">&#39;self&#39;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">parameters</span><span class="p">[</span><span class="n">pname</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="nb">repr</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">default</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span>
+                    <span class="k">else</span> <span class="kc">None</span>
+                <span class="p">),</span>
+            <span class="p">}</span>
+
+    <span class="c1"># Try to get source code for script generation</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">ToolSpec</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_extract_validator_spec</span><span class="p">(</span><span class="n">validator</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ValidatorSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract a ValidatorSpec from a validator callable.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">validator</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&lt;lambda&gt;&#39;</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">validator</span><span class="p">,</span> <span class="s1">&#39;__class__&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">validator</span><span class="p">))</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="n">doc</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">validator</span><span class="p">,</span> <span class="s1">&#39;__doc__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">cleandoc</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+
+    <span class="c1"># For composite validators (all_validators, any_validator), try to</span>
+    <span class="c1"># extract the component validators from the closure</span>
+    <span class="n">checks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">validator</span><span class="p">,</span> <span class="s1">&#39;__closure__&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">validator</span><span class="o">.</span><span class="vm">__closure__</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">validator</span><span class="o">.</span><span class="vm">__closure__</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">cell_contents</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+                            <span class="c1"># Try to get a meaningful name. Inner closures</span>
+                            <span class="c1"># from is_type/is_not_empty are all named</span>
+                            <span class="c1"># &#39;validate&#39;, so look at the qualname instead.</span>
+                            <span class="n">qualname</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;__qualname__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+                            <span class="k">if</span> <span class="s1">&#39;.&lt;locals&gt;.&#39;</span> <span class="ow">in</span> <span class="n">qualname</span><span class="p">:</span>
+                                <span class="c1"># e.g. &#39;is_type.&lt;locals&gt;.validate&#39; -&gt; &#39;is_type&#39;</span>
+                                <span class="n">outer_name</span> <span class="o">=</span> <span class="n">qualname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&lt;locals&gt;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                                <span class="n">checks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outer_name</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">inner_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">inner_name</span> <span class="ow">and</span> <span class="n">inner_name</span> <span class="o">!=</span> <span class="s1">&#39;&lt;lambda&gt;&#39;</span><span class="p">:</span>
+                                    <span class="n">checks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inner_name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+    <span class="c1"># Deduplicate while preserving order</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">unique_checks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">checks</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">unique_checks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ValidatorSpec</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span> <span class="n">checks</span><span class="o">=</span><span class="n">unique_checks</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_infer_instructions</span><span class="p">(</span><span class="n">agent</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Infer natural language instructions from an agent&#39;s structure.</span>
+
+<span class="sd">    Examines the agent&#39;s methods, docstrings, and code to produce</span>
+<span class="sd">    a human-readable description of what the agent does.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Extract class docstring as primary instruction source</span>
+    <span class="n">class_doc</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">class_doc</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">class_doc</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Look for execute method docstring</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s1">&#39;execute&#39;</span><span class="p">):</span>
+        <span class="n">execute_doc</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">execute</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">execute_doc</span> <span class="ow">and</span> <span class="n">execute_doc</span> <span class="o">!=</span> <span class="n">class_doc</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;### Execution&#39;</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">execute_doc</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Look for code generation methods (common in aw agents)</span>
+    <span class="k">for</span> <span class="n">method_name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">agent</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">method_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_generate_&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">method_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">):</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+                <span class="n">doc</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
+                    <span class="c1"># Convert method name to readable form</span>
+                    <span class="n">readable</span> <span class="o">=</span> <span class="n">method_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_generate_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;- **</span><span class="si">{</span><span class="n">readable</span><span class="si">}</span><span class="s1">**: </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="extract_agent_spec">
+<a class="viewcode-back" href="../../module_docs/aw/translators.html#aw.extract_agent_spec">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_agent_spec</span><span class="p">(</span><span class="n">agent</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract a normalized AgentSpec from any aw agent.</span>
+
+<span class="sd">    Introspects the agent&#39;s class, config, tools, and validators</span>
+<span class="sd">    to build a format-agnostic intermediate representation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        agent: An aw agent instance (LoadingAgent, PreparationAgent, etc.)</span>
+<span class="sd">        name: Override name (defaults to class name)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        AgentSpec with all extractable information</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from aw import LoadingAgent</span>
+<span class="sd">        &gt;&gt;&gt; spec = extract_agent_spec(LoadingAgent())</span>
+<span class="sd">        &gt;&gt;&gt; spec.name</span>
+<span class="sd">        &#39;LoadingAgent&#39;</span>
+<span class="sd">        &gt;&gt;&gt; len(spec.tools) &gt;= 1</span>
+<span class="sd">        True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Name</span>
+    <span class="n">agent_name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="c1"># Description from docstring</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">:</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">cleandoc</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="c1"># First paragraph as description</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Instructions from deeper analysis</span>
+    <span class="n">instructions</span> <span class="o">=</span> <span class="n">_infer_instructions</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+
+    <span class="c1"># Config</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">max_retries</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">human_in_loop</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">llm</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;llm&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">llm</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">llm</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">max_retries</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;max_retries&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">human_in_loop</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;human_in_loop&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Tools: look for tool attributes on the agent</span>
+    <span class="n">tools</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">tool_attr_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">agent</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attr_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)):</span>
+            <span class="k">continue</span>
+        <span class="c1"># Heuristic: it&#39;s a tool if it&#39;s callable and its class name ends with</span>
+        <span class="c1"># &#39;Tool&#39; or it&#39;s in the config.tools list</span>
+        <span class="n">cls_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">attr</span><span class="p">),</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cls_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;Tool&#39;</span><span class="p">):</span>
+            <span class="n">tools</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_extract_tool_spec</span><span class="p">(</span><span class="n">attr</span><span class="p">))</span>
+            <span class="n">tool_attr_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr_name</span><span class="p">)</span>
+
+    <span class="c1"># Also check config.tools</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;tools&#39;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span>
+            <span class="n">spec</span> <span class="o">=</span> <span class="n">_extract_tool_spec</span><span class="p">(</span><span class="n">tool</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">]:</span>
+                <span class="n">tools</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+
+    <span class="c1"># Validators</span>
+    <span class="n">validators</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">validator_obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s1">&#39;validator&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">validator_obj</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">validator_obj</span><span class="p">):</span>
+        <span class="n">validators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_extract_validator_spec</span><span class="p">(</span><span class="n">validator_obj</span><span class="p">))</span>
+
+    <span class="c1"># Extra info</span>
+    <span class="n">extra</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s1">&#39;target&#39;</span><span class="p">):</span>
+        <span class="n">extra</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">target</span>
+
+    <span class="k">return</span> <span class="n">AgentSpec</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">agent_name</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+        <span class="n">instructions</span><span class="o">=</span><span class="n">instructions</span><span class="p">,</span>
+        <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="n">validators</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+        <span class="n">max_retries</span><span class="o">=</span><span class="n">max_retries</span><span class="p">,</span>
+        <span class="n">human_in_loop</span><span class="o">=</span><span class="n">human_in_loop</span><span class="p">,</span>
+        <span class="n">source_class</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="n">extra</span><span class="o">=</span><span class="n">extra</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Claude Code Skills / Agent Skills Open Standard</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+<span class="c1"># Mapping from aw tool names to Claude Code built-in tools</span>
+<span class="n">_AW_TOOL_TO_CLAUDE_TOOL</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;CodeInterpreterTool&#39;</span><span class="p">:</span> <span class="s1">&#39;Bash&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SafeCodeInterpreter&#39;</span><span class="p">:</span> <span class="s1">&#39;Bash&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;FileSamplerTool&#39;</span><span class="p">:</span> <span class="s1">&#39;Read&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_spec_to_allowed_tools</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">AgentSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Map aw tools to Claude Code allowed-tools.&quot;&quot;&quot;</span>
+    <span class="n">claude_tools</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span>
+        <span class="n">mapped</span> <span class="o">=</span> <span class="n">_AW_TOOL_TO_CLAUDE_TOOL</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mapped</span><span class="p">:</span>
+            <span class="n">claude_tools</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mapped</span><span class="p">)</span>
+    <span class="c1"># Always include Read for data work</span>
+    <span class="n">claude_tools</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;Read&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">claude_tools</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_spec_to_skill_instructions</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">AgentSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render the markdown body of a SKILL.md from an AgentSpec.&quot;&quot;&quot;</span>
+    <span class="n">sections</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Instructions (which already contains the class docstring as first part)</span>
+    <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">instructions</span><span class="p">:</span>
+        <span class="n">sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;## Instructions</span><span class="se">\n\n</span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">instructions</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">spec</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
+        <span class="n">sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;## Purpose</span><span class="se">\n\n</span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Tools section</span>
+    <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span>
+        <span class="n">tool_lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;- **</span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">**&#39;</span>
+            <span class="k">if</span> <span class="n">tool</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
+                <span class="c1"># First sentence only</span>
+                <span class="n">first_sentence</span> <span class="o">=</span> <span class="n">tool</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">line</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;: </span><span class="si">{</span><span class="n">first_sentence</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">tool_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;## Available Tools</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tool_lines</span><span class="p">))</span>
+
+    <span class="c1"># Validation section</span>
+    <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">validators</span><span class="p">:</span>
+        <span class="n">val_lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">validators</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">check</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
+                    <span class="n">val_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;- </span><span class="si">{</span><span class="n">check</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">v</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
+                <span class="n">val_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;- </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">val_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;- </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;## Validation</span><span class="se">\n\n</span><span class="s1">The output must pass these checks:</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+            <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">val_lines</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Retry behavior</span>
+    <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">max_retries</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;## Error Recovery</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;If a step fails, retry with adjusted parameters &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;(up to </span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">max_retries</span><span class="si">}</span><span class="s1"> attempts).</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;Analyze the error message to determine what to change.&#39;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Target (if present)</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">extra</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;target&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;## Target</span><span class="se">\n\n</span><span class="s1">Prepare data for target format: **</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">**&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="to_claude_skill">
+<a class="viewcode-back" href="../../module_docs/aw/translators.html#aw.to_claude_skill">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_claude_skill</span><span class="p">(</span>
+    <span class="n">agent</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">extra_tools</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">disable_model_invocation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate an aw agent to a Claude Code SKILL.md string.</span>
+
+<span class="sd">    Generates a complete SKILL.md file with YAML frontmatter and</span>
+<span class="sd">    markdown instructions, compatible with both Claude Code skills</span>
+<span class="sd">    and the Agent Skills Open Standard (agentskills.io).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        agent: An aw agent instance</span>
+<span class="sd">        name: Override skill name (defaults to kebab-case of class name)</span>
+<span class="sd">        description: Override description</span>
+<span class="sd">        extra_tools: Additional Claude Code tools to allow</span>
+<span class="sd">        disable_model_invocation: If True, skill is manual-only (/name)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Complete SKILL.md content as a string</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from aw import LoadingAgent</span>
+<span class="sd">        &gt;&gt;&gt; skill = to_claude_skill(LoadingAgent(), name=&#39;data-loading&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; &#39;---&#39; in skill</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; &#39;data-loading&#39; in skill</span>
+<span class="sd">        True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">extract_agent_spec</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Derive skill name (kebab-case)</span>
+    <span class="n">skill_name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">_to_kebab_case</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Description</span>
+    <span class="n">skill_description</span> <span class="o">=</span> <span class="n">description</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">description</span>
+
+    <span class="c1"># Allowed tools</span>
+    <span class="n">allowed_tools</span> <span class="o">=</span> <span class="n">_spec_to_allowed_tools</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">extra_tools</span><span class="p">:</span>
+        <span class="n">allowed_tools</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">allowed_tools</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">extra_tools</span><span class="p">))</span>
+
+    <span class="c1"># Build frontmatter</span>
+    <span class="n">fm_lines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;---&#39;</span><span class="p">]</span>
+    <span class="n">fm_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;name: </span><span class="si">{</span><span class="n">skill_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">skill_description</span><span class="p">:</span>
+        <span class="c1"># Escape for YAML</span>
+        <span class="n">fm_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;description: &gt;-&#39;</span><span class="p">)</span>
+        <span class="n">fm_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">skill_description</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">allowed_tools</span><span class="p">:</span>
+        <span class="n">fm_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;allowed-tools: </span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allowed_tools</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">model</span><span class="p">:</span>
+        <span class="n">fm_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;model: </span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">disable_model_invocation</span><span class="p">:</span>
+        <span class="n">fm_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;disable-model-invocation: true&#39;</span><span class="p">)</span>
+    <span class="n">fm_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
+
+    <span class="n">frontmatter</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fm_lines</span><span class="p">)</span>
+
+    <span class="c1"># Build body</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">_spec_to_skill_instructions</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">frontmatter</span><span class="si">}</span><span class="se">\n\n</span><span class="si">{</span><span class="n">body</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="write_skill_directory">
+<a class="viewcode-back" href="../../module_docs/aw/translators.html#aw.write_skill_directory">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_skill_directory</span><span class="p">(</span>
+    <span class="n">agent</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">include_scripts</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a complete Claude Code skill directory.</span>
+
+<span class="sd">    Creates:</span>
+<span class="sd">        output_dir/</span>
+<span class="sd">        ├── SKILL.md</span>
+<span class="sd">        └── scripts/          (if include_scripts and agent has tools)</span>
+<span class="sd">            └── validate.py   (validator wrapper script)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        agent: An aw agent instance</span>
+<span class="sd">        output_dir: Directory to write the skill to</span>
+<span class="sd">        name: Override skill name</span>
+<span class="sd">        description: Override description</span>
+<span class="sd">        include_scripts: Whether to generate helper scripts</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Path to the created directory</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from aw import LoadingAgent</span>
+<span class="sd">        &gt;&gt;&gt; path = write_skill_directory(  # doctest: +SKIP</span>
+<span class="sd">        ...     LoadingAgent(), &#39;/tmp/test-skill&#39;, name=&#39;data-loading&#39;</span>
+<span class="sd">        ... )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+    <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Write SKILL.md</span>
+    <span class="n">skill_md</span> <span class="o">=</span> <span class="n">to_claude_skill</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;SKILL.md&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">skill_md</span><span class="p">)</span>
+
+    <span class="c1"># Write helper scripts</span>
+    <span class="k">if</span> <span class="n">include_scripts</span><span class="p">:</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">extract_agent_spec</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">scripts_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;scripts&#39;</span>
+
+        <span class="c1"># Generate validator script if we have validators</span>
+        <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">validators</span><span class="p">:</span>
+            <span class="n">scripts_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">validator_script</span> <span class="o">=</span> <span class="n">_generate_validator_script</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">scripts_dir</span> <span class="o">/</span> <span class="s1">&#39;validate.py&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">validator_script</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output_dir</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_generate_validator_script</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">AgentSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a Python validation script from validator specs.&quot;&quot;&quot;</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;#!/usr/bin/env python3&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;&quot;&quot;&quot;Auto-generated validation script from aw agent spec.&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s1">&#39;Source agent: </span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">source_class</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;&quot;&quot;&quot;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;import sys&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;import json&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;def validate(artifact):&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;    &quot;&quot;&quot;Validate the artifact meets requirements.&quot;&quot;&quot;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;    errors = []&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">validators</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">check</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    # Check: </span><span class="si">{</span><span class="n">check</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    # </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="s1">&#39;    if artifact is None:&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;        errors.append(&#39;Artifact is None&#39;)&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;    elif hasattr(artifact, </span><span class="se">\&quot;</span><span class="s1">__len__</span><span class="se">\&quot;</span><span class="s1">) and len(artifact) == 0:&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;        errors.append(&#39;Artifact is empty&#39;)&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;    return len(errors) == 0, errors&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;if __name__ == &quot;__main__&quot;:&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;    # Read artifact from stdin or file argument&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;    if len(sys.argv) &gt; 1:&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;        import pandas as pd&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;        artifact = pd.read_csv(sys.argv[1])&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;    else:&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;        artifact = json.load(sys.stdin)&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;    success, errors = validate(artifact)&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;    result = {&#39;success&#39;: success, &#39;errors&#39;: errors}&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;    print(json.dumps(result, indent=2))&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;    sys.exit(0 if success else 1)&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+
+<div class="viewcode-block" id="workflow_to_skills">
+<a class="viewcode-back" href="../../module_docs/aw/translators.html#aw.workflow_to_skills">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">workflow_to_skills</span><span class="p">(</span>
+    <span class="n">workflow</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate an AgenticWorkflow into a set of Claude Code skills.</span>
+
+<span class="sd">    Each step in the workflow becomes a separate skill directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        workflow: An AgenticWorkflow instance</span>
+<span class="sd">        output_dir: Parent directory for all skill directories</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of Paths to created skill directories</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from aw import create_cosmo_prep_workflow</span>
+<span class="sd">        &gt;&gt;&gt; workflow = create_cosmo_prep_workflow()</span>
+<span class="sd">        &gt;&gt;&gt; paths = workflow_to_skills(workflow, &#39;/tmp/skills&#39;)  # doctest: +SKIP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+    <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">step_agent</span> <span class="ow">in</span> <span class="n">workflow</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+        <span class="n">skill_name</span> <span class="o">=</span> <span class="n">_to_kebab_case</span><span class="p">(</span><span class="n">step_name</span><span class="p">)</span>
+        <span class="n">skill_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">skill_name</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">write_skill_directory</span><span class="p">(</span><span class="n">step_agent</span><span class="p">,</span> <span class="n">skill_dir</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">skill_name</span><span class="p">)</span>
+        <span class="n">paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">paths</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># CrewAI Format</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="to_crewai_yaml">
+<a class="viewcode-back" href="../../module_docs/aw/translators.html#aw.to_crewai_yaml">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_crewai_yaml</span><span class="p">(</span>
+    <span class="n">agent</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">goal</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">backstory</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate an aw agent to a CrewAI agent YAML config dict.</span>
+
+<span class="sd">    CrewAI agents are defined with role, goal, backstory, and tools.</span>
+<span class="sd">    This function maps aw&#39;s AgentSpec to that structure.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        agent: An aw agent instance</span>
+<span class="sd">        name: Override agent name</span>
+<span class="sd">        role: Override role (defaults to agent description)</span>
+<span class="sd">        goal: Override goal</span>
+<span class="sd">        backstory: Override backstory</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict suitable for YAML serialization as a CrewAI agent config</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from aw import LoadingAgent</span>
+<span class="sd">        &gt;&gt;&gt; config = to_crewai_yaml(LoadingAgent(), name=&#39;data_loader&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; config[&#39;role&#39;]  # doctest: +SKIP</span>
+<span class="sd">        &#39;Data Loading Specialist&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">extract_agent_spec</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Derive role from class name or description</span>
+    <span class="k">if</span> <span class="n">role</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">role</span> <span class="o">=</span> <span class="n">_class_name_to_role</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">source_class</span><span class="p">)</span>
+
+    <span class="c1"># Derive goal from description</span>
+    <span class="k">if</span> <span class="n">goal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">goal</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">description</span> <span class="ow">or</span> <span class="sa">f</span><span class="s1">&#39;Execute the </span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> task successfully&#39;</span>
+
+    <span class="c1"># Derive backstory from instructions</span>
+    <span class="k">if</span> <span class="n">backstory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">backstory</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;You are a specialized agent that follows the ReAct pattern &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;(Reason-Act-Observe-Validate). &#39;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">instructions</span><span class="p">:</span>
+            <span class="c1"># Use first paragraph of instructions</span>
+            <span class="n">first_para</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">instructions</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">backstory</span> <span class="o">+=</span> <span class="n">first_para</span>
+
+    <span class="n">agent_config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">_to_snake_case</span><span class="p">(</span><span class="n">name</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">):</span> <span class="p">{</span>
+            <span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="n">role</span><span class="p">,</span>
+            <span class="s1">&#39;goal&#39;</span><span class="p">:</span> <span class="n">goal</span><span class="p">,</span>
+            <span class="s1">&#39;backstory&#39;</span><span class="p">:</span> <span class="n">backstory</span><span class="p">,</span>
+            <span class="s1">&#39;verbose&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;max_iter&#39;</span><span class="p">:</span> <span class="n">spec</span><span class="o">.</span><span class="n">max_retries</span><span class="p">,</span>
+            <span class="s1">&#39;tools&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">tools</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">agent_config</span></div>
+
+
+
+<div class="viewcode-block" id="workflow_to_crewai_yaml">
+<a class="viewcode-back" href="../../module_docs/aw/translators.html#aw.workflow_to_crewai_yaml">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">workflow_to_crewai_yaml</span><span class="p">(</span><span class="n">workflow</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate an AgenticWorkflow to CrewAI agents.yaml + tasks.yaml.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        workflow: An AgenticWorkflow instance</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict with &#39;agents&#39; and &#39;tasks&#39; keys, each containing</span>
+<span class="sd">        YAML-serializable config dicts</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from aw import create_cosmo_prep_workflow</span>
+<span class="sd">        &gt;&gt;&gt; workflow = create_cosmo_prep_workflow()</span>
+<span class="sd">        &gt;&gt;&gt; config = workflow_to_crewai_yaml(workflow)</span>
+<span class="sd">        &gt;&gt;&gt; &#39;agents&#39; in config and &#39;tasks&#39; in config</span>
+<span class="sd">        True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">agents</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">prev_step_name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">step_agent</span> <span class="ow">in</span> <span class="n">workflow</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+        <span class="n">snake_name</span> <span class="o">=</span> <span class="n">_to_snake_case</span><span class="p">(</span><span class="n">step_name</span><span class="p">)</span>
+
+        <span class="c1"># Agent config</span>
+        <span class="n">agent_config</span> <span class="o">=</span> <span class="n">to_crewai_yaml</span><span class="p">(</span><span class="n">step_agent</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">)</span>
+        <span class="n">agents</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">agent_config</span><span class="p">)</span>
+
+        <span class="c1"># Task config</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">extract_agent_spec</span><span class="p">(</span><span class="n">step_agent</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">)</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">spec</span><span class="o">.</span><span class="n">description</span> <span class="ow">or</span> <span class="sa">f</span><span class="s1">&#39;Execute </span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;expected_output&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;Validated output from </span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s1"> step&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;agent&#39;</span><span class="p">:</span> <span class="n">snake_name</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">prev_step_name</span><span class="p">:</span>
+            <span class="n">task</span><span class="p">[</span><span class="s1">&#39;context&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">_to_snake_case</span><span class="p">(</span><span class="n">prev_step_name</span><span class="p">)]</span>
+
+        <span class="n">tasks</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">snake_name</span><span class="si">}</span><span class="s1">_task&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">task</span>
+        <span class="n">prev_step_name</span> <span class="o">=</span> <span class="n">step_name</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;agents&#39;</span><span class="p">:</span> <span class="n">agents</span><span class="p">,</span> <span class="s1">&#39;tasks&#39;</span><span class="p">:</span> <span class="n">tasks</span><span class="p">}</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># OpenAI Tool Schemas</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="to_openai_tools">
+<a class="viewcode-back" href="../../module_docs/aw/translators.html#aw.to_openai_tools">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_openai_tools</span><span class="p">(</span><span class="n">agent</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate an aw agent&#39;s tools to OpenAI function-calling tool schemas.</span>
+
+<span class="sd">    Generates JSON-Schema-based tool definitions compatible with the</span>
+<span class="sd">    OpenAI Chat Completions API and Responses API.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        agent: An aw agent instance</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of tool definition dicts in OpenAI format</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from aw import LoadingAgent</span>
+<span class="sd">        &gt;&gt;&gt; tools = to_openai_tools(LoadingAgent())</span>
+<span class="sd">        &gt;&gt;&gt; all(t[&#39;type&#39;] == &#39;function&#39; for t in tools)</span>
+<span class="sd">        True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">extract_agent_spec</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="n">openai_tools</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span>
+        <span class="c1"># Build parameter schema from extracted info</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">required</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">pname</span><span class="p">,</span> <span class="n">pinfo</span> <span class="ow">in</span> <span class="n">tool</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">prop</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;Parameter: </span><span class="si">{</span><span class="n">pname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+            <span class="n">properties</span><span class="p">[</span><span class="n">pname</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop</span>
+            <span class="k">if</span> <span class="n">pinfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">required</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pname</span><span class="p">)</span>
+
+        <span class="n">tool_def</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;function&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">_to_snake_case</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">tool</span><span class="o">.</span><span class="n">description</span> <span class="ow">or</span> <span class="sa">f</span><span class="s1">&#39;Tool: </span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="n">properties</span><span class="p">,</span>
+                    <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="n">required</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+        <span class="n">openai_tools</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tool_def</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">openai_tools</span></div>
+
+
+
+<div class="viewcode-block" id="to_openai_assistant">
+<a class="viewcode-back" href="../../module_docs/aw/translators.html#aw.to_openai_assistant">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_openai_assistant</span><span class="p">(</span>
+    <span class="n">agent</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gpt-4&#39;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate an aw agent to an OpenAI Assistant-style config dict.</span>
+
+<span class="sd">    Generates a configuration suitable for creating an OpenAI Assistant</span>
+<span class="sd">    (or Responses API agent) via the API.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        agent: An aw agent instance</span>
+<span class="sd">        name: Override name</span>
+<span class="sd">        model: Override model</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict with assistant configuration</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from aw import LoadingAgent</span>
+<span class="sd">        &gt;&gt;&gt; config = to_openai_assistant(LoadingAgent())</span>
+<span class="sd">        &gt;&gt;&gt; &#39;instructions&#39; in config</span>
+<span class="sd">        True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">extract_agent_spec</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">tools</span> <span class="o">=</span> <span class="n">to_openai_tools</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+
+    <span class="c1"># Always include code_interpreter for aw agents (they execute code)</span>
+    <span class="n">has_code_tool</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;CodeInterpreterTool&#39;</span><span class="p">,</span> <span class="s1">&#39;SafeCodeInterpreter&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">tools</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">has_code_tool</span><span class="p">:</span>
+        <span class="n">tools</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;code_interpreter&#39;</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s1">&#39;instructions&#39;</span><span class="p">:</span> <span class="n">spec</span><span class="o">.</span><span class="n">instructions</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+        <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model</span> <span class="k">if</span> <span class="n">model</span> <span class="o">!=</span> <span class="s1">&#39;gpt-4&#39;</span> <span class="k">else</span> <span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">model</span> <span class="ow">or</span> <span class="n">model</span><span class="p">),</span>
+        <span class="s1">&#39;tools&#39;</span><span class="p">:</span> <span class="n">tools</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Helpers</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_to_kebab_case</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert CamelCase or snake_case to kebab-case.</span>
+
+<span class="sd">    &gt;&gt;&gt; _to_kebab_case(&#39;LoadingAgent&#39;)</span>
+<span class="sd">    &#39;loading-agent&#39;</span>
+<span class="sd">    &gt;&gt;&gt; _to_kebab_case(&#39;cosmo_ready&#39;)</span>
+<span class="sd">    &#39;cosmo-ready&#39;</span>
+<span class="sd">    &gt;&gt;&gt; _to_kebab_case(&#39;already-kebab&#39;)</span>
+<span class="sd">    &#39;already-kebab&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+    <span class="c1"># CamelCase to separated</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?&lt;=[a-z0-9])([A-Z])&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;-\1&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="c1"># Underscores to hyphens</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_to_snake_case</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert CamelCase or kebab-case to snake_case.</span>
+
+<span class="sd">    &gt;&gt;&gt; _to_snake_case(&#39;LoadingAgent&#39;)</span>
+<span class="sd">    &#39;loading_agent&#39;</span>
+<span class="sd">    &gt;&gt;&gt; _to_snake_case(&#39;data-loading&#39;)</span>
+<span class="sd">    &#39;data_loading&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?&lt;=[a-z0-9])([A-Z])&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;_\1&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_class_name_to_role</span><span class="p">(</span><span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a class name to a human-readable role.</span>
+
+<span class="sd">    &gt;&gt;&gt; _class_name_to_role(&#39;LoadingAgent&#39;)</span>
+<span class="sd">    &#39;Data Loading Specialist&#39;</span>
+<span class="sd">    &gt;&gt;&gt; _class_name_to_role(&#39;PreparationAgent&#39;)</span>
+<span class="sd">    &#39;Data Preparation Specialist&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+    <span class="c1"># Remove &#39;Agent&#39; suffix</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Agent$&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span>
+    <span class="c1"># Split CamelCase</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?&lt;=[a-z])([A-Z])&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39; \1&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">words</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;Specialist&#39;</span>
+
+    <span class="c1"># Add context-appropriate prefix/suffix</span>
+    <span class="n">role_words</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">words</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">):</span>
+        <span class="n">role_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
+    <span class="n">role_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+    <span class="n">role_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Specialist&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">role_words</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
