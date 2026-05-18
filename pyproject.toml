@@ -129,7 +129,9 @@ format = []
 
 [tool.wads.ci.env]
 required_envvars = []
-test_envvars = []
+# OPENAI_API_KEY: aw modules read this via config2py at import time.
+# wads-migrate wires this from secrets into the workflow-level env: block.
+test_envvars = ["OPENAI_API_KEY"]
 extra_envvars = []
 
 [tool.wads.ci.env.defaults]
@@ -186,3 +188,4 @@ ignore_paths = [
     "scrap/",
     "examples/",
 ]
+
