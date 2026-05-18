@@ -1,6 +1,5 @@
 """Function makeing and calling"""
 
-
 """
 Improved template for generating Python code from task descriptions using LLMs.
 
@@ -175,44 +174,38 @@ Generate the function:
 
 # Simple schema: just the code string
 CODE_DEFINITION_SCHEMA = {
-    'name': 'generated_python_function',
-    'schema': {
-        'type': 'object',
-        'properties': {
-            'code': {
-                'type': 'string',
-                'description': 'Complete Python function definition as a string'
+    "name": "generated_python_function",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "code": {
+                "type": "string",
+                "description": "Complete Python function definition as a string",
             },
         },
-        'required': ['code'],
+        "required": ["code"],
     },
 }
 
 # Detailed schema: includes metadata
 DETAILED_CODE_DEFINITION_SCHEMA = {
-    'name': 'detailed_python_function',
-    'schema': {
-        'type': 'object',
-        'properties': {
-            'code': {
-                'type': 'string',
-                'description': 'Complete Python function definition'
+    "name": "detailed_python_function",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "code": {
+                "type": "string",
+                "description": "Complete Python function definition",
             },
-            'function_name': {
-                'type': 'string',
-                'description': 'Name of the function'
+            "function_name": {"type": "string", "description": "Name of the function"},
+            "parameters": {
+                "type": "array",
+                "description": "List of parameter names",
+                "items": {"type": "string"},
             },
-            'parameters': {
-                'type': 'array',
-                'description': 'List of parameter names',
-                'items': {'type': 'string'}
-            },
-            'docstring': {
-                'type': 'string',
-                'description': 'The function docstring'
-            },
+            "docstring": {"type": "string", "description": "The function docstring"},
         },
-        'required': ['code', 'function_name'],
+        "required": ["code", "function_name"],
     },
 }
 
@@ -221,19 +214,20 @@ DETAILED_CODE_DEFINITION_SCHEMA = {
 # Helper Functions
 # ============================================================================
 
+
 def extract_function_from_code(code_str: str) -> callable:
     """
     Safely extract a function from a code string.
-    
+
     Args:
         code_str: String containing a Python function definition
-        
+
     Returns:
         The function object
-        
+
     Raises:
         ValueError: If no function is found or multiple functions exist
-        
+
     Example:
         >>> code = 'def add(a, b):\\n    return a + b'
         >>> func = extract_function_from_code(code)
@@ -242,24 +236,24 @@ def extract_function_from_code(code_str: str) -> callable:
     """
     # Create isolated namespace
     namespace = {}
-    
+
     try:
         # Compile first to catch syntax errors
-        compiled = compile(code_str, '<generated>', 'exec')
+        compiled = compile(code_str, "<generated>", "exec")
         exec(compiled, namespace)
     except SyntaxError as e:
         raise ValueError(f"Generated code has syntax error: {e}")
     except Exception as e:
         raise ValueError(f"Error executing generated code: {e}")
-    
+
     # Find the function
     functions = [obj for obj in namespace.values() if inspect.isfunction(obj)]
-    
+
     if len(functions) == 0:
         raise ValueError("No function found in generated code")
     elif len(functions) > 1:
         raise ValueError(f"Multiple functions found: {[f.__name__ for f in functions]}")
-    
+
     return functions[0]
 
 
@@ -270,15 +264,15 @@ def make_code_generator(
 ):
     """
     Create a code generation function from a template and schema.
-    
+
     Args:
         template: The prompt template for code generation
         code_schema: JSON schema defining the output format
         prompt_json_function_maker: Factory function (defaults to oa.prompt_json_function)
-        
+
     Returns:
         A function that generates code from task descriptions
-        
+
     Example:
         >>> from oa import prompt_json_function
         >>> write_code = make_code_generator(
@@ -297,35 +291,36 @@ def make_code_generator(
         # Try to import from oa
         try:
             from oa import prompt_json_function
+
             prompt_json_function_maker = prompt_json_function
         except ImportError:
             raise ValueError(
                 "Must provide prompt_json_function_maker or have 'oa' package installed"
             )
-    
+
     return prompt_json_function_maker(template, json_schema=code_schema)
 
 
 def task_to_function(
     task: str,
     output_schema: dict | str | None = None,
-    name: str = 'generated_function',
+    name: str = "generated_function",
     code_generator=None,
-    **generator_kwargs
+    **generator_kwargs,
 ) -> callable:
     """
     End-to-end: Convert a task description to an executable function.
-    
+
     Args:
         task: Natural language description of the function's purpose
         output_schema: JSON schema for the return value (optional)
         name: Name for the generated function
         code_generator: Code generation function (creates one if None)
         **generator_kwargs: Additional arguments for code generator
-        
+
     Returns:
         Executable Python function
-        
+
     Example:
         >>> func = task_to_function(
         ...     task='Multiply {x} and {y}',
@@ -337,29 +332,27 @@ def task_to_function(
     """
     if code_generator is None:
         code_generator = make_code_generator()
-    
+
     # Format the output schema as JSON string if it's a dict
     if isinstance(output_schema, dict):
         output_schema_str = json.dumps(output_schema, indent=2)
     else:
-        output_schema_str = output_schema or 'null'
-    
+        output_schema_str = output_schema or "null"
+
     # Generate code
     result = code_generator(
-        task=task,
-        output_schema=output_schema_str,
-        name=name,
-        **generator_kwargs
+        task=task, output_schema=output_schema_str, name=name, **generator_kwargs
     )
-    
+
     # Extract function from generated code
-    code_str = result['code']
+    code_str = result["code"]
     return extract_function_from_code(code_str)
 
 
 # ============================================================================
 # Demonstration
 # ============================================================================
+
 
 def _demo():
     """Show example of how to use the templates."""
@@ -371,7 +364,7 @@ def _demo():
     print("CODE DEFINITION SCHEMA:")
     print("=" * 70)
     print(json.dumps(CODE_DEFINITION_SCHEMA, indent=2))
-    
+
     print("\n" + "=" * 70)
     print("USAGE EXAMPLE:")
     print("=" * 70)
@@ -400,5 +393,5 @@ print(func(2, 3))  # {'sum': 5}
     """)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _demo()

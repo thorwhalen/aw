@@ -73,13 +73,13 @@ class LoadingAgent:
 
         # Step 1: Sample the file
         file_info = self.file_sampler(source_uri)
-        attempts.append({'step': 'file_sample', 'result': file_info})
+        attempts.append({"step": "file_sample", "result": file_info})
 
-        if 'error' in file_info:
+        if "error" in file_info:
             return None, {
-                'success': False,
-                'error': file_info['error'],
-                'attempts': attempts,
+                "success": False,
+                "error": file_info["error"],
+                "attempts": attempts,
             }
 
         # Try to load with increasingly sophisticated approaches
@@ -88,18 +88,18 @@ class LoadingAgent:
             code = self._generate_loading_code(file_info, attempts, attempt_num)
 
             attempts.append(
-                {'attempt': attempt_num, 'step': 'generate_code', 'code': code}
+                {"attempt": attempt_num, "step": "generate_code", "code": code}
             )
 
             # Step 3: Execute code
             exec_result = self.code_interpreter(code)
             attempts.append(
                 {
-                    'attempt': attempt_num,
-                    'step': 'execute',
-                    'success': exec_result.success,
-                    'output': exec_result.output,
-                    'error': exec_result.error,
+                    "attempt": attempt_num,
+                    "step": "execute",
+                    "success": exec_result.success,
+                    "output": exec_result.output,
+                    "error": exec_result.error,
                 }
             )
 
@@ -108,16 +108,16 @@ class LoadingAgent:
                 continue
 
             # Get the DataFrame from execution result
-            df = exec_result.locals.get('df')
+            df = exec_result.locals.get("df")
 
             # Step 4: Validate
             is_valid, validation_info = self.validator(df)
             attempts.append(
                 {
-                    'attempt': attempt_num,
-                    'step': 'validate',
-                    'success': is_valid,
-                    'info': validation_info,
+                    "attempt": attempt_num,
+                    "step": "validate",
+                    "success": is_valid,
+                    "info": validation_info,
                 }
             )
 
@@ -125,24 +125,24 @@ class LoadingAgent:
                 # Success! Compute metadata and return
                 df_info = compute_dataframe_info(df)
                 metadata = {
-                    'success': True,
-                    'source_uri': source_uri,
-                    'file_info': file_info,
-                    'df_info': df_info,
-                    'attempts': attempts,
-                    'num_attempts': attempt_num + 1,
+                    "success": True,
+                    "source_uri": source_uri,
+                    "file_info": file_info,
+                    "df_info": df_info,
+                    "attempts": attempts,
+                    "num_attempts": attempt_num + 1,
                 }
 
                 # Store in context
-                context['loading'] = {'df': df, 'metadata': metadata}
+                context["loading"] = {"df": df, "metadata": metadata}
 
                 return df, metadata
 
         # All attempts failed
         return None, {
-            'success': False,
-            'error': 'Max retries exceeded',
-            'attempts': attempts,
+            "success": False,
+            "error": "Max retries exceeded",
+            "attempts": attempts,
         }
 
     def _generate_loading_code(
@@ -169,18 +169,18 @@ class LoadingAgent:
 
     def _generate_initial_code(self, file_info: dict) -> str:
         """Generate initial loading code based on file info."""
-        extension = file_info.get('extension', '.csv')
-        uri = file_info.get('uri')
+        extension = file_info.get("extension", ".csv")
+        uri = file_info.get("uri")
 
         # Infer loader and params
         loader_func = infer_loader_from_extension(extension)
-        sample_text = file_info.get('sample_text')
+        sample_text = file_info.get("sample_text")
         params = infer_loader_params(extension, sample_text)
 
         # Build params string
-        params_str = ', '.join(f"{k}={repr(v)}" for k, v in params.items())
+        params_str = ", ".join(f"{k}={repr(v)}" for k, v in params.items())
         if params_str:
-            params_str = ', ' + params_str
+            params_str = ", " + params_str
 
         code = f"""import pandas as pd
 df = pd.{loader_func}({repr(uri)}{params_str})
@@ -193,32 +193,32 @@ df = pd.{loader_func}({repr(uri)}{params_str})
         Analyzes error messages to adjust parameters.
         """
         # Get last error
-        last_exec = [a for a in attempts if a.get('step') == 'execute'][-1]
-        error_msg = last_exec.get('error', '')
+        last_exec = [a for a in attempts if a.get("step") == "execute"][-1]
+        error_msg = last_exec.get("error", "")
 
-        extension = file_info.get('extension', '.csv')
-        uri = file_info.get('uri')
+        extension = file_info.get("extension", ".csv")
+        uri = file_info.get("uri")
         loader_func = infer_loader_from_extension(extension)
 
         # Adjust parameters based on error
         params = {}
 
-        if 'UnicodeDecodeError' in error_msg:
-            params['encoding'] = 'latin-1'
-        elif 'ParserError' in error_msg or 'delimiter' in error_msg.lower():
+        if "UnicodeDecodeError" in error_msg:
+            params["encoding"] = "latin-1"
+        elif "ParserError" in error_msg or "delimiter" in error_msg.lower():
             # Try different delimiter
-            params['sep'] = '\\t' if 'sep=,' in str(attempts) else ';'
-        elif 'FileNotFoundError' in error_msg:
+            params["sep"] = "\\t" if "sep=," in str(attempts) else ";"
+        elif "FileNotFoundError" in error_msg:
             # Try with different path interpretation
             params = {}
 
         # Try with error_bad_lines parameter for problematic CSVs
-        if loader_func == 'read_csv' and 'ParserError' in error_msg:
-            params['on_bad_lines'] = 'skip'
+        if loader_func == "read_csv" and "ParserError" in error_msg:
+            params["on_bad_lines"] = "skip"
 
-        params_str = ', '.join(f"{k}={repr(v)}" for k, v in params.items())
+        params_str = ", ".join(f"{k}={repr(v)}" for k, v in params.items())
         if params_str:
-            params_str = ', ' + params_str
+            params_str = ", " + params_str
 
         code = f"""import pandas as pd
 df = pd.{loader_func}({repr(uri)}{params_str})

@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 import sys
 
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'i' / 'config2py'))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "i" / "config2py"))
 
 from config2py.sync_store import FileStore
 
@@ -23,7 +23,7 @@ def test_missing_file():
     print("-" * 70)
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        config_path = Path(tmpdir) / 'new_config.json'
+        config_path = Path(tmpdir) / "new_config.json"
 
         # Verify file doesn't exist
         assert not config_path.exists(), "File should not exist initially"
@@ -32,7 +32,7 @@ def test_missing_file():
         # Create FileStore with factories
         store = FileStore(
             config_path,
-            key_path='section',
+            key_path="section",
             create_file_content=lambda: {},
             create_key_path_content=lambda: {},
         )
@@ -45,18 +45,18 @@ def test_missing_file():
         with open(config_path) as f:
             content = json.load(f)
 
-        assert 'section' in content, "section key should exist"
-        assert content['section'] == {}, "section should be empty dict"
+        assert "section" in content, "section key should exist"
+        assert content["section"] == {}, "section should be empty dict"
         print(f"✓ Correct structure: {content}")
 
         # Add data
-        store['item'] = {'value': 123}
+        store["item"] = {"value": 123}
 
         # Verify persistence
         with open(config_path) as f:
             content = json.load(f)
 
-        assert content['section']['item']['value'] == 123
+        assert content["section"]["item"]["value"] == 123
         print(f"✓ Data persisted correctly: {content}")
 
     print("✅ Test 1 passed\n")
@@ -68,45 +68,45 @@ def test_missing_key_path():
     print("-" * 70)
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        config_path = Path(tmpdir) / 'config.json'
+        config_path = Path(tmpdir) / "config.json"
 
         # Create file with some existing content
         initial_content = {
-            'existing_section': {'key': 'value'},
-            'other_data': [1, 2, 3],
+            "existing_section": {"key": "value"},
+            "other_data": [1, 2, 3],
         }
 
-        with open(config_path, 'w') as f:
+        with open(config_path, "w") as f:
             json.dump(initial_content, f)
 
         print(f"✓ Created file with initial content: {initial_content}")
 
         # Open with key_path that doesn't exist
         store = FileStore(
-            config_path, key_path='new_section', create_key_path_content=lambda: {}
+            config_path, key_path="new_section", create_key_path_content=lambda: {}
         )
 
         # Verify key_path was created
         with open(config_path) as f:
             content = json.load(f)
 
-        assert 'new_section' in content, "new_section should exist"
-        assert content['new_section'] == {}, "new_section should be empty"
+        assert "new_section" in content, "new_section should exist"
+        assert content["new_section"] == {}, "new_section should be empty"
 
         # Verify existing content preserved
-        assert content['existing_section'] == initial_content['existing_section']
-        assert content['other_data'] == initial_content['other_data']
+        assert content["existing_section"] == initial_content["existing_section"]
+        assert content["other_data"] == initial_content["other_data"]
         print(f"✓ Key path created, existing content preserved")
 
         # Add data to new section
-        store['item'] = 'test'
+        store["item"] = "test"
 
         # Verify everything is correct
         with open(config_path) as f:
             content = json.load(f)
 
-        assert content['new_section']['item'] == 'test'
-        assert content['existing_section']['key'] == 'value'
+        assert content["new_section"]["item"] == "test"
+        assert content["existing_section"]["key"] == "value"
         print(f"✓ All content correct: {content}")
 
     print("✅ Test 2 passed\n")
@@ -122,7 +122,7 @@ def test_claude_desktop_config():
         sys.path.insert(0, str(Path(__file__).parent))
         from aw.util import claude_desktop_config
 
-        config_path = Path(tmpdir) / 'claude_desktop_config.json'
+        config_path = Path(tmpdir) / "claude_desktop_config.json"
 
         print(f"✓ Config path: {config_path}")
         print(f"✓ File exists before: {config_path.exists()}")
@@ -133,7 +133,7 @@ def test_claude_desktop_config():
         print(f"✓ File exists after: {config_path.exists()}")
 
         # Add server config
-        mcp['download'] = {'command': 'python', 'args': ['/path/to/agent.py']}
+        mcp["download"] = {"command": "python", "args": ["/path/to/agent.py"]}
 
         print(f"✓ Added download server")
 
@@ -142,8 +142,8 @@ def test_claude_desktop_config():
             content = json.load(f)
 
         expected_structure = {
-            'mcpServers': {
-                'download': {'command': 'python', 'args': ['/path/to/agent.py']}
+            "mcpServers": {
+                "download": {"command": "python", "args": ["/path/to/agent.py"]}
             }
         }
 
@@ -160,26 +160,26 @@ def test_without_factories_fails():
     print("-" * 70)
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        config_path = Path(tmpdir) / 'missing.json'
+        config_path = Path(tmpdir) / "missing.json"
 
         print(f"✓ Testing with missing file, no factory")
 
         try:
             # Should raise FileNotFoundError
-            store = FileStore(config_path, key_path='section')
+            store = FileStore(config_path, key_path="section")
             assert False, "Should have raised FileNotFoundError"
         except FileNotFoundError as e:
             print(f"✓ Correctly raised FileNotFoundError: {e}")
 
         # Create file but missing key_path
-        with open(config_path, 'w') as f:
-            json.dump({'other': 'data'}, f)
+        with open(config_path, "w") as f:
+            json.dump({"other": "data"}, f)
 
         print(f"✓ Testing with existing file, missing key_path, no factory")
 
         try:
             # Should raise KeyError
-            store = FileStore(config_path, key_path='missing_section')
+            store = FileStore(config_path, key_path="missing_section")
             assert False, "Should have raised KeyError"
         except KeyError as e:
             print(f"✓ Correctly raised KeyError: {e}")
@@ -187,7 +187,7 @@ def test_without_factories_fails():
     print("✅ Test 4 passed\n")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("=" * 70)
     print("FileStore Auto-Initialization Test Suite")
     print("=" * 70)

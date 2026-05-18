@@ -58,15 +58,15 @@ class PriorityRouter:
                 return result
         return None
 
-    def prepend(self, strategy: RoutingStrategy) -> 'PriorityRouter':
+    def prepend(self, strategy: RoutingStrategy) -> "PriorityRouter":
         """Add a strategy at the beginning (highest priority)."""
         return PriorityRouter([strategy] + self.strategies)
 
-    def append(self, strategy: RoutingStrategy) -> 'PriorityRouter':
+    def append(self, strategy: RoutingStrategy) -> "PriorityRouter":
         """Add a strategy at the end (lowest priority)."""
         return PriorityRouter(self.strategies + [strategy])
 
-    def insert(self, index: int, strategy: RoutingStrategy) -> 'PriorityRouter':
+    def insert(self, index: int, strategy: RoutingStrategy) -> "PriorityRouter":
         """Insert a strategy at a specific position."""
         new_strategies = self.strategies.copy()
         new_strategies.insert(index, strategy)
@@ -173,7 +173,7 @@ class MappingRouter:
         """Update mapping."""
         self.mapping.update(*args, **kwargs)
 
-    def copy(self) -> 'MappingRouter':
+    def copy(self) -> "MappingRouter":
         """Create a copy with same configuration."""
         return MappingRouter(
             self.mapping.copy(), default=self.default, key_transform=self.key_transform
@@ -199,43 +199,43 @@ class ExtensionContext:
     """
 
     url: str
-    content: bytes = b''
-    content_type: str = ''
+    content: bytes = b""
+    content_type: str = ""
     explicit_extension: Optional[str] = None
 
 
 # Default Content-Type mapping (visible and mutable)
 DEFAULT_CONTENT_TYPE_MAP = {
-    'application/pdf': '.pdf',
-    'text/html': '.html',
-    'text/markdown': '.md',
-    'text/plain': '.txt',
-    'application/json': '.json',
-    'application/xml': '.xml',
-    'text/csv': '.csv',
-    'image/png': '.png',
-    'image/jpeg': '.jpg',
-    'image/gif': '.gif',
-    'image/webp': '.webp',
-    'image/svg+xml': '.svg',
-    'application/zip': '.zip',
-    'application/gzip': '.gz',
-    'application/x-tar': '.tar',
+    "application/pdf": ".pdf",
+    "text/html": ".html",
+    "text/markdown": ".md",
+    "text/plain": ".txt",
+    "application/json": ".json",
+    "application/xml": ".xml",
+    "text/csv": ".csv",
+    "image/png": ".png",
+    "image/jpeg": ".jpg",
+    "image/gif": ".gif",
+    "image/webp": ".webp",
+    "image/svg+xml": ".svg",
+    "application/zip": ".zip",
+    "application/gzip": ".gz",
+    "application/x-tar": ".tar",
 }
 
 
 # Default magic bytes patterns (visible and mutable)
 DEFAULT_MAGIC_BYTES_MAP = {
-    b'%PDF': '.pdf',
-    b'<!DOCTYPE html': '.html',
-    b'<!doctype html': '.html',
-    b'<html': '.html',
-    b'\x89PNG': '.png',
-    b'\xff\xd8\xff': '.jpg',
-    b'GIF87a': '.gif',
-    b'GIF89a': '.gif',
-    b'PK\x03\x04': '.zip',
-    b'\x1f\x8b': '.gz',
+    b"%PDF": ".pdf",
+    b"<!DOCTYPE html": ".html",
+    b"<!doctype html": ".html",
+    b"<html": ".html",
+    b"\x89PNG": ".png",
+    b"\xff\xd8\xff": ".jpg",
+    b"GIF87a": ".gif",
+    b"GIF89a": ".gif",
+    b"PK\x03\x04": ".zip",
+    b"\x1f\x8b": ".gz",
 }
 
 
@@ -256,7 +256,7 @@ def detect_from_url(ctx: ExtensionContext) -> Optional[str]:
     ext = Path(url_path).suffix.lower()
 
     # Validate extension looks reasonable
-    if ext and 1 < len(ext) <= 5 and ext[1:].replace('_', '').isalnum():
+    if ext and 1 < len(ext) <= 5 and ext[1:].replace("_", "").isalnum():
         return ext
 
     return None
@@ -291,7 +291,7 @@ def make_content_type_detector(
             return None
 
         # Clean content type (remove charset, etc.)
-        content_type = ctx.content_type.split(';')[0].strip().lower()
+        content_type = ctx.content_type.split(";")[0].strip().lower()
         return content_type_map.get(content_type)
 
     return detect
@@ -329,7 +329,7 @@ def make_magic_bytes_detector(
 
             img_ext = imghdr.what(None, h=ctx.content[:50])
             if img_ext:
-                return f'.{img_ext}'
+                return f".{img_ext}"
         except Exception:
             pass
 
@@ -350,8 +350,8 @@ def detect_explicit(ctx: ExtensionContext) -> Optional[str]:
     """
     if ctx.explicit_extension:
         ext = ctx.explicit_extension
-        if not ext.startswith('.'):
-            ext = f'.{ext}'
+        if not ext.startswith("."):
+            ext = f".{ext}"
         return ext
     return None
 
@@ -390,7 +390,7 @@ class ExtensionRouter:
 
     # Priority extensions that short-circuit other checks
     priority_extensions: frozenset = field(
-        default_factory=lambda: frozenset(['.pdf', '.md', '.json'])
+        default_factory=lambda: frozenset([".pdf", ".md", ".json"])
     )
 
     # Configurable mappings (users can modify these)
@@ -425,9 +425,9 @@ class ExtensionRouter:
 
     def __call__(
         self,
-        url: str = '',
-        content: bytes = b'',
-        content_type: str = '',
+        url: str = "",
+        content: bytes = b"",
+        content_type: str = "",
         *,
         explicit_extension: Optional[str] = None,
     ) -> str:
@@ -442,11 +442,11 @@ class ExtensionRouter:
             ctx = ExtensionContext(url, content, content_type, explicit_extension)
 
         result = self.router(ctx)
-        return result if result else '.bin'
+        return result if result else ".bin"
 
     def with_prepended_strategy(
         self, strategy: Callable[[ExtensionContext], Optional[str]]
-    ) -> 'ExtensionRouter':
+    ) -> "ExtensionRouter":
         """Create new router with added strategy at highest priority."""
         new_router = ExtensionRouter(
             self.priority_extensions,
@@ -458,7 +458,7 @@ class ExtensionRouter:
 
     def with_appended_strategy(
         self, strategy: Callable[[ExtensionContext], Optional[str]]
-    ) -> 'ExtensionRouter':
+    ) -> "ExtensionRouter":
         """Create new router with added strategy at lowest priority."""
         new_router = ExtensionRouter(
             self.priority_extensions,

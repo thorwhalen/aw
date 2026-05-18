@@ -21,7 +21,7 @@ from config2py import get_app_data_folder, process_path
 # Default location follows XDG standards:
 #   - Linux/macOS: ~/.local/share/aw
 #   - Windows: %LOCALAPPDATA%/aw
-_aw_data_dir_raw = os.environ.get('AW_DATA_DIR') or get_app_data_folder('aw')
+_aw_data_dir_raw = os.environ.get("AW_DATA_DIR") or get_app_data_folder("aw")
 
 # Process path and ensure it exists
 AW_DATA_DIR = process_path(_aw_data_dir_raw, ensure_dir_exists=True)
@@ -65,41 +65,41 @@ class FileSamplerTool:
         parsed = urllib.parse.urlparse(uri)
 
         # Determine if local or remote
-        if parsed.scheme in ('', 'file'):
+        if parsed.scheme in ("", "file"):
             return self._sample_local(parsed.path or uri)
-        elif parsed.scheme in ('http', 'https'):
+        elif parsed.scheme in ("http", "https"):
             return self._sample_remote(uri)
         else:
-            return {'error': f'Unsupported URI scheme: {parsed.scheme}'}
+            return {"error": f"Unsupported URI scheme: {parsed.scheme}"}
 
     def _sample_local(self, path: str) -> dict[str, Any]:
         """Sample local file."""
         file_path = Path(path)
 
         if not file_path.exists():
-            return {'error': f'File not found: {path}'}
+            return {"error": f"File not found: {path}"}
 
         info = {
-            'uri': str(file_path),
-            'extension': file_path.suffix,
-            'size': file_path.stat().st_size,
-            'exists': True,
+            "uri": str(file_path),
+            "extension": file_path.suffix,
+            "size": file_path.stat().st_size,
+            "exists": True,
         }
 
         try:
             # Read sample
-            with open(file_path, 'rb') as f:
+            with open(file_path, "rb") as f:
                 sample_bytes = f.read(self.sample_size)
-            info['sample_bytes'] = sample_bytes
+            info["sample_bytes"] = sample_bytes
 
             # Try to decode as text
             try:
-                info['sample_text'] = sample_bytes.decode('utf-8')
-                info['encoding'] = 'utf-8'
+                info["sample_text"] = sample_bytes.decode("utf-8")
+                info["encoding"] = "utf-8"
             except UnicodeDecodeError:
-                info['encoding'] = 'binary'
+                info["encoding"] = "binary"
         except Exception as e:
-            info['error'] = str(e)
+            info["error"] = str(e)
 
         return info
 
@@ -111,30 +111,30 @@ class FileSamplerTool:
             # Get headers
             with urllib.request.urlopen(url) as response:
                 info = {
-                    'uri': url,
-                    'content_type': response.headers.get('Content-Type'),
-                    'content_length': response.headers.get('Content-Length'),
+                    "uri": url,
+                    "content_type": response.headers.get("Content-Type"),
+                    "content_length": response.headers.get("Content-Length"),
                 }
 
                 # Infer extension from URL or content-type
                 parsed = urllib.parse.urlparse(url)
                 path = parsed.path
-                if '.' in path:
-                    info['extension'] = '.' + path.split('.')[-1]
+                if "." in path:
+                    info["extension"] = "." + path.split(".")[-1]
 
                 # Read sample
                 sample_bytes = response.read(self.sample_size)
-                info['sample_bytes'] = sample_bytes
+                info["sample_bytes"] = sample_bytes
 
                 try:
-                    info['sample_text'] = sample_bytes.decode('utf-8')
-                    info['encoding'] = 'utf-8'
+                    info["sample_text"] = sample_bytes.decode("utf-8")
+                    info["encoding"] = "utf-8"
                 except UnicodeDecodeError:
-                    info['encoding'] = 'binary'
+                    info["encoding"] = "binary"
 
             return info
         except Exception as e:
-            return {'uri': url, 'error': str(e)}
+            return {"uri": url, "error": str(e)}
 
 
 # ----------------------------------------------------------------------------
@@ -146,7 +146,7 @@ from config2py.sync_store import FileStore
 
 
 def claude_desktop_config(
-    key_path='mcpServers',
+    key_path="mcpServers",
     *,
     config_dir=None,
 ):
@@ -182,12 +182,12 @@ def claude_desktop_config(
         >>> del mcp['old_server']  # doctest: +SKIP
     """
     if config_dir is None:
-        if os.name == 'nt':  # Windows
-            config_dir = os.path.expandvars(r'%APPDATA%\Claude')
+        if os.name == "nt":  # Windows
+            config_dir = os.path.expandvars(r"%APPDATA%\Claude")
         else:  # macOS/Linux
-            config_dir = '~/Library/Application Support/Claude'
+            config_dir = "~/Library/Application Support/Claude"
 
-    config_path = Path(config_dir).expanduser() / 'claude_desktop_config.json'
+    config_path = Path(config_dir).expanduser() / "claude_desktop_config.json"
 
     # Factory for creating empty file content
     def create_empty_config():
@@ -226,25 +226,25 @@ def infer_loader_from_extension(extension: str) -> str:
         'read_excel'
     """
     ext_map = {
-        '.csv': 'read_csv',
-        '.tsv': 'read_csv',
-        '.txt': 'read_csv',
-        '.json': 'read_json',
-        '.jsonl': 'read_json',
-        '.xlsx': 'read_excel',
-        '.xls': 'read_excel',
-        '.parquet': 'read_parquet',
-        '.feather': 'read_feather',
-        '.hdf': 'read_hdf',
-        '.h5': 'read_hdf',
-        '.sql': 'read_sql',
-        '.html': 'read_html',
-        '.xml': 'read_xml',
-        '.pickle': 'read_pickle',
-        '.pkl': 'read_pickle',
+        ".csv": "read_csv",
+        ".tsv": "read_csv",
+        ".txt": "read_csv",
+        ".json": "read_json",
+        ".jsonl": "read_json",
+        ".xlsx": "read_excel",
+        ".xls": "read_excel",
+        ".parquet": "read_parquet",
+        ".feather": "read_feather",
+        ".hdf": "read_hdf",
+        ".h5": "read_hdf",
+        ".sql": "read_sql",
+        ".html": "read_html",
+        ".xml": "read_xml",
+        ".pickle": "read_pickle",
+        ".pkl": "read_pickle",
     }
 
-    return ext_map.get(extension.lower(), 'read_csv')  # Default to CSV
+    return ext_map.get(extension.lower(), "read_csv")  # Default to CSV
 
 
 def infer_loader_params(extension: str, sample_text: str = None) -> dict:
@@ -265,20 +265,20 @@ def infer_loader_params(extension: str, sample_text: str = None) -> dict:
     params = {}
 
     # Extension-based defaults
-    if extension == '.tsv':
-        params['sep'] = '\t'
-    elif extension == '.jsonl':
-        params['lines'] = True
+    if extension == ".tsv":
+        params["sep"] = "\t"
+    elif extension == ".jsonl":
+        params["lines"] = True
 
     # Sample-based inference
     if sample_text:
         # Check for common delimiters
-        if '\t' in sample_text and extension in ('.txt', '.csv'):
-            params['sep'] = '\t'
-        elif ';' in sample_text and ',' not in sample_text:
-            params['sep'] = ';'
-        elif '|' in sample_text:
-            params['sep'] = '|'
+        if "\t" in sample_text and extension in (".txt", ".csv"):
+            params["sep"] = "\t"
+        elif ";" in sample_text and "," not in sample_text:
+            params["sep"] = ";"
+        elif "|" in sample_text:
+            params["sep"] = "|"
 
     return params
 
@@ -398,28 +398,28 @@ def compute_dataframe_info(df) -> dict:
     import pandas as pd
 
     if not isinstance(df, pd.DataFrame):
-        return {'error': 'Not a DataFrame', 'type': type(df).__name__}
+        return {"error": "Not a DataFrame", "type": type(df).__name__}
 
     info = {
-        'shape': df.shape,
-        'columns': list(df.columns),
-        'dtypes': {col: str(dtype) for col, dtype in df.dtypes.items()},
-        'null_counts': df.isnull().sum().to_dict(),
-        'total_nulls': int(df.isnull().sum().sum()),
-        'memory_usage': int(df.memory_usage(deep=True).sum()),
+        "shape": df.shape,
+        "columns": list(df.columns),
+        "dtypes": {col: str(dtype) for col, dtype in df.dtypes.items()},
+        "null_counts": df.isnull().sum().to_dict(),
+        "total_nulls": int(df.isnull().sum().sum()),
+        "memory_usage": int(df.memory_usage(deep=True).sum()),
     }
 
     # Add numeric column info
-    numeric_cols = df.select_dtypes(include='number').columns
-    info['numeric_columns'] = list(numeric_cols)
-    info['num_numeric_columns'] = len(numeric_cols)
+    numeric_cols = df.select_dtypes(include="number").columns
+    info["numeric_columns"] = list(numeric_cols)
+    info["num_numeric_columns"] = len(numeric_cols)
 
     # Add categorical column info
-    categorical_cols = df.select_dtypes(include=['object', 'category']).columns
-    info['categorical_columns'] = list(categorical_cols)
+    categorical_cols = df.select_dtypes(include=["object", "category"]).columns
+    info["categorical_columns"] = list(categorical_cols)
 
     # Sample rows (as records for JSON serializability)
-    info['sample_rows'] = df.head(5).to_dict('records')
+    info["sample_rows"] = df.head(5).to_dict("records")
 
     return info
 
@@ -440,7 +440,7 @@ def get_numeric_columns(df, exclude_nulls: bool = True):
     """
     import pandas as pd
 
-    numeric_cols = df.select_dtypes(include='number').columns
+    numeric_cols = df.select_dtypes(include="number").columns
 
     for col in numeric_cols:
         if exclude_nulls and df[col].isnull().any():

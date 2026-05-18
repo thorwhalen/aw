@@ -34,7 +34,7 @@ class AgenticWorkflow:
         self.context = context or Context()
         self.steps: list[tuple[str, AgenticStep]] = []
 
-    def add_step(self, name: str, step: AgenticStep) -> 'AgenticWorkflow':
+    def add_step(self, name: str, step: AgenticStep) -> "AgenticWorkflow":
         """Add a step to the workflow.
 
         Args:
@@ -57,33 +57,33 @@ class AgenticWorkflow:
             Tuple of (final_artifact, workflow_metadata)
         """
         current_input = initial_input
-        workflow_metadata = {'steps': [], 'context_snapshot': None}
+        workflow_metadata = {"steps": [], "context_snapshot": None}
 
         for step_name, step in self.steps:
             # Execute step
             artifact, metadata = step.execute(current_input, self.context)
 
             # Record step execution
-            workflow_metadata['steps'].append(
+            workflow_metadata["steps"].append(
                 {
-                    'name': step_name,
-                    'success': metadata.get('success', True),
-                    'metadata': metadata,
+                    "name": step_name,
+                    "success": metadata.get("success", True),
+                    "metadata": metadata,
                 }
             )
 
             # Check for failure
-            if not metadata.get('success', True):
-                workflow_metadata['failed_at'] = step_name
-                workflow_metadata['context_snapshot'] = self.context.snapshot()
+            if not metadata.get("success", True):
+                workflow_metadata["failed_at"] = step_name
+                workflow_metadata["context_snapshot"] = self.context.snapshot()
                 return artifact, workflow_metadata
 
             # Pass artifact to next step
             current_input = artifact
 
         # All steps completed successfully
-        workflow_metadata['success'] = True
-        workflow_metadata['context_snapshot'] = self.context.snapshot()
+        workflow_metadata["success"] = True
+        workflow_metadata["context_snapshot"] = self.context.snapshot()
 
         return current_input, workflow_metadata
 
@@ -100,26 +100,26 @@ class AgenticWorkflow:
             Tuple of (artifact, metadata)
         """
         current_input = initial_input
-        workflow_metadata = {'steps': []}
+        workflow_metadata = {"steps": []}
 
         for step_name, step in self.steps:
             artifact, metadata = step.execute(current_input, self.context)
 
-            workflow_metadata['steps'].append({'name': step_name, 'metadata': metadata})
+            workflow_metadata["steps"].append({"name": step_name, "metadata": metadata})
 
             current_input = artifact
 
             if step_name == stop_after:
                 break
 
-        workflow_metadata['context_snapshot'] = self.context.snapshot()
+        workflow_metadata["context_snapshot"] = self.context.snapshot()
         return current_input, workflow_metadata
 
 
 def create_data_prep_workflow(
     loading_config: StepConfig = None,
     preparing_config: StepConfig = None,
-    target: str = 'generic',
+    target: str = "generic",
 ) -> AgenticWorkflow:
     """Factory to create a data preparation workflow.
 
@@ -141,11 +141,11 @@ def create_data_prep_workflow(
 
     # Add loading step
     loading_agent = LoadingAgent(loading_config)
-    workflow.add_step('loading', loading_agent)
+    workflow.add_step("loading", loading_agent)
 
     # Add preparing step
     preparing_agent = PreparationAgent(config=preparing_config, target=target)
-    workflow.add_step('preparing', preparing_agent)
+    workflow.add_step("preparing", preparing_agent)
 
     return workflow
 
@@ -178,7 +178,7 @@ def create_cosmo_prep_workflow(
     return create_data_prep_workflow(
         loading_config=loading_config,
         preparing_config=preparing_config,
-        target='cosmo-ready',
+        target="cosmo-ready",
     )
 
 
@@ -189,7 +189,7 @@ def create_cosmo_prep_workflow(
 
 def load_and_prepare(
     source_uri: str,
-    target: str = 'generic',
+    target: str = "generic",
     validator: Callable = None,
     max_retries: int = 3,
 ) -> tuple[Any, dict]:
@@ -241,7 +241,7 @@ def load_for_cosmo(
 
     return load_and_prepare(
         source_uri=source_uri,
-        target='cosmo-ready',
+        target="cosmo-ready",
         validator=validator,
         max_retries=max_retries,
     )
@@ -270,7 +270,7 @@ class InteractiveWorkflow(AgenticWorkflow):
 
     def add_step(
         self, name: str, step: AgenticStep, require_approval: bool = False
-    ) -> 'InteractiveWorkflow':
+    ) -> "InteractiveWorkflow":
         """Add step with optional approval requirement."""
         super().add_step(name, step)
         self.approval_required[name] = require_approval
@@ -288,33 +288,33 @@ class InteractiveWorkflow(AgenticWorkflow):
     def run_interactive(self, initial_input: Any) -> tuple[Any, dict]:
         """Run workflow with human-in-loop checkpoints."""
         current_input = initial_input
-        workflow_metadata = {'steps': []}
+        workflow_metadata = {"steps": []}
 
         for step_name, step in self.steps:
             # Execute step
             artifact, metadata = step.execute(current_input, self.context)
 
-            workflow_metadata['steps'].append({'name': step_name, 'metadata': metadata})
+            workflow_metadata["steps"].append({"name": step_name, "metadata": metadata})
 
             # Check if approval required
             if self.approval_required.get(step_name, False):
                 if self.approval_callback:
                     approved = self.approval_callback(step_name, artifact, metadata)
                     if not approved:
-                        workflow_metadata['aborted_at'] = step_name
-                        workflow_metadata['reason'] = 'User rejected'
+                        workflow_metadata["aborted_at"] = step_name
+                        workflow_metadata["reason"] = "User rejected"
                         return artifact, workflow_metadata
                 else:
                     # No callback - just print and ask
                     print(f"\nStep '{step_name}' completed:")
                     print(f"  Metadata: {metadata}")
                     response = input("Continue? (y/n): ")
-                    if response.lower() != 'y':
-                        workflow_metadata['aborted_at'] = step_name
+                    if response.lower() != "y":
+                        workflow_metadata["aborted_at"] = step_name
                         return artifact, workflow_metadata
 
             current_input = artifact
 
-        workflow_metadata['success'] = True
-        workflow_metadata['context_snapshot'] = self.context.snapshot()
+        workflow_metadata["success"] = True
+        workflow_metadata["context_snapshot"] = self.context.snapshot()
         return current_input, workflow_metadata

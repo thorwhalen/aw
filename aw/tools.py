@@ -73,15 +73,15 @@ class CodeInterpreterTool:
             executor: Optional custom executor function for advanced backends
         """
         self.allowed_modules = allowed_modules or [
-            'pandas',
-            'numpy',
-            'math',
-            'json',
-            're',
-            'itertools',
-            'collections',
-            'functools',
-            'typing',
+            "pandas",
+            "numpy",
+            "math",
+            "json",
+            "re",
+            "itertools",
+            "collections",
+            "functools",
+            "typing",
         ]
         self.global_context = global_context or {}
         self._executor = executor or self._default_executor
@@ -116,7 +116,7 @@ class CodeInterpreterTool:
             output = captured_output.getvalue()
 
             # Try to get result from last expression
-            result = local_vars.get('_result', None)
+            result = local_vars.get("_result", None)
 
             return ExecutionResult(
                 success=True, output=output, result=result, locals_dict=local_vars
@@ -137,38 +137,38 @@ class CodeInterpreterTool:
     def _build_safe_namespace(self) -> dict:
         """Build a safe namespace with allowed modules."""
         namespace = {
-            '__builtins__': {
+            "__builtins__": {
                 # Include safe builtins
-                'print': print,
-                'len': len,
-                'range': range,
-                'enumerate': enumerate,
-                'zip': zip,
-                'map': map,
-                'filter': filter,
-                'sum': sum,
-                'min': min,
-                'max': max,
-                'abs': abs,
-                'round': round,
-                'int': int,
-                'float': float,
-                'str': str,
-                'bool': bool,
-                'list': list,
-                'dict': dict,
-                'set': set,
-                'tuple': tuple,
-                'type': type,
-                'isinstance': isinstance,
-                'hasattr': hasattr,
-                'getattr': getattr,
-                'setattr': setattr,
-                'sorted': sorted,
-                'reversed': reversed,
-                'any': any,
-                'all': all,
-                '__import__': __import__,  # Needed for import statements
+                "print": print,
+                "len": len,
+                "range": range,
+                "enumerate": enumerate,
+                "zip": zip,
+                "map": map,
+                "filter": filter,
+                "sum": sum,
+                "min": min,
+                "max": max,
+                "abs": abs,
+                "round": round,
+                "int": int,
+                "float": float,
+                "str": str,
+                "bool": bool,
+                "list": list,
+                "dict": dict,
+                "set": set,
+                "tuple": tuple,
+                "type": type,
+                "isinstance": isinstance,
+                "hasattr": hasattr,
+                "getattr": getattr,
+                "setattr": setattr,
+                "sorted": sorted,
+                "reversed": reversed,
+                "any": any,
+                "all": all,
+                "__import__": __import__,  # Needed for import statements
             }
         }
 
@@ -177,11 +177,11 @@ class CodeInterpreterTool:
             try:
                 module = __import__(module_name)
                 # Handle submodules (e.g., pandas.core)
-                if '.' in module_name:
-                    parts = module_name.split('.')
+                if "." in module_name:
+                    parts = module_name.split(".")
                     for part in parts[1:]:
                         module = getattr(module, part)
-                namespace[module_name.split('.')[0]] = module
+                namespace[module_name.split(".")[0]] = module
             except ImportError:
                 # Module not available - skip silently
                 pass
@@ -203,9 +203,9 @@ def _extract_imports(code: str) -> list[str]:
     imports = []
 
     # Match "import module" and "from module import ..."
-    import_pattern = r'^\s*(?:import|from)\s+(\w+)'
+    import_pattern = r"^\s*(?:import|from)\s+(\w+)"
 
-    for line in code.split('\n'):
+    for line in code.split("\n"):
         match = re.match(import_pattern, line)
         if match:
             imports.append(match.group(1))
@@ -222,7 +222,7 @@ class SafeCodeInterpreter(CodeInterpreterTool):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Remove potentially dangerous modules
-        dangerous_modules = {'os', 'sys', 'subprocess', 'socket', 'urllib'}
+        dangerous_modules = {"os", "sys", "subprocess", "socket", "urllib"}
         self.allowed_modules = [
             m for m in self.allowed_modules if m not in dangerous_modules
         ]
@@ -249,7 +249,7 @@ def create_langchain_executor() -> Callable[[str, dict], ExecutionResult]:
 
         def executor(code: str, context: dict) -> ExecutionResult:
             # Inject context variables
-            context_setup = '\n'.join(f"{k} = {repr(v)}" for k, v in context.items())
+            context_setup = "\n".join(f"{k} = {repr(v)}" for k, v in context.items())
             full_code = f"{context_setup}\n{code}" if context else code
 
             try:

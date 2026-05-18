@@ -9,8 +9,8 @@ from dataclasses import dataclass, field
 from collections.abc import Mapping, MutableMapping
 
 
-T = TypeVar('T')
-ArtifactType = TypeVar('ArtifactType')
+T = TypeVar("T")
+ArtifactType = TypeVar("ArtifactType")
 
 
 class AgenticStep(Protocol[ArtifactType]):
@@ -148,18 +148,18 @@ class StepConfig:
         def validate(artifact):
             try:
                 # Try Pydantic model validation
-                if hasattr(schema, 'model_validate'):
+                if hasattr(schema, "model_validate"):
                     result = schema.model_validate(artifact)
-                    return True, {'validated': result}
+                    return True, {"validated": result}
                 # Try JSON schema validation
-                elif hasattr(schema, 'validate'):
+                elif hasattr(schema, "validate"):
                     schema.validate(artifact)
                     return True, {}
                 else:
                     # Unknown schema type - pass through
                     return True, {}
             except Exception as e:
-                return False, {'error': str(e)}
+                return False, {"error": str(e)}
 
         return validate
 
@@ -189,9 +189,9 @@ class GlobalConfig:
             A new StepConfig with merged configuration
         """
         defaults = {
-            'llm': self.llm,
-            'max_retries': self.max_retries,
-            'human_in_loop': self.human_in_loop,
+            "llm": self.llm,
+            "max_retries": self.max_retries,
+            "human_in_loop": self.human_in_loop,
         }
         defaults.update(kwargs)
         return StepConfig(**defaults)

@@ -52,17 +52,17 @@ def schema_validator(schema: Any) -> Callable[[Any], tuple[bool, dict]]:
     def validate(artifact):
         try:
             # Try Pydantic model validation
-            if hasattr(schema, 'model_validate'):
+            if hasattr(schema, "model_validate"):
                 result = schema.model_validate(artifact)
-                return True, {'validated': result}
+                return True, {"validated": result}
             # Try JSON schema validation
-            elif hasattr(schema, 'validate'):
+            elif hasattr(schema, "validate"):
                 schema.validate(artifact)
                 return True, {}
             else:
-                return False, {'error': 'Unknown schema type'}
+                return False, {"error": "Unknown schema type"}
         except Exception as e:
-            return False, {'error': str(e), 'exception_type': type(e).__name__}
+            return False, {"error": str(e), "exception_type": type(e).__name__}
 
     return validate
 
@@ -102,9 +102,9 @@ def info_dict_validator(
         try:
             info = compute_info(artifact)
             success, reason = check_info(info)
-            return success, {'info': info, 'reason': reason}
+            return success, {"info": info, "reason": reason}
         except Exception as e:
-            return False, {'error': str(e), 'exception_type': type(e).__name__}
+            return False, {"error": str(e), "exception_type": type(e).__name__}
 
     return validate
 
@@ -144,12 +144,12 @@ def functional_validator(
                 success = success_check(result)
             else:
                 success = result is not None
-            return success, {'result': result}
+            return success, {"result": result}
         except Exception as e:
             return False, {
-                'error': str(e),
-                'exception_type': type(e).__name__,
-                'traceback': _get_traceback_str(e),
+                "error": str(e),
+                "exception_type": type(e).__name__,
+                "traceback": _get_traceback_str(e),
             }
 
     return validate
@@ -159,7 +159,7 @@ def _get_traceback_str(exception: Exception) -> str:
     """Extract traceback string from exception."""
     import traceback
 
-    return ''.join(traceback.format_tb(exception.__traceback__))
+    return "".join(traceback.format_tb(exception.__traceback__))
 
 
 # ============================================================================
@@ -188,7 +188,7 @@ def all_validators(*validators: Callable) -> Callable[[Any], tuple[bool, dict]]:
         all_info = {}
         for i, validator in enumerate(validators):
             success, info = validator(artifact)
-            all_info[f'validator_{i}'] = {'success': success, 'info': info}
+            all_info[f"validator_{i}"] = {"success": success, "info": info}
             if not success:
                 return False, all_info
         return True, all_info
@@ -210,7 +210,7 @@ def any_validator(*validators: Callable) -> Callable[[Any], tuple[bool, dict]]:
         all_info = {}
         for i, validator in enumerate(validators):
             success, info = validator(artifact)
-            all_info[f'validator_{i}'] = {'success': success, 'info': info}
+            all_info[f"validator_{i}"] = {"success": success, "info": info}
             if success:
                 return True, all_info
         return False, all_info
@@ -234,8 +234,8 @@ def is_type(expected_type: type) -> Callable[[Any], tuple[bool, dict]]:
     def validate(artifact):
         success = isinstance(artifact, expected_type)
         info = {
-            'expected_type': expected_type.__name__,
-            'actual_type': type(artifact).__name__,
+            "expected_type": expected_type.__name__,
+            "actual_type": type(artifact).__name__,
         }
         return success, info
 
@@ -251,10 +251,10 @@ def is_not_empty() -> Callable[[Any], tuple[bool, dict]]:
     def validate(artifact):
         try:
             is_empty = len(artifact) == 0
-            return not is_empty, {'length': len(artifact)}
+            return not is_empty, {"length": len(artifact)}
         except TypeError:
             # Object has no len - consider non-empty if it exists
-            return artifact is not None, {'has_length': False}
+            return artifact is not None, {"has_length": False}
 
     return validate
 
@@ -270,18 +270,18 @@ def has_attributes(**required_attrs: Any) -> Callable[[Any], tuple[bool, dict]]:
         info = {}
         for attr_name, checker in required_attrs.items():
             if not hasattr(artifact, attr_name):
-                return False, {'missing_attribute': attr_name, 'info': info}
+                return False, {"missing_attribute": attr_name, "info": info}
             attr_value = getattr(artifact, attr_name)
             if checker is not None:
                 if callable(checker):
                     check_passed = checker(attr_value)
                 else:
                     check_passed = attr_value == checker
-                info[attr_name] = {'value': attr_value, 'check_passed': check_passed}
+                info[attr_name] = {"value": attr_value, "check_passed": check_passed}
                 if not check_passed:
                     return False, info
             else:
-                info[attr_name] = {'value': attr_value}
+                info[attr_name] = {"value": attr_value}
         return True, info
 
     return validate

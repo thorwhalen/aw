@@ -170,38 +170,38 @@ Generate the function:
 
 # Simple schema: just the code string
 CODE_DEFINITION_SCHEMA = {
-    'name': 'generated_python_function',
-    'schema': {
-        'type': 'object',
-        'properties': {
-            'code': {
-                'type': 'string',
-                'description': 'Complete Python function definition as a string',
+    "name": "generated_python_function",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "code": {
+                "type": "string",
+                "description": "Complete Python function definition as a string",
             },
         },
-        'required': ['code'],
+        "required": ["code"],
     },
 }
 
 # Detailed schema: includes metadata
 DETAILED_CODE_DEFINITION_SCHEMA = {
-    'name': 'detailed_python_function',
-    'schema': {
-        'type': 'object',
-        'properties': {
-            'code': {
-                'type': 'string',
-                'description': 'Complete Python function definition',
+    "name": "detailed_python_function",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "code": {
+                "type": "string",
+                "description": "Complete Python function definition",
             },
-            'function_name': {'type': 'string', 'description': 'Name of the function'},
-            'parameters': {
-                'type': 'array',
-                'description': 'List of parameter names',
-                'items': {'type': 'string'},
+            "function_name": {"type": "string", "description": "Name of the function"},
+            "parameters": {
+                "type": "array",
+                "description": "List of parameter names",
+                "items": {"type": "string"},
             },
-            'docstring': {'type': 'string', 'description': 'The function docstring'},
+            "docstring": {"type": "string", "description": "The function docstring"},
         },
-        'required': ['code', 'function_name'],
+        "required": ["code", "function_name"],
     },
 }
 
@@ -248,7 +248,7 @@ def extract_function_from_code(
     if strict:
         # Pre-compile check
         try:
-            compile(code_str_for_func, '<generated>', 'exec')
+            compile(code_str_for_func, "<generated>", "exec")
         except SyntaxError as e:
             raise ValueError(f"Generated code has syntax error: {e}")
 
@@ -267,11 +267,11 @@ def extract_function_from_code(
 
     if make_picklable:
         name = func.__name__
-        if name in sys.modules['__main__'].__dict__:
-            if verbose and inspect.isfunction(sys.modules['__main__'].__dict__[name]):
+        if name in sys.modules["__main__"].__dict__:
+            if verbose and inspect.isfunction(sys.modules["__main__"].__dict__[name]):
                 print(f"WARNING: Overwriting '{name}' in __main__")
 
-        sys.modules['__main__'].__dict__[name] = func
+        sys.modules["__main__"].__dict__[name] = func
         if verbose:
             print(f"Loaded function: {name} (picklable)")
     elif verbose:
@@ -317,7 +317,7 @@ def make_code_generator(
 def task_to_function(
     task: str,
     output_schema: dict | str | None = None,
-    name: str = 'generated_function',
+    name: str = "generated_function",
     code_generator=None,
     **generator_kwargs,
 ) -> callable:
@@ -345,7 +345,7 @@ def task_to_function(
     if isinstance(output_schema, dict):
         output_schema_str = json.dumps(output_schema, indent=2)
     else:
-        output_schema_str = output_schema or 'null'
+        output_schema_str = output_schema or "null"
 
     # Generate code
     result = code_generator(
@@ -353,7 +353,7 @@ def task_to_function(
     )
 
     # Extract function from generated code
-    code_str = result['code']
+    code_str = result["code"]
     return extract_function_from_code(code_str)
 
 
@@ -403,5 +403,5 @@ print(func(2, 3))  # {'sum': 5}
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _demo()

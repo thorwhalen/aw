@@ -31,7 +31,7 @@ class PreparationAgent:
     def __init__(
         self,
         config: StepConfig = None,
-        target: str = 'generic',
+        target: str = "generic",
         target_validator: Callable = None,
     ):
         """Initialize preparation agent.
@@ -55,7 +55,7 @@ class PreparationAgent:
             self.validator = self.config.resolve_validator()
         else:
             # Use a basic validator
-            self.validator = lambda df: (True, {'note': 'No validation specified'})
+            self.validator = lambda df: (True, {"note": "No validation specified"})
 
     def execute(
         self, input_df: Any, context: MutableMapping[str, Any]
@@ -73,11 +73,11 @@ class PreparationAgent:
 
         # Initialize
         attempts = []
-        current_df = input_df.copy() if hasattr(input_df, 'copy') else input_df
+        current_df = input_df.copy() if hasattr(input_df, "copy") else input_df
 
         # Get initial info
         initial_info = compute_dataframe_info(current_df)
-        attempts.append({'step': 'initial_analysis', 'info': initial_info})
+        attempts.append({"step": "initial_analysis", "info": initial_info})
 
         # Iterate with transformations
         for attempt_num in range(self.config.max_retries):
@@ -87,21 +87,21 @@ class PreparationAgent:
             )
 
             attempts.append(
-                {'attempt': attempt_num, 'step': 'generate_code', 'code': code}
+                {"attempt": attempt_num, "step": "generate_code", "code": code}
             )
 
             # Step 2: Execute transformation
             exec_result = self.code_interpreter(
-                code, context={'df': current_df, 'pd': pd}
+                code, context={"df": current_df, "pd": pd}
             )
 
             attempts.append(
                 {
-                    'attempt': attempt_num,
-                    'step': 'execute',
-                    'success': exec_result.success,
-                    'output': exec_result.output,
-                    'error': exec_result.error,
+                    "attempt": attempt_num,
+                    "step": "execute",
+                    "success": exec_result.success,
+                    "output": exec_result.output,
+                    "error": exec_result.error,
                 }
             )
 
@@ -110,16 +110,16 @@ class PreparationAgent:
                 continue
 
             # Get transformed DataFrame
-            transformed_df = exec_result.locals.get('transformed_df', current_df)
+            transformed_df = exec_result.locals.get("transformed_df", current_df)
 
             # Step 3: Validate with target validator
             is_valid, validation_info = self.validator(transformed_df)
             attempts.append(
                 {
-                    'attempt': attempt_num,
-                    'step': 'validate',
-                    'success': is_valid,
-                    'info': validation_info,
+                    "attempt": attempt_num,
+                    "step": "validate",
+                    "success": is_valid,
+                    "info": validation_info,
                 }
             )
 
@@ -127,17 +127,17 @@ class PreparationAgent:
                 # Success!
                 final_info = compute_dataframe_info(transformed_df)
                 metadata = {
-                    'success': True,
-                    'target': self.target,
-                    'initial_info': initial_info,
-                    'final_info': final_info,
-                    'validation_result': validation_info,
-                    'attempts': attempts,
-                    'num_attempts': attempt_num + 1,
+                    "success": True,
+                    "target": self.target,
+                    "initial_info": initial_info,
+                    "final_info": final_info,
+                    "validation_result": validation_info,
+                    "attempts": attempts,
+                    "num_attempts": attempt_num + 1,
                 }
 
                 # Store in context
-                context['preparing'] = {'df': transformed_df, 'metadata': metadata}
+                context["preparing"] = {"df": transformed_df, "metadata": metadata}
 
                 return transformed_df, metadata
 
@@ -146,10 +146,10 @@ class PreparationAgent:
 
         # Max retries exceeded
         return current_df, {
-            'success': False,
-            'error': 'Max retries exceeded',
-            'target': self.target,
-            'attempts': attempts,
+            "success": False,
+            "error": "Max retries exceeded",
+            "target": self.target,
+            "attempts": attempts,
         }
 
     def _generate_transformation_code(
@@ -173,7 +173,7 @@ class PreparationAgent:
 
     def _generate_initial_transformation(self, df: Any, info: dict) -> str:
         """Generate initial transformation based on target."""
-        if self.target == 'cosmo-ready':
+        if self.target == "cosmo-ready":
             return self._generate_cosmo_transformation(df, info)
         else:
             # Generic: just ensure no nulls
@@ -189,7 +189,7 @@ transformed_df = transformed_df.dropna()
         - At least 2 numeric columns for x/y coordinates
         - No nulls in those columns
         """
-        numeric_cols = info.get('numeric_columns', [])
+        numeric_cols = info.get("numeric_columns", [])
 
         if len(numeric_cols) >= 2:
             # We have numeric columns - just clean them
@@ -228,13 +228,13 @@ transformed_df = transformed_df.dropna()
     ) -> str:
         """Generate retry transformation based on validation errors."""
         # Get last validation error
-        last_validation = [a for a in attempts if a.get('step') == 'validate'][-1]
+        last_validation = [a for a in attempts if a.get("step") == "validate"][-1]
 
-        error_info = last_validation.get('info', {})
-        error_msg = error_info.get('error', '')
+        error_info = last_validation.get("info", {})
+        error_msg = error_info.get("error", "")
 
         # Adjust based on error
-        if 'not numeric' in error_msg.lower():
+        if "not numeric" in error_msg.lower():
             return """
 import numpy as np
 transformed_df = df.copy()
@@ -246,7 +246,7 @@ for col in transformed_df.columns:
         pass
 transformed_df = transformed_df.dropna()
 """
-        elif 'too few' in error_msg.lower() or 'column' in error_msg.lower():
+        elif "too few" in error_msg.lower() or "column" in error_msg.lower():
             return """
 import numpy as np
 transformed_df = df.copy()
@@ -270,7 +270,7 @@ transformed_df = transformed_df.fillna(transformed_df.mean())
 
 
 def create_preparation_agent(
-    target: str = 'generic',
+    target: str = "generic",
     validator: Callable = None,
     llm: str = None,
     max_retries: int = 3,

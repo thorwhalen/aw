@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aw"
-version = "0.1.1"
+version = "0.1.3"
 description = "AI Agentic Workflows for data preparation and transformation"
 readme = "README.md"
 requires-python = ">=3.10"
