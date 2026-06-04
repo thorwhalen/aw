@@ -104,12 +104,16 @@ from aw.translators import (
     ValidatorSpec,
     extract_agent_spec,
     to_claude_skill,
+    claude_skill_from_spec,
     write_skill_directory,
     workflow_to_skills,
     to_crewai_yaml,
+    crewai_yaml_from_spec,
     workflow_to_crewai_yaml,
     to_openai_tools,
+    openai_tools_from_spec,
     to_openai_assistant,
+    openai_assistant_from_spec,
 )
 
 __version__ = "0.1.0"
@@ -171,10 +175,14 @@ __all__ = [
     "ValidatorSpec",
     "extract_agent_spec",
     "to_claude_skill",
+    "claude_skill_from_spec",
     "write_skill_directory",
     "workflow_to_skills",
     "to_crewai_yaml",
+    "crewai_yaml_from_spec",
     "workflow_to_crewai_yaml",
     "to_openai_tools",
+    "openai_tools_from_spec",
     "to_openai_assistant",
+    "openai_assistant_from_spec",
 ]
