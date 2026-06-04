@@ -414,8 +414,35 @@ def to_claude_skill(
         >>> 'data-loading' in skill
         True
     """
-    spec = extract_agent_spec(agent, name=name)
+    return claude_skill_from_spec(
+        extract_agent_spec(agent, name=name),
+        name=name,
+        description=description,
+        extra_tools=extra_tools,
+        disable_model_invocation=disable_model_invocation,
+    )
 
+
+def claude_skill_from_spec(
+    spec: "AgentSpec",
+    *,
+    name: str = None,
+    description: str = None,
+    extra_tools: list = None,
+    disable_model_invocation: bool = False,
+) -> str:
+    """Render a Claude Code SKILL.md string from an :class:`AgentSpec`.
+
+    The rendering core of :func:`to_claude_skill` — driveable by any ``AgentSpec``
+    (not only a live aw agent), so other tools (e.g. ``coact``) can reuse it.
+
+    Example:
+        >>> from aw import LoadingAgent
+        >>> from aw.translators import extract_agent_spec, claude_skill_from_spec
+        >>> spec = extract_agent_spec(LoadingAgent(), name='data-loading')
+        >>> '---' in claude_skill_from_spec(spec)
+        True
+    """
     # Derive skill name (kebab-case)
     skill_name = name or _to_kebab_case(spec.name)
 
@@ -621,8 +648,27 @@ def to_crewai_yaml(
         >>> config['role']  # doctest: +SKIP
         'Data Loading Specialist'
     """
-    spec = extract_agent_spec(agent, name=name)
+    return crewai_yaml_from_spec(
+        extract_agent_spec(agent, name=name),
+        name=name,
+        role=role,
+        goal=goal,
+        backstory=backstory,
+    )
 
+
+def crewai_yaml_from_spec(
+    spec: "AgentSpec",
+    *,
+    name: str = None,
+    role: str = None,
+    goal: str = None,
+    backstory: str = None,
+) -> dict:
+    """Render a CrewAI agent config dict from an :class:`AgentSpec`.
+
+    The rendering core of :func:`to_crewai_yaml`, driveable by any ``AgentSpec``.
+    """
     # Derive role from class name or description
     if role is None:
         role = _class_name_to_role(spec.source_class)
@@ -723,7 +769,14 @@ def to_openai_tools(agent: Any) -> list:
         >>> all(t['type'] == 'function' for t in tools)
         True
     """
-    spec = extract_agent_spec(agent)
+    return openai_tools_from_spec(extract_agent_spec(agent))
+
+
+def openai_tools_from_spec(spec: "AgentSpec") -> list:
+    """Render OpenAI function-calling tool schemas from an :class:`AgentSpec`.
+
+    The rendering core of :func:`to_openai_tools`, driveable by any ``AgentSpec``.
+    """
     openai_tools = []
 
     for tool in spec.tools:
@@ -778,8 +831,19 @@ def to_openai_assistant(
         >>> 'instructions' in config
         True
     """
-    spec = extract_agent_spec(agent, name=name)
-    tools = to_openai_tools(agent)
+    return openai_assistant_from_spec(
+        extract_agent_spec(agent, name=name), name=name, model=model
+    )
+
+
+def openai_assistant_from_spec(
+    spec: "AgentSpec", *, name: str = None, model: str = "gpt-4"
+) -> dict:
+    """Render an OpenAI Assistant-style config dict from an :class:`AgentSpec`.
+
+    The rendering core of :func:`to_openai_assistant`, driveable by any ``AgentSpec``.
+    """
+    tools = openai_tools_from_spec(spec)
 
     # Always include code_interpreter for aw agents (they execute code)
     has_code_tool = any(
