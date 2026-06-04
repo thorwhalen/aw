@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aw.routing &mdash; aw 0.1.1 documentation</title>
+  <title>aw.routing &mdash; aw 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/documentation_options.js?v=360bc84d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -153,21 +153,21 @@
 
 <div class="viewcode-block" id="PriorityRouter.prepend">
 <a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.PriorityRouter.prepend">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">prepend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">RoutingStrategy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;PriorityRouter&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">RoutingStrategy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PriorityRouter&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a strategy at the beginning (highest priority).&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">PriorityRouter</span><span class="p">([</span><span class="n">strategy</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PriorityRouter.append">
 <a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.PriorityRouter.append">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">RoutingStrategy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;PriorityRouter&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">RoutingStrategy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PriorityRouter&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a strategy at the end (lowest priority).&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">PriorityRouter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">strategies</span> <span class="o">+</span> <span class="p">[</span><span class="n">strategy</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="PriorityRouter.insert">
 <a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.PriorityRouter.insert">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">RoutingStrategy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;PriorityRouter&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">RoutingStrategy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PriorityRouter&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Insert a strategy at a specific position.&quot;&quot;&quot;</span>
         <span class="n">new_strategies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">new_strategies</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">strategy</span><span class="p">)</span>
@@ -286,7 +286,7 @@
 
 <div class="viewcode-block" id="MappingRouter.copy">
 <a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.MappingRouter.copy">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;MappingRouter&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MappingRouter&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a copy with same configuration.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">MappingRouter</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">key_transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">key_transform</span>
@@ -316,44 +316,44 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">content</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
-    <span class="n">content_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">content</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+    <span class="n">content_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">explicit_extension</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
 
 <span class="c1"># Default Content-Type mapping (visible and mutable)</span>
 <span class="n">DEFAULT_CONTENT_TYPE_MAP</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;application/pdf&#39;</span><span class="p">:</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;text/html&#39;</span><span class="p">:</span> <span class="s1">&#39;.html&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;text/markdown&#39;</span><span class="p">:</span> <span class="s1">&#39;.md&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;text/plain&#39;</span><span class="p">:</span> <span class="s1">&#39;.txt&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;application/json&#39;</span><span class="p">:</span> <span class="s1">&#39;.json&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;application/xml&#39;</span><span class="p">:</span> <span class="s1">&#39;.xml&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;text/csv&#39;</span><span class="p">:</span> <span class="s1">&#39;.csv&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;image/png&#39;</span><span class="p">:</span> <span class="s1">&#39;.png&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;image/jpeg&#39;</span><span class="p">:</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;image/gif&#39;</span><span class="p">:</span> <span class="s1">&#39;.gif&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;image/webp&#39;</span><span class="p">:</span> <span class="s1">&#39;.webp&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;image/svg+xml&#39;</span><span class="p">:</span> <span class="s1">&#39;.svg&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;application/zip&#39;</span><span class="p">:</span> <span class="s1">&#39;.zip&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;application/gzip&#39;</span><span class="p">:</span> <span class="s1">&#39;.gz&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;application/x-tar&#39;</span><span class="p">:</span> <span class="s1">&#39;.tar&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;application/pdf&quot;</span><span class="p">:</span> <span class="s2">&quot;.pdf&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;text/html&quot;</span><span class="p">:</span> <span class="s2">&quot;.html&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;text/markdown&quot;</span><span class="p">:</span> <span class="s2">&quot;.md&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;text/plain&quot;</span><span class="p">:</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;application/json&quot;</span><span class="p">:</span> <span class="s2">&quot;.json&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;application/xml&quot;</span><span class="p">:</span> <span class="s2">&quot;.xml&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;text/csv&quot;</span><span class="p">:</span> <span class="s2">&quot;.csv&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;image/png&quot;</span><span class="p">:</span> <span class="s2">&quot;.png&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;image/jpeg&quot;</span><span class="p">:</span> <span class="s2">&quot;.jpg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;image/gif&quot;</span><span class="p">:</span> <span class="s2">&quot;.gif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;image/webp&quot;</span><span class="p">:</span> <span class="s2">&quot;.webp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;image/svg+xml&quot;</span><span class="p">:</span> <span class="s2">&quot;.svg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;application/zip&quot;</span><span class="p">:</span> <span class="s2">&quot;.zip&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;application/gzip&quot;</span><span class="p">:</span> <span class="s2">&quot;.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;application/x-tar&quot;</span><span class="p">:</span> <span class="s2">&quot;.tar&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 
 <span class="c1"># Default magic bytes patterns (visible and mutable)</span>
 <span class="n">DEFAULT_MAGIC_BYTES_MAP</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="sa">b</span><span class="s1">&#39;%PDF&#39;</span><span class="p">:</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">,</span>
-    <span class="sa">b</span><span class="s1">&#39;&lt;!DOCTYPE html&#39;</span><span class="p">:</span> <span class="s1">&#39;.html&#39;</span><span class="p">,</span>
-    <span class="sa">b</span><span class="s1">&#39;&lt;!doctype html&#39;</span><span class="p">:</span> <span class="s1">&#39;.html&#39;</span><span class="p">,</span>
-    <span class="sa">b</span><span class="s1">&#39;&lt;html&#39;</span><span class="p">:</span> <span class="s1">&#39;.html&#39;</span><span class="p">,</span>
-    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x89</span><span class="s1">PNG&#39;</span><span class="p">:</span> <span class="s1">&#39;.png&#39;</span><span class="p">,</span>
-    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\xff\xd8\xff</span><span class="s1">&#39;</span><span class="p">:</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">,</span>
-    <span class="sa">b</span><span class="s1">&#39;GIF87a&#39;</span><span class="p">:</span> <span class="s1">&#39;.gif&#39;</span><span class="p">,</span>
-    <span class="sa">b</span><span class="s1">&#39;GIF89a&#39;</span><span class="p">:</span> <span class="s1">&#39;.gif&#39;</span><span class="p">,</span>
-    <span class="sa">b</span><span class="s1">&#39;PK</span><span class="se">\x03\x04</span><span class="s1">&#39;</span><span class="p">:</span> <span class="s1">&#39;.zip&#39;</span><span class="p">,</span>
-    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x1f\x8b</span><span class="s1">&#39;</span><span class="p">:</span> <span class="s1">&#39;.gz&#39;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s2">&quot;%PDF&quot;</span><span class="p">:</span> <span class="s2">&quot;.pdf&quot;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s2">&quot;&lt;!DOCTYPE html&quot;</span><span class="p">:</span> <span class="s2">&quot;.html&quot;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s2">&quot;&lt;!doctype html&quot;</span><span class="p">:</span> <span class="s2">&quot;.html&quot;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s2">&quot;&lt;html&quot;</span><span class="p">:</span> <span class="s2">&quot;.html&quot;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x89</span><span class="s2">PNG&quot;</span><span class="p">:</span> <span class="s2">&quot;.png&quot;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xff\xd8\xff</span><span class="s2">&quot;</span><span class="p">:</span> <span class="s2">&quot;.jpg&quot;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s2">&quot;GIF87a&quot;</span><span class="p">:</span> <span class="s2">&quot;.gif&quot;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s2">&quot;GIF89a&quot;</span><span class="p">:</span> <span class="s2">&quot;.gif&quot;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s2">&quot;PK</span><span class="se">\x03\x04</span><span class="s2">&quot;</span><span class="p">:</span> <span class="s2">&quot;.zip&quot;</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x1f\x8b</span><span class="s2">&quot;</span><span class="p">:</span> <span class="s2">&quot;.gz&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -376,7 +376,7 @@
     <span class="n">ext</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">url_path</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
     <span class="c1"># Validate extension looks reasonable</span>
-    <span class="k">if</span> <span class="n">ext</span> <span class="ow">and</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">ext</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">isalnum</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">ext</span> <span class="ow">and</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">ext</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isalnum</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">ext</span>
 
     <span class="k">return</span> <span class="kc">None</span></div>
@@ -414,7 +414,7 @@
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="c1"># Clean content type (remove charset, etc.)</span>
-        <span class="n">content_type</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">content_type</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">content_type</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">content_type</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">content_type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">content_type</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">detect</span></div>
@@ -455,7 +455,7 @@
 
             <span class="n">img_ext</span> <span class="o">=</span> <span class="n">imghdr</span><span class="o">.</span><span class="n">what</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">content</span><span class="p">[:</span><span class="mi">50</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">img_ext</span><span class="p">:</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="n">img_ext</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">img_ext</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">pass</span>
 
@@ -479,8 +479,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">explicit_extension</span><span class="p">:</span>
         <span class="n">ext</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">explicit_extension</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ext</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
-            <span class="n">ext</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ext</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">ext</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -522,7 +522,7 @@
 
     <span class="c1"># Priority extensions that short-circuit other checks</span>
     <span class="n">priority_extensions</span><span class="p">:</span> <span class="nb">frozenset</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
-        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">([</span><span class="s1">&#39;.pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;.md&#39;</span><span class="p">,</span> <span class="s1">&#39;.json&#39;</span><span class="p">])</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">([</span><span class="s2">&quot;.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;.md&quot;</span><span class="p">,</span> <span class="s2">&quot;.json&quot;</span><span class="p">])</span>
     <span class="p">)</span>
 
     <span class="c1"># Configurable mappings (users can modify these)</span>
@@ -557,9 +557,9 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-        <span class="n">content</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-        <span class="n">content_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">content_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">explicit_extension</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -574,13 +574,13 @@
             <span class="n">ctx</span> <span class="o">=</span> <span class="n">ExtensionContext</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">content_type</span><span class="p">,</span> <span class="n">explicit_extension</span><span class="p">)</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">router</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span> <span class="k">if</span> <span class="n">result</span> <span class="k">else</span> <span class="s1">&#39;.bin&#39;</span>
+        <span class="k">return</span> <span class="n">result</span> <span class="k">if</span> <span class="n">result</span> <span class="k">else</span> <span class="s2">&quot;.bin&quot;</span>
 
 <div class="viewcode-block" id="ExtensionRouter.with_prepended_strategy">
 <a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.ExtensionRouter.with_prepended_strategy">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">with_prepended_strategy</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ExtensionContext</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ExtensionRouter&#39;</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ExtensionRouter&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create new router with added strategy at highest priority.&quot;&quot;&quot;</span>
         <span class="n">new_router</span> <span class="o">=</span> <span class="n">ExtensionRouter</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">priority_extensions</span><span class="p">,</span>
@@ -595,7 +595,7 @@
 <a class="viewcode-back" href="../../module_docs/aw/routing.html#aw.routing.ExtensionRouter.with_appended_strategy">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">with_appended_strategy</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ExtensionContext</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ExtensionRouter&#39;</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ExtensionRouter&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create new router with added strategy at lowest priority.&quot;&quot;&quot;</span>
         <span class="n">new_router</span> <span class="o">=</span> <span class="n">ExtensionRouter</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">priority_extensions</span><span class="p">,</span>

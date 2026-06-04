@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aw.func_calling &mdash; aw 0.1.1 documentation</title>
+  <title>aw.func_calling &mdash; aw 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/documentation_options.js?v=360bc84d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -258,38 +258,38 @@
 
 <span class="c1"># Simple schema: just the code string</span>
 <span class="n">CODE_DEFINITION_SCHEMA</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;generated_python_function&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;schema&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Complete Python function definition as a string&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;generated_python_function&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Complete Python function definition as a string&quot;</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">},</span>
-        <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">],</span>
+        <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">],</span>
     <span class="p">},</span>
 <span class="p">}</span>
 
 <span class="c1"># Detailed schema: includes metadata</span>
 <span class="n">DETAILED_CODE_DEFINITION_SCHEMA</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;detailed_python_function&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;schema&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Complete Python function definition&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;detailed_python_function&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Complete Python function definition&quot;</span><span class="p">,</span>
             <span class="p">},</span>
-            <span class="s1">&#39;function_name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Name of the function&#39;</span><span class="p">},</span>
-            <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;List of parameter names&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+            <span class="s2">&quot;function_name&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Name of the function&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;List of parameter names&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
             <span class="p">},</span>
-            <span class="s1">&#39;docstring&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;The function docstring&#39;</span><span class="p">},</span>
+            <span class="s2">&quot;docstring&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The function docstring&quot;</span><span class="p">},</span>
         <span class="p">},</span>
-        <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="s1">&#39;function_name&#39;</span><span class="p">],</span>
+        <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="s2">&quot;function_name&quot;</span><span class="p">],</span>
     <span class="p">},</span>
 <span class="p">}</span>
 
@@ -338,7 +338,7 @@
     <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
         <span class="c1"># Pre-compile check</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="nb">compile</span><span class="p">(</span><span class="n">code_str_for_func</span><span class="p">,</span> <span class="s1">&#39;&lt;generated&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">)</span>
+            <span class="nb">compile</span><span class="p">(</span><span class="n">code_str_for_func</span><span class="p">,</span> <span class="s2">&quot;&lt;generated&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;exec&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">SyntaxError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated code has syntax error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -357,11 +357,11 @@
 
     <span class="k">if</span> <span class="n">make_picklable</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;__main__&quot;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;__main__&quot;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: Overwriting &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; in __main__&quot;</span><span class="p">)</span>
 
-        <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;__main__&quot;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded function: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> (picklable)&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">verbose</span><span class="p">:</span>
@@ -413,7 +413,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">task_to_function</span><span class="p">(</span>
     <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">output_schema</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;generated_function&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;generated_function&quot;</span><span class="p">,</span>
     <span class="n">code_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">generator_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">callable</span><span class="p">:</span>
@@ -441,7 +441,7 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_schema</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">output_schema_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">output_schema</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">output_schema_str</span> <span class="o">=</span> <span class="n">output_schema</span> <span class="ow">or</span> <span class="s1">&#39;null&#39;</span>
+        <span class="n">output_schema_str</span> <span class="o">=</span> <span class="n">output_schema</span> <span class="ow">or</span> <span class="s2">&quot;null&quot;</span>
 
     <span class="c1"># Generate code</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">code_generator</span><span class="p">(</span>
@@ -449,7 +449,7 @@
     <span class="p">)</span>
 
     <span class="c1"># Extract function from generated code</span>
-    <span class="n">code_str</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span>
+    <span class="n">code_str</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">extract_function_from_code</span><span class="p">(</span><span class="n">code_str</span><span class="p">)</span></div>
 
 
@@ -500,7 +500,7 @@
     <span class="p">)</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">_demo</span><span class="p">()</span>
 </pre></div>
 

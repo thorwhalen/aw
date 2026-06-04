@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aw.orchestration &mdash; aw 0.1.1 documentation</title>
+  <title>aw.orchestration &mdash; aw 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/documentation_options.js?v=360bc84d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -126,7 +126,7 @@
 
 <div class="viewcode-block" id="AgenticWorkflow.add_step">
 <a class="viewcode-back" href="../../module_docs/aw/orchestration.html#aw.AgenticWorkflow.add_step">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">AgenticStep</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AgenticWorkflow&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">AgenticStep</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AgenticWorkflow&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a step to the workflow.</span>
 
 <span class="sd">        Args:</span>
@@ -152,33 +152,33 @@
 <span class="sd">            Tuple of (final_artifact, workflow_metadata)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_input</span> <span class="o">=</span> <span class="n">initial_input</span>
-        <span class="n">workflow_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;context_snapshot&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="n">workflow_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;context_snapshot&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
 
         <span class="k">for</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
             <span class="c1"># Execute step</span>
             <span class="n">artifact</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">current_input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
 
             <span class="c1"># Record step execution</span>
-            <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;steps&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="p">{</span>
-                    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">step_name</span><span class="p">,</span>
-                    <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;success&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
-                    <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">step_name</span><span class="p">,</span>
+                    <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">,</span>
                 <span class="p">}</span>
             <span class="p">)</span>
 
             <span class="c1"># Check for failure</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;success&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
-                <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;failed_at&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step_name</span>
-                <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;context_snapshot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;failed_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step_name</span>
+                <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;context_snapshot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
                 <span class="k">return</span> <span class="n">artifact</span><span class="p">,</span> <span class="n">workflow_metadata</span>
 
             <span class="c1"># Pass artifact to next step</span>
             <span class="n">current_input</span> <span class="o">=</span> <span class="n">artifact</span>
 
         <span class="c1"># All steps completed successfully</span>
-        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;context_snapshot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
+        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;context_snapshot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">current_input</span><span class="p">,</span> <span class="n">workflow_metadata</span></div>
 
@@ -198,19 +198,19 @@
 <span class="sd">            Tuple of (artifact, metadata)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_input</span> <span class="o">=</span> <span class="n">initial_input</span>
-        <span class="n">workflow_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="n">workflow_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="p">[]}</span>
 
         <span class="k">for</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
             <span class="n">artifact</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">current_input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
 
-            <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">step_name</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">})</span>
+            <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;steps&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">step_name</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">})</span>
 
             <span class="n">current_input</span> <span class="o">=</span> <span class="n">artifact</span>
 
             <span class="k">if</span> <span class="n">step_name</span> <span class="o">==</span> <span class="n">stop_after</span><span class="p">:</span>
                 <span class="k">break</span>
 
-        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;context_snapshot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
+        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;context_snapshot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">current_input</span><span class="p">,</span> <span class="n">workflow_metadata</span></div>
 </div>
 
@@ -221,7 +221,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">create_data_prep_workflow</span><span class="p">(</span>
     <span class="n">loading_config</span><span class="p">:</span> <span class="n">StepConfig</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">preparing_config</span><span class="p">:</span> <span class="n">StepConfig</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;generic&#39;</span><span class="p">,</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;generic&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgenticWorkflow</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory to create a data preparation workflow.</span>
 
@@ -243,11 +243,11 @@
 
     <span class="c1"># Add loading step</span>
     <span class="n">loading_agent</span> <span class="o">=</span> <span class="n">LoadingAgent</span><span class="p">(</span><span class="n">loading_config</span><span class="p">)</span>
-    <span class="n">workflow</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="s1">&#39;loading&#39;</span><span class="p">,</span> <span class="n">loading_agent</span><span class="p">)</span>
+    <span class="n">workflow</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="s2">&quot;loading&quot;</span><span class="p">,</span> <span class="n">loading_agent</span><span class="p">)</span>
 
     <span class="c1"># Add preparing step</span>
     <span class="n">preparing_agent</span> <span class="o">=</span> <span class="n">PreparationAgent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">preparing_config</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
-    <span class="n">workflow</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="s1">&#39;preparing&#39;</span><span class="p">,</span> <span class="n">preparing_agent</span><span class="p">)</span>
+    <span class="n">workflow</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="s2">&quot;preparing&quot;</span><span class="p">,</span> <span class="n">preparing_agent</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">workflow</span></div>
 
@@ -283,7 +283,7 @@
     <span class="k">return</span> <span class="n">create_data_prep_workflow</span><span class="p">(</span>
         <span class="n">loading_config</span><span class="o">=</span><span class="n">loading_config</span><span class="p">,</span>
         <span class="n">preparing_config</span><span class="o">=</span><span class="n">preparing_config</span><span class="p">,</span>
-        <span class="n">target</span><span class="o">=</span><span class="s1">&#39;cosmo-ready&#39;</span><span class="p">,</span>
+        <span class="n">target</span><span class="o">=</span><span class="s2">&quot;cosmo-ready&quot;</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -297,7 +297,7 @@
 <a class="viewcode-back" href="../../module_docs/aw/orchestration.html#aw.load_and_prepare">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_and_prepare</span><span class="p">(</span>
     <span class="n">source_uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;generic&#39;</span><span class="p">,</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;generic&quot;</span><span class="p">,</span>
     <span class="n">validator</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
@@ -352,7 +352,7 @@
 
     <span class="k">return</span> <span class="n">load_and_prepare</span><span class="p">(</span>
         <span class="n">source_uri</span><span class="o">=</span><span class="n">source_uri</span><span class="p">,</span>
-        <span class="n">target</span><span class="o">=</span><span class="s1">&#39;cosmo-ready&#39;</span><span class="p">,</span>
+        <span class="n">target</span><span class="o">=</span><span class="s2">&quot;cosmo-ready&quot;</span><span class="p">,</span>
         <span class="n">validator</span><span class="o">=</span><span class="n">validator</span><span class="p">,</span>
         <span class="n">max_retries</span><span class="o">=</span><span class="n">max_retries</span><span class="p">,</span>
     <span class="p">)</span></div>
@@ -386,7 +386,7 @@
 <a class="viewcode-back" href="../../module_docs/aw/orchestration.html#aw.InteractiveWorkflow.add_step">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_step</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">AgenticStep</span><span class="p">,</span> <span class="n">require_approval</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;InteractiveWorkflow&#39;</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InteractiveWorkflow&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add step with optional approval requirement.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">approval_required</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">require_approval</span>
@@ -410,35 +410,35 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">run_interactive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_input</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run workflow with human-in-loop checkpoints.&quot;&quot;&quot;</span>
         <span class="n">current_input</span> <span class="o">=</span> <span class="n">initial_input</span>
-        <span class="n">workflow_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="n">workflow_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="p">[]}</span>
 
         <span class="k">for</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
             <span class="c1"># Execute step</span>
             <span class="n">artifact</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">current_input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
 
-            <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">step_name</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">})</span>
+            <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;steps&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">step_name</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">})</span>
 
             <span class="c1"># Check if approval required</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">approval_required</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">step_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">approval_callback</span><span class="p">:</span>
                     <span class="n">approved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">approval_callback</span><span class="p">(</span><span class="n">step_name</span><span class="p">,</span> <span class="n">artifact</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">approved</span><span class="p">:</span>
-                        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;aborted_at&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step_name</span>
-                        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;User rejected&#39;</span>
+                        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;aborted_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step_name</span>
+                        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;reason&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;User rejected&quot;</span>
                         <span class="k">return</span> <span class="n">artifact</span><span class="p">,</span> <span class="n">workflow_metadata</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># No callback - just print and ask</span>
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step &#39;</span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s2">&#39; completed:&quot;</span><span class="p">)</span>
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Metadata: </span><span class="si">{</span><span class="n">metadata</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">response</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Continue? (y/n): &quot;</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
-                        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;aborted_at&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step_name</span>
+                    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+                        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;aborted_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step_name</span>
                         <span class="k">return</span> <span class="n">artifact</span><span class="p">,</span> <span class="n">workflow_metadata</span>
 
             <span class="n">current_input</span> <span class="o">=</span> <span class="n">artifact</span>
 
-        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s1">&#39;context_snapshot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
+        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">workflow_metadata</span><span class="p">[</span><span class="s2">&quot;context_snapshot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">current_input</span><span class="p">,</span> <span class="n">workflow_metadata</span></div>
 </div>
 

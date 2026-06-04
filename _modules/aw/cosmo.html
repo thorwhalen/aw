@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aw.cosmo &mdash; aw 0.1.1 documentation</title>
+  <title>aw.cosmo &mdash; aw 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/documentation_options.js?v=360bc84d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -127,19 +127,19 @@
         <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Not a DataFrame&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">}</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Not a DataFrame&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">}</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Empty DataFrame&#39;</span><span class="p">}</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Empty DataFrame&quot;</span><span class="p">}</span>
 
         <span class="c1"># Check for numeric columns</span>
-        <span class="n">numeric_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">numeric_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">numeric_cols</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">required_columns</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span>
-                <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;Too few numeric columns: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">numeric_cols</span><span class="p">)</span><span class="si">}</span><span class="s1"> &lt; </span><span class="si">{</span><span class="n">required_columns</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;numeric_columns&#39;</span><span class="p">:</span> <span class="n">numeric_cols</span><span class="p">,</span>
-                <span class="s1">&#39;all_columns&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Too few numeric columns: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">numeric_cols</span><span class="p">)</span><span class="si">}</span><span class="s2"> &lt; </span><span class="si">{</span><span class="n">required_columns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;numeric_columns&quot;</span><span class="p">:</span> <span class="n">numeric_cols</span><span class="p">,</span>
+                <span class="s2">&quot;all_columns&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span>
             <span class="p">}</span>
 
         <span class="c1"># Check for nulls in numeric columns</span>
@@ -147,8 +147,8 @@
         <span class="k">if</span> <span class="n">null_counts</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
             <span class="n">cols_with_nulls</span> <span class="o">=</span> <span class="n">null_counts</span><span class="p">[</span><span class="n">null_counts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
             <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span>
-                <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Numeric columns contain nulls&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;null_counts&#39;</span><span class="p">:</span> <span class="n">cols_with_nulls</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Numeric columns contain nulls&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;null_counts&quot;</span><span class="p">:</span> <span class="n">cols_with_nulls</span><span class="p">,</span>
             <span class="p">}</span>
 
         <span class="c1"># If allow_generated_params, try to find suitable columns</span>
@@ -157,49 +157,49 @@
             <span class="n">x_col</span> <span class="o">=</span> <span class="n">numeric_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">y_col</span> <span class="o">=</span> <span class="n">numeric_cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">numeric_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">numeric_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;points_x_by&#39;</span><span class="p">:</span> <span class="n">x_col</span><span class="p">,</span> <span class="s1">&#39;points_y_by&#39;</span><span class="p">:</span> <span class="n">y_col</span><span class="p">}</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;points_x_by&quot;</span><span class="p">:</span> <span class="n">x_col</span><span class="p">,</span> <span class="s2">&quot;points_y_by&quot;</span><span class="p">:</span> <span class="n">y_col</span><span class="p">}</span>
 
             <span class="c1"># Add optional params if available</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">numeric_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">params</span><span class="p">[</span><span class="s1">&#39;point_size_by&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numeric_cols</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">params</span><span class="p">[</span><span class="s2">&quot;point_size_by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numeric_cols</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
             <span class="c1"># Check for categorical columns for color</span>
-            <span class="n">categorical_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
+            <span class="n">categorical_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="s2">&quot;category&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">categorical_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="c1"># Check if first categorical has reasonable cardinality</span>
                 <span class="n">first_cat</span> <span class="o">=</span> <span class="n">categorical_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">first_cat</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">:</span>
-                    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;point_color_by&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_cat</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s2">&quot;point_color_by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_cat</span>
 
             <span class="c1"># Try actual cosmograph call if function provided</span>
             <span class="k">if</span> <span class="n">cosmo_function</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="n">cosmo_function</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
                     <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{</span>
-                        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
-                        <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
-                        <span class="s1">&#39;note&#39;</span><span class="p">:</span> <span class="s1">&#39;Successfully created visualization&#39;</span><span class="p">,</span>
+                        <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
+                        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+                        <span class="s2">&quot;note&quot;</span><span class="p">:</span> <span class="s2">&quot;Successfully created visualization&quot;</span><span class="p">,</span>
                     <span class="p">}</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span>
-                        <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;Cosmo call failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
-                        <span class="s1">&#39;exception_type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Cosmo call failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
+                        <span class="s2">&quot;exception_type&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                     <span class="p">}</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># No actual cosmo function - just verify requirements met</span>
                 <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
-                    <span class="s1">&#39;note&#39;</span><span class="p">:</span> <span class="s1">&#39;Requirements met (cosmo not called)&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;numeric_columns&#39;</span><span class="p">:</span> <span class="n">numeric_cols</span><span class="p">,</span>
-                    <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+                    <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
+                    <span class="s2">&quot;note&quot;</span><span class="p">:</span> <span class="s2">&quot;Requirements met (cosmo not called)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;numeric_columns&quot;</span><span class="p">:</span> <span class="n">numeric_cols</span><span class="p">,</span>
+                    <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
                 <span class="p">}</span>
 
         <span class="c1"># Basic validation passed</span>
         <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{</span>
-            <span class="s1">&#39;numeric_columns&#39;</span><span class="p">:</span> <span class="n">numeric_cols</span><span class="p">,</span>
-            <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
-            <span class="s1">&#39;note&#39;</span><span class="p">:</span> <span class="s1">&#39;Basic requirements met&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;numeric_columns&quot;</span><span class="p">:</span> <span class="n">numeric_cols</span><span class="p">,</span>
+            <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+            <span class="s2">&quot;note&quot;</span><span class="p">:</span> <span class="s2">&quot;Basic requirements met&quot;</span><span class="p">,</span>
         <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">validate_cosmo_ready</span></div>
@@ -234,8 +234,8 @@
             <span class="n">cosmo_function</span> <span class="o">=</span> <span class="n">cosmo</span>
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span>
-                <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;cosmograph not available&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;note&#39;</span><span class="p">:</span> <span class="s1">&#39;Install with: pip install cosmograph&#39;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;cosmograph not available&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;note&quot;</span><span class="p">:</span> <span class="s2">&quot;Install with: pip install cosmograph&quot;</span><span class="p">,</span>
             <span class="p">}</span>
 
     <span class="c1"># First check basic requirements</span>
@@ -246,24 +246,24 @@
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">basic_info</span>
 
     <span class="c1"># Get suggested params if not provided</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="n">cosmo_kwargs</span> <span class="ow">or</span> <span class="n">basic_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">cosmo_kwargs</span> <span class="ow">or</span> <span class="n">basic_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;params&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
     <span class="c1"># Try the visualization</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">cosmo_function</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{</span>
-            <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
-            <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
-            <span class="s1">&#39;note&#39;</span><span class="p">:</span> <span class="s1">&#39;Visualization created successfully&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
+            <span class="s2">&quot;note&quot;</span><span class="p">:</span> <span class="s2">&quot;Visualization created successfully&quot;</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
 
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{</span>
-            <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
-            <span class="s1">&#39;exception_type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-            <span class="s1">&#39;traceback&#39;</span><span class="p">:</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
-            <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
+            <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+            <span class="s2">&quot;exception_type&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;traceback&quot;</span><span class="p">:</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 
@@ -328,22 +328,22 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{}</span>
 
-    <span class="n">numeric_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">numeric_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">numeric_cols</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{}</span>
 
-    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;points_x_by&#39;</span><span class="p">:</span> <span class="n">numeric_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;points_y_by&#39;</span><span class="p">:</span> <span class="n">numeric_cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;points_x_by&quot;</span><span class="p">:</span> <span class="n">numeric_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;points_y_by&quot;</span><span class="p">:</span> <span class="n">numeric_cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
 
     <span class="c1"># Add size if available</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">numeric_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;point_size_by&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numeric_cols</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">params</span><span class="p">[</span><span class="s2">&quot;point_size_by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numeric_cols</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="c1"># Add color from categorical</span>
-    <span class="n">categorical_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">categorical_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="s2">&quot;category&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">categorical_cols</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">:</span>  <span class="c1"># Reasonable cardinality</span>
-            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;point_color_by&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">col</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;point_color_by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">col</span>
             <span class="k">break</span>
 
     <span class="k">return</span> <span class="n">params</span></div>
