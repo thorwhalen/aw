@@ -278,13 +278,13 @@ def make_code_generator(
         >>> write_code = make_code_generator(
         ...     prompt_json_function_maker=prompt_json_function
         ... )
-        >>> result = write_code(
+        >>> result = write_code(  # doctest: +SKIP
         ...     task='Add {a} and {b}',
         ...     output_schema='{"type": "object", "properties": {"sum": {"type": "number"}}}',
         ...     name='add_numbers'
         ... )
-        >>> func = extract_function_from_code(result['code'])
-        >>> func(2, 3)
+        >>> func = extract_function_from_code(result['code'])  # doctest: +SKIP
+        >>> func(2, 3)  # doctest: +SKIP
         {'sum': 5}
     """
     if prompt_json_function_maker is None:
@@ -322,12 +322,12 @@ def task_to_function(
         Executable Python function
 
     Example:
-        >>> func = task_to_function(
+        >>> func = task_to_function(  # doctest: +SKIP
         ...     task='Multiply {x} and {y}',
         ...     output_schema='{"type": "object", "properties": {"product": {"type": "number"}}}',
         ...     name='multiply'
         ... )
-        >>> func(3, 4)
+        >>> func(3, 4)  # doctest: +SKIP
         {'product': 12}
     """
     if code_generator is None:
