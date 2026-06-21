@@ -30,6 +30,18 @@ keywords = [
 authors = [
     { name = "Thor Whalen" },
 ]
+license = "MIT"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 dependencies = [
     "pandas",
     "config2py",
@@ -37,11 +49,11 @@ dependencies = [
     "oa",
 ]
 
-[project.license]
-text = "MIT"
-
 [project.urls]
-Homepage = "https://github.com/thorwhalen/aw"
+Homepage = "https://thorwhalen.github.io/aw/"
+Repository = "https://github.com/thorwhalen/aw"
+Issues = "https://github.com/thorwhalen/aw/issues"
+Changelog = "https://github.com/thorwhalen/aw/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 llm = [
