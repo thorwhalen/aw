@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aw.py_gen &mdash; aw 0.1.4 documentation</title>
+  <title>aw.py_gen &mdash; aw 0.1.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=fd825880"></script>
+      <script src="../../_static/documentation_options.js?v=59fadc99"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -371,13 +371,13 @@
 <span class="sd">        &gt;&gt;&gt; write_code = make_code_generator(</span>
 <span class="sd">        ...     prompt_json_function_maker=prompt_json_function</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; result = write_code(</span>
+<span class="sd">        &gt;&gt;&gt; result = write_code(  # doctest: +SKIP</span>
 <span class="sd">        ...     task=&#39;Add {a} and {b}&#39;,</span>
 <span class="sd">        ...     output_schema=&#39;{&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {&quot;sum&quot;: {&quot;type&quot;: &quot;number&quot;}}}&#39;,</span>
 <span class="sd">        ...     name=&#39;add_numbers&#39;</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; func = extract_function_from_code(result[&#39;code&#39;])</span>
-<span class="sd">        &gt;&gt;&gt; func(2, 3)</span>
+<span class="sd">        &gt;&gt;&gt; func = extract_function_from_code(result[&#39;code&#39;])  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; func(2, 3)  # doctest: +SKIP</span>
 <span class="sd">        {&#39;sum&#39;: 5}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">prompt_json_function_maker</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -418,12 +418,12 @@
 <span class="sd">        Executable Python function</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; func = task_to_function(</span>
+<span class="sd">        &gt;&gt;&gt; func = task_to_function(  # doctest: +SKIP</span>
 <span class="sd">        ...     task=&#39;Multiply {x} and {y}&#39;,</span>
 <span class="sd">        ...     output_schema=&#39;{&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {&quot;product&quot;: {&quot;type&quot;: &quot;number&quot;}}}&#39;,</span>
 <span class="sd">        ...     name=&#39;multiply&#39;</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; func(3, 4)</span>
+<span class="sd">        &gt;&gt;&gt; func(3, 4)  # doctest: +SKIP</span>
 <span class="sd">        {&#39;product&#39;: 12}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">code_generator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
