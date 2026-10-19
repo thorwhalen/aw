@@ -124,6 +124,70 @@ class ConditionalRouter(PriorityRouter):
 
 
 @dataclass
+class ConfidentRetrievalStrategy:
+    """A routing strategy backed by a ranked search: answer only when the ranking is clear.
+
+    ``search(context)`` returns ``(candidate, score)`` pairs, best first (any retrieval
+    engine: ``ir.discover``, a BM25 index, a dict lookup). The strategy returns the top
+    candidate when its score reaches ``floor`` *and* beats the runner-up by at least
+    ``gap``; otherwise it returns ``None`` so a :class:`PriorityRouter` can fall through
+    to the next, more expensive, strategy (an LLM adjudicator, a human). That is the
+    "cheap-first, escalate on ambiguity" shape: no model in the hot path for the clear
+    cases, abstention rather than a guess for the close ones.
+
+    >>> ranked = {'open an issue': [('ge-write-issue', 0.9), ('ge', 0.4)],
+    ...           'do the thing': [('a', 0.5), ('b', 0.48)],
+    ...           'nothing': []}
+    >>> route = ConfidentRetrievalStrategy(search=ranked.get, floor=0.3, gap=0.1)
+    >>> route('open an issue')
+    'ge-write-issue'
+    >>> route('do the thing') is None   # too close to call: escalate
+    True
+    >>> route('nothing') is None
+    True
+    >>> router = PriorityRouter([route, lambda q: 'ask-the-llm'])
+    >>> router('do the thing')
+    'ask-the-llm'
+
+    ``explain`` tells a caller why a query fell through, for calibration logs:
+
+    >>> route.explain('do the thing')
+    'ambiguous: a=0.5 over b=0.48 is below gap 0.1'
+    """
+
+    search: Callable[[Any], list]
+    floor: float = 0.0
+    gap: float = 0.0
+
+    def _ranked(self, context: Any) -> list:
+        return list(self.search(context) or [])
+
+    def __call__(self, context: Any) -> Optional[Any]:
+        ranked = self._ranked(context)
+        if not ranked:
+            return None
+        best, best_score = ranked[0]
+        if best_score < self.floor:
+            return None
+        if len(ranked) > 1 and best_score - ranked[1][1] < self.gap:
+            return None
+        return best
+
+    def explain(self, context: Any) -> str:
+        """Why the strategy answered or abstained, in one line."""
+        ranked = self._ranked(context)
+        if not ranked:
+            return "abstained: no candidates"
+        best, best_score = ranked[0]
+        if best_score < self.floor:
+            return f"abstained: {best}={best_score} is below floor {self.floor}"
+        if len(ranked) > 1 and best_score - ranked[1][1] < self.gap:
+            second, second_score = ranked[1]
+            return f"ambiguous: {best}={best_score} over {second}={second_score} is below gap {self.gap}"
+        return f"confident: {best}={best_score}"
+
+
+@dataclass
 class MappingRouter:
     """Router based on a lookup mapping.
 
