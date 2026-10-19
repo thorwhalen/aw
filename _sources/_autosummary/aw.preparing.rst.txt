@@ -1,0 +1,18 @@
+aw.preparing
+============
+
+.. automodule:: aw.preparing
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      create_preparation_agent
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PreparationAgent
+   

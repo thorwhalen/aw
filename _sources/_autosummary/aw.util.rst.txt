@@ -1,0 +1,25 @@
+aw.util
+=======
+
+.. automodule:: aw.util
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      claude_desktop_config
+      compute_dataframe_info
+      create_oa_chat
+      create_openai_chat
+      default_llm_factory
+      get_numeric_columns
+      infer_loader_from_extension
+      infer_loader_params
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FileSamplerTool
+   

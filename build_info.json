@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "built_at": "2026-10-19T12:43:35Z",
+  "package": {
+    "name": "aw",
+    "version": "0.1.7",
+    "display_name": "aw",
+    "source": "pyproject.toml"
+  },
+  "git": {
+    "available": true,
+    "commit": "cf51aec055531b526d2349b56d96072b068a2684",
+    "short_commit": "cf51aec",
+    "branch": "main",
+    "tags": [
+      "0.1.7"
+    ],
+    "dirty": false,
+    "remote_url": "https://github.com/thorwhalen/aw",
+    "commit_url": "https://github.com/thorwhalen/aw/commit/cf51aec055531b526d2349b56d96072b068a2684",
+    "error": null
+  },
+  "ci": {
+    "provider": "github",
+    "repository": "thorwhalen/aw",
+    "sha": "856cb4eef5f0d7b5fd1d9add2a11409f1236bacc",
+    "sha_in_history": true,
+    "ref": "refs/heads/main",
+    "ref_name": "main",
+    "run_id": "39253975270",
+    "run_url": "https://github.com/thorwhalen/aw/actions/runs/39253975270",
+    "server_url": "https://github.com"
+  },
+  "tools": {
+    "epythet": "0.2.18",
+    "sphinx": "9.1.0",
+    "docutils": "0.22.4",
+    "python": "3.12.15"
+  },
+  "config": {
+    "theme": "auto",
+    "html_theme": "furo",
+    "accent": "#4e6200",
+    "mode": "auto",
+    "api_generator": "autosummary",
+    "ignore": [
+      "tests/",
+      "scrap/",
+      "examples/"
+    ],
+    "agent_outputs": true,
+    "aggregates": [
+      "md"
+    ],
+    "ai_artifacts": true,
+    "provenance": true,
+    "docs_dir": "docsrc"
+  },
+  "site": {
+    "modules_documented": 13,
+    "objects_documented": 190
+  },
+  "pypi": {
+    "checked": true,
+    "latest": "0.1.7",
+    "relation": "same",
+    "error": null
+  },
+  "reproduce": "git clone https://github.com/thorwhalen/aw && cd aw\ngit checkout cf51aec055531b526d2349b56d96072b068a2684\npip install \"epythet==0.2.18\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "warnings": [],
+  "alignment": {
+    "aligned": true,
+    "notes": []
+  }
+}

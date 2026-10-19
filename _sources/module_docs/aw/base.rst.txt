@@ -1,4 +1,0 @@
-aw.base
-=======
-.. automodule:: aw.base
-   :members:

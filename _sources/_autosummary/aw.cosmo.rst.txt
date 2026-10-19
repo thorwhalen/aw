@@ -1,0 +1,16 @@
+aw.cosmo
+========
+
+.. automodule:: aw.cosmo
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      basic_cosmo_validator
+      create_cosmo_validator
+      infer_cosmo_params
+      strict_cosmo_validator
+      try_cosmo_visualization
+   

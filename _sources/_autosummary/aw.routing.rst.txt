@@ -1,0 +1,27 @@
+aw.routing
+==========
+
+.. automodule:: aw.routing
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      detect_explicit
+      detect_from_url
+      make_content_type_detector
+      make_magic_bytes_detector
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ConditionalRouter
+      ConfidentRetrievalStrategy
+      ExtensionContext
+      ExtensionRouter
+      MappingRouter
+      PriorityRouter
+      RoutingStrategy
+   

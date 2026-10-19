@@ -1,0 +1,31 @@
+aw.translators
+==============
+
+.. automodule:: aw.translators
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      claude_skill_from_spec
+      crewai_yaml_from_spec
+      extract_agent_spec
+      openai_assistant_from_spec
+      openai_tools_from_spec
+      to_claude_skill
+      to_crewai_yaml
+      to_openai_assistant
+      to_openai_tools
+      workflow_to_crewai_yaml
+      workflow_to_skills
+      write_skill_directory
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AgentSpec
+      ToolSpec
+      ValidatorSpec
+   

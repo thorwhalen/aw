@@ -1,0 +1,31 @@
+# aw
+
+> AI Agentic Workflows for data preparation and transformation
+
+
+## Pages
+
+- [aw - Agentic Workflows for Data Preparation](index.html.md): An AI agent package for data preparation with a focus on modular, extensible workflows that follow b...
+- [API reference](api.html.md): | &#96;aw&#96;   | aw - Agentic Workflows for Data Preparation   |
+- [aw](_autosummary/aw.html.md): aw - Agentic Workflows for Data Preparation
+- [aw.base](_autosummary/aw.base.html.md): Core protocols and base classes for agentic workflows.
+- [aw.cosmo](_autosummary/aw.cosmo.html.md): Cosmograph-specific validator tool.
+- [aw.func_calling](_autosummary/aw.func_calling.html.md): This module provides robust templates for creating (python) code-generating functions
+- [aw.loading](_autosummary/aw.loading.html.md): Loading agent for converting data sources to pandas DataFrames.
+- [aw.orchestration](_autosummary/aw.orchestration.html.md): Orchestration and workflow management for agentic steps.
+- [aw.preparing](_autosummary/aw.preparing.html.md): Preparation agent for transforming data to meet target requirements.
+- [aw.py_gen](_autosummary/aw.py_gen.html.md): Function makeing and calling
+- [aw.routing](_autosummary/aw.routing.html.md): Configurable routing and decision chains for agentic workflows.
+- [aw.tools](_autosummary/aw.tools.html.md): Tools for executing code and other agent actions.
+- [aw.translators](_autosummary/aw.translators.html.md): Translators from aw agent specifications to other agent formats.
+- [aw.util](_autosummary/aw.util.html.md): Utility tools and helper functions for agents.
+- [aw.validation](_autosummary/aw.validation.html.md): Validation system supporting three flavors: schema, info-dict, and functional.
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-19 12:43 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+
+## Optional
+
+- [aw.md](aw.md): Complete documentation in a single file.
+
+## Build
+
+- [build_info.json](build_info.json): build provenance (commit, version, tool versions, whether the docs match the package)

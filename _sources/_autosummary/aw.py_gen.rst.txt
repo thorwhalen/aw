@@ -1,0 +1,14 @@
+aw.py\_gen
+==========
+
+.. automodule:: aw.py_gen
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      extract_function_from_code
+      make_code_generator
+      task_to_function
+   

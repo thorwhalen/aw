@@ -1,0 +1,18 @@
+aw.loading
+==========
+
+.. automodule:: aw.loading
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      create_loading_agent
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      LoadingAgent
+   

@@ -1,4 +1,0 @@
-aw
-==
-.. automodule:: aw
-   :members:

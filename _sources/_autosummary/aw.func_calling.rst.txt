@@ -1,0 +1,14 @@
+aw.func\_calling
+================
+
+.. automodule:: aw.func_calling
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      extract_function_from_code
+      make_code_generator
+      task_to_function
+   

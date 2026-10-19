@@ -1,4 +1,0 @@
-aw.preparing
-============
-.. automodule:: aw.preparing
-   :members:

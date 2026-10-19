@@ -1,4 +1,0 @@
-aw.loading
-==========
-.. automodule:: aw.loading
-   :members:

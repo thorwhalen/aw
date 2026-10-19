@@ -1,4 +1,0 @@
-aw.py_gen
-=========
-.. automodule:: aw.py_gen
-   :members:
