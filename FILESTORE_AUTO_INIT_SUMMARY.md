@@ -55,10 +55,7 @@ from aw.util import claude_desktop_config
 mcp = claude_desktop_config()
 
 # Add server configuration
-mcp['download'] = {
-    'command': 'python',
-    'args': ['/path/to/agent.py']
-}
+mcp["download"] = {"command": "python", "args": ["/path/to/agent.py"]}
 ```
 
 ### Direct FileStore Usage
@@ -68,13 +65,13 @@ from config2py.sync_store import FileStore
 
 # Auto-create file and key_path if missing
 store = FileStore(
-    'path/to/config.json',
-    key_path='servers',
+    "path/to/config.json",
+    key_path="servers",
     create_file_content=lambda: {},  # Empty dict for new files
-    create_key_path_content=lambda: {}  # Empty dict for new sections
+    create_key_path_content=lambda: {},  # Empty dict for new sections
 )
 
-store['myserver'] = {'command': 'python', 'args': ['script.py']}
+store["myserver"] = {"command": "python", "args": ["script.py"]}
 ```
 
 ## Benefits
@@ -123,7 +120,7 @@ mcp = claude_desktop_config()  # Creates file with {"mcpServers": {}}
 ```python
 # Initial file: {"otherSection": {...}}
 mcp = claude_desktop_config()
-mcp['server'] = {...}
+mcp["server"] = {...}
 # Result: {"otherSection": {...}, "mcpServers": {"server": {...}}}
 ```
 
@@ -132,7 +129,7 @@ mcp['server'] = {...}
 ```python
 # No change in behavior - works as before
 mcp = claude_desktop_config()
-mcp['newserver'] = {...}
+mcp["newserver"] = {...}
 ```
 
 ## Impact

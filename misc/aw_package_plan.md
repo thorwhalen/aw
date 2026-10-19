@@ -98,8 +98,8 @@ We will not use in-memory history or `inplace=True`. We will use a DVC system li
     8.  `Action (Code):`
         ```python
         transformed_df = df.copy()
-        transformed_df['col_C'] = pd.to_numeric(transformed_df['col_C'], errors='coerce')
-        transformed_df = transformed_df.dropna(subset=['col_A', 'col_C'])
+        transformed_df["col_C"] = pd.to_numeric(transformed_df["col_C"], errors="coerce")
+        transformed_df = transformed_df.dropna(subset=["col_A", "col_C"])
         ```
     9.  `Validate (Action):` `CosmoValidatorTool(transformed_df, x_col='col_A', y_col='col_C')`
     10. `Observation (from Tool):` `{'success': True, 'params': {'x': 'col_A', 'y': 'col_C'}}`

@@ -13,14 +13,15 @@ pip install -e .
 from aw import load_for_cosmo
 
 # Load and prepare data for cosmograph in one line
-df, meta = load_for_cosmo('data.csv')
+df, meta = load_for_cosmo("data.csv")
 
 # Get suggested visualization parameters
-params = meta['preparing']['metadata']['validation_result']['params']
+params = meta["preparing"]["metadata"]["validation_result"]["params"]
 # params = {'points_x_by': 'col1', 'points_y_by': 'col2', ...}
 
 # Use with cosmograph
 from cosmograph import cosmo
+
 cosmo(df, **params)
 ```
 
@@ -33,7 +34,7 @@ from aw import LoadingAgent, Context
 
 agent = LoadingAgent()
 context = Context()
-df, metadata = agent.execute('data.csv', context)
+df, metadata = agent.execute("data.csv", context)
 ```
 
 ### Preparing Data
@@ -42,10 +43,7 @@ df, metadata = agent.execute('data.csv', context)
 from aw import PreparationAgent
 from aw.cosmo import basic_cosmo_validator
 
-agent = PreparationAgent(
-    target='cosmo-ready',
-    target_validator=basic_cosmo_validator()
-)
+agent = PreparationAgent(target="cosmo-ready", target_validator=basic_cosmo_validator())
 prepared_df, metadata = agent.execute(df, context)
 ```
 
@@ -55,7 +53,7 @@ prepared_df, metadata = agent.execute(df, context)
 from aw import create_cosmo_prep_workflow
 
 workflow = create_cosmo_prep_workflow(max_retries=3)
-result_df, metadata = workflow.run('data.csv')
+result_df, metadata = workflow.run("data.csv")
 ```
 
 ## Validation
@@ -66,9 +64,11 @@ result_df, metadata = workflow.run('data.csv')
 from aw.validation import schema_validator
 from pydantic import BaseModel
 
+
 class DataSchema(BaseModel):
     x: float
     y: float
+
 
 validator = schema_validator(DataSchema)
 success, info = validator(data)
@@ -79,11 +79,14 @@ success, info = validator(data)
 ```python
 from aw.validation import info_dict_validator
 
+
 def compute_info(df):
-    return {'null_count': df.isnull().sum().sum()}
+    return {"null_count": df.isnull().sum().sum()}
+
 
 def check_info(info):
-    return info['null_count'] == 0, "No nulls"
+    return info["null_count"] == 0, "No nulls"
+
 
 validator = info_dict_validator(compute_info, check_info)
 ```
@@ -93,8 +96,10 @@ validator = info_dict_validator(compute_info, check_info)
 ```python
 from aw.validation import functional_validator
 
+
 def try_visualization(df):
-    return cosmo(df, points_x_by='x', points_y_by='y')
+    return cosmo(df, points_x_by="x", points_y_by="y")
+
 
 validator = functional_validator(try_visualization)
 ```
@@ -106,11 +111,7 @@ validator = functional_validator(try_visualization)
 ```python
 from aw import StepConfig, LoadingAgent
 
-config = StepConfig(
-    llm="gpt-4",
-    max_retries=5,
-    human_in_loop=False
-)
+config = StepConfig(llm="gpt-4", max_retries=5, human_in_loop=False)
 
 agent = LoadingAgent(config)
 ```
@@ -121,14 +122,12 @@ agent = LoadingAgent(config)
 def my_llm(prompt):
     return "Response to: " + prompt
 
-def my_validator(artifact):
-    return True, {'info': 'All good'}
 
-config = StepConfig(
-    llm=my_llm,
-    validator=my_validator,
-    max_retries=3
-)
+def my_validator(artifact):
+    return True, {"info": "All good"}
+
+
+config = StepConfig(llm=my_llm, validator=my_validator, max_retries=3)
 ```
 
 ### Cascading Config
@@ -149,7 +148,7 @@ tool = CodeInterpreterTool()
 result = tool("x = 5; y = x * 2; print(y)")
 
 print(result.success)  # True
-print(result.output)   # "10\n"
+print(result.output)  # "10\n"
 ```
 
 ## Custom Agents
@@ -158,18 +157,19 @@ print(result.output)   # "10\n"
 from aw.base import StepConfig
 from collections.abc import MutableMapping
 
+
 class MyAgent:
     def __init__(self, config: StepConfig = None):
         self.config = config or StepConfig()
         self.validator = self.config.resolve_validator()
-    
+
     def execute(self, input_data, context: MutableMapping):
         for attempt in range(self.config.max_retries):
             result = self._process(input_data)
             is_valid, info = self.validator(result)
             if is_valid:
-                return result, {'success': True}
-        return None, {'success': False}
+                return result, {"success": True}
+        return None, {"success": False}
 ```
 
 ## Interactive Workflows
@@ -178,14 +178,16 @@ class MyAgent:
 from aw import InteractiveWorkflow, LoadingAgent
 
 workflow = InteractiveWorkflow()
-workflow.add_step('loading', LoadingAgent(), require_approval=True)
+workflow.add_step("loading", LoadingAgent(), require_approval=True)
+
 
 def approve(step_name, artifact, metadata):
     print(f"Step {step_name} done. Shape: {artifact.shape}")
-    return input("Continue? (y/n): ").lower() == 'y'
+    return input("Continue? (y/n): ").lower() == "y"
+
 
 workflow.set_approval_callback(approve)
-result, meta = workflow.run_interactive('data.csv')
+result, meta = workflow.run_interactive("data.csv")
 ```
 
 ## Module Reference
@@ -215,7 +217,7 @@ result, meta = workflow.run_interactive('data.csv')
 ```python
 from aw import load_and_prepare
 
-df, meta = load_and_prepare('data.csv', target='generic')
+df, meta = load_and_prepare("data.csv", target="generic")
 ```
 
 ### Load with Custom Validator
@@ -223,14 +225,12 @@ df, meta = load_and_prepare('data.csv', target='generic')
 ```python
 from aw import load_and_prepare
 
-def my_validator(df):
-    return len(df) > 100, {'rows': len(df)}
 
-df, meta = load_and_prepare(
-    'data.csv',
-    validator=my_validator,
-    max_retries=5
-)
+def my_validator(df):
+    return len(df) > 100, {"rows": len(df)}
+
+
+df, meta = load_and_prepare("data.csv", validator=my_validator, max_retries=5)
 ```
 
 ### Partial Workflow
@@ -239,10 +239,10 @@ df, meta = load_and_prepare(
 workflow = create_cosmo_prep_workflow()
 
 # Run only loading
-df, meta = workflow.run_partial('data.csv', stop_after='loading')
+df, meta = workflow.run_partial("data.csv", stop_after="loading")
 
 # Inspect, then continue
-prepared_df, meta = workflow.run_partial(df, stop_after='preparing')
+prepared_df, meta = workflow.run_partial(df, stop_after="preparing")
 ```
 
 ## Troubleshooting
@@ -260,16 +260,16 @@ except ImportError:
 ### Check Metadata
 
 ```python
-df, meta = load_for_cosmo('data.csv')
+df, meta = load_for_cosmo("data.csv")
 
 # Check success
-if meta.get('success'):
+if meta.get("success"):
     print("Success!")
 else:
     print(f"Failed at: {meta.get('failed_at')}")
-    
+
 # Check attempts
-for step in meta['steps']:
+for step in meta["steps"]:
     print(f"{step['name']}: {step['success']}")
 ```
 

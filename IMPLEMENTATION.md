@@ -123,13 +123,14 @@ Specialized validators that actually try visualization
 from aw import load_for_cosmo
 
 # One-line data prep for cosmograph
-df, metadata = load_for_cosmo('data.csv')
+df, metadata = load_for_cosmo("data.csv")
 
 # Get suggested parameters
-params = metadata['preparing']['metadata']['validation_result']['params']
+params = metadata["preparing"]["metadata"]["validation_result"]["params"]
 
 # Use with cosmograph
 from cosmograph import cosmo
+
 cosmo(df, **params)
 ```
 
