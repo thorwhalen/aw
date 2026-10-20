@@ -207,6 +207,7 @@
 <li class="toctree-l2 current has-children"><a class="reference internal" href="aw.html">aw</a><input aria-label="Toggle navigation of aw" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="aw.base.html">aw.base</a></li>
 <li class="toctree-l3"><a class="reference internal" href="aw.cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aw.dispatch.html">aw.dispatch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="aw.func_calling.html">aw.func_calling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="aw.loading.html">aw.loading</a></li>
 <li class="toctree-l3"><a class="reference internal" href="aw.orchestration.html">aw.orchestration</a></li>
@@ -297,7 +298,7 @@ that follow the open-closed principle. Users can:</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aw.routing.ConditionalRouter" title="aw.routing.ConditionalRouter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConditionalRouter</span></code></a>([strategies, short_circuit])</p></td>
 <td><p>Router with short-circuit conditions.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#aw.routing.ConfidentRetrievalStrategy" title="aw.routing.ConfidentRetrievalStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfidentRetrievalStrategy</span></code></a>(search[, floor, gap])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#aw.routing.ConfidentRetrievalStrategy" title="aw.routing.ConfidentRetrievalStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfidentRetrievalStrategy</span></code></a>(search[, floor, ...])</p></td>
 <td><p>A routing strategy backed by a ranked search: answer only when the ranking is clear.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aw.routing.ExtensionContext" title="aw.routing.ExtensionContext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ExtensionContext</span></code></a>(url[, content, ...])</p></td>
@@ -349,16 +350,22 @@ otherwise continues to next strategy.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="aw.routing.ConfidentRetrievalStrategy">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">ConfidentRetrievalStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">search</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/routing.html#ConfidentRetrievalStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ConfidentRetrievalStrategy" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aw.routing.</span></span><span class="sig-name descname"><span class="pre">ConfidentRetrievalStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">search</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rel_gap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">require_boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dedup_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aw/routing.html#ConfidentRetrievalStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aw.routing.ConfidentRetrievalStrategy" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A routing strategy backed by a ranked search: answer only when the ranking is clear.</p>
 <p><code class="docutils literal notranslate"><span class="pre">search(context)</span></code> returns <code class="docutils literal notranslate"><span class="pre">(candidate,</span> <span class="pre">score)</span></code> pairs, best first (any retrieval
 engine: <code class="docutils literal notranslate"><span class="pre">ir.discover</span></code>, a BM25 index, a dict lookup). The strategy returns the top
-candidate when its score reaches <code class="docutils literal notranslate"><span class="pre">floor</span></code> <em>and</em> beats the runner-up by at least
-<code class="docutils literal notranslate"><span class="pre">gap</span></code>; otherwise it returns <code class="docutils literal notranslate"><span class="pre">None</span></code> so a <a class="reference internal" href="#aw.routing.PriorityRouter" title="aw.routing.PriorityRouter"><code class="xref py py-class docutils literal notranslate"><span class="pre">PriorityRouter</span></code></a> can fall through
-to the next, more expensive, strategy (an LLM adjudicator, a human). That is the
+candidate when its score reaches <code class="docutils literal notranslate"><span class="pre">floor</span></code> <em>and</em> beats the runner-up by <code class="docutils literal notranslate"><span class="pre">gap</span></code>
+(absolute) or keeps it at or below <code class="docutils literal notranslate"><span class="pre">rel_gap</span></code> times its own score (relative);
+otherwise it returns <code class="docutils literal notranslate"><span class="pre">None</span></code> so a <a class="reference internal" href="#aw.routing.PriorityRouter" title="aw.routing.PriorityRouter"><code class="xref py py-class docutils literal notranslate"><span class="pre">PriorityRouter</span></code></a> can fall through to the
+next, more expensive, strategy (an LLM adjudicator, a human). That is the
 “cheap-first, escalate on ambiguity” shape: no model in the hot path for the clear
 cases, abstention rather than a guess for the close ones.</p>
+<p>Until a boundary is configured the strategy <strong>abstains</strong> (<code class="docutils literal notranslate"><span class="pre">require_boundary</span></code>):
+an uncalibrated search must not route. Set <code class="docutils literal notranslate"><span class="pre">floor</span></code>, <code class="docutils literal notranslate"><span class="pre">gap</span></code> or <code class="docutils literal notranslate"><span class="pre">rel_gap</span></code>, or
+pass <code class="docutils literal notranslate"><span class="pre">require_boundary=False</span></code> to take the top candidate of any ranking.</p>
+<p><code class="docutils literal notranslate"><span class="pre">dedup_key</span></code> collapses copies of one candidate (<code class="docutils literal notranslate"><span class="pre">'name&#64;base'</span></code> records of the same
+skill) to the best-scoring one before the gap test, so twins cannot tie.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ranked</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'open an issue'</span><span class="p">:</span> <span class="p">[(</span><span class="s1">'ge-write-issue'</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span> <span class="p">(</span><span class="s1">'ge'</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)],</span>
 <span class="gp">... </span>          <span class="s1">'do the thing'</span><span class="p">:</span> <span class="p">[(</span><span class="s1">'a'</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="s1">'b'</span><span class="p">,</span> <span class="mf">0.48</span><span class="p">)],</span>
 <span class="gp">... </span>          <span class="s1">'nothing'</span><span class="p">:</span> <span class="p">[]}</span>
@@ -377,6 +384,11 @@ cases, abstention rather than a guess for the close ones.</p>
 <p><code class="docutils literal notranslate"><span class="pre">explain</span></code> tells a caller why a query fell through, for calibration logs:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">route</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="s1">'do the thing'</span><span class="p">)</span>
 <span class="go">'ambiguous: a=0.5 over b=0.48 is below gap 0.1'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ConfidentRetrievalStrategy</span><span class="p">(</span><span class="n">search</span><span class="o">=</span><span class="n">ranked</span><span class="o">.</span><span class="n">get</span><span class="p">)</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="s1">'open an issue'</span><span class="p">)</span>
+<span class="go">'abstained: no boundary configured (set floor, gap or rel_gap)'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">copies</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">q</span><span class="p">:</span> <span class="p">[(</span><span class="s1">'x@a'</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="p">(</span><span class="s1">'x@b'</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="p">(</span><span class="s1">'y'</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ConfidentRetrievalStrategy</span><span class="p">(</span><span class="n">search</span><span class="o">=</span><span class="n">copies</span><span class="p">,</span> <span class="n">rel_gap</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">dedup_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'@'</span><span class="p">)[</span><span class="mi">0</span><span class="p">])(</span><span class="s1">'q'</span><span class="p">)</span>
+<span class="go">'x@a'</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -763,7 +775,7 @@ Users can create custom detectors with different mappings.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=72e2dd8f"></script>
+</div><script src="../_static/documentation_options.js?v=dba2a9e9"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

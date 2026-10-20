@@ -24,7 +24,7 @@ The key pattern is: provide sensible defaults, make them visible, keep them muta
 
 | [`ConditionalRouter`](#aw.routing.ConditionalRouter)([strategies, short_circuit])   | Router with short-circuit conditions.                                                |
 |---------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
-| [`ConfidentRetrievalStrategy`](#aw.routing.ConfidentRetrievalStrategy)(search[, floor, gap]) | A routing strategy backed by a ranked search: answer only when the ranking is clear. |
+| [`ConfidentRetrievalStrategy`](#aw.routing.ConfidentRetrievalStrategy)(search[, floor, ...]) | A routing strategy backed by a ranked search: answer only when the ranking is clear. |
 | [`ExtensionContext`](#aw.routing.ExtensionContext)(url[, content, ...])            | Context for extension detection.                                                     |
 | [`ExtensionRouter`](#aw.routing.ExtensionRouter)([priority_extensions, ...])      | Route extension detection through configurable strategies.                           |
 | [`MappingRouter`](#aw.routing.MappingRouter)([mapping, default, key_transform]) | Router based on a lookup mapping.                                                    |
@@ -59,7 +59,7 @@ otherwise continues to next strategy.
 '.md'
 ```
 
-### *class* aw.routing.ConfidentRetrievalStrategy(search, floor=0.0, gap=0.0)
+### *class* aw.routing.ConfidentRetrievalStrategy(search, floor=0.0, gap=0.0, rel_gap=None, require_boundary=True, dedup_key=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -67,11 +67,19 @@ A routing strategy backed by a ranked search: answer only when the ranking is cl
 
 `search(context)` returns `(candidate, score)` pairs, best first (any retrieval
 engine: `ir.discover`, a BM25 index, a dict lookup). The strategy returns the top
-candidate when its score reaches `floor` *and* beats the runner-up by at least
-`gap`; otherwise it returns `None` so a [`PriorityRouter`](#aw.routing.PriorityRouter) can fall through
-to the next, more expensive, strategy (an LLM adjudicator, a human). That is the
+candidate when its score reaches `floor` *and* beats the runner-up by `gap`
+(absolute) or keeps it at or below `rel_gap` times its own score (relative);
+otherwise it returns `None` so a [`PriorityRouter`](#aw.routing.PriorityRouter) can fall through to the
+next, more expensive, strategy (an LLM adjudicator, a human). That is the
 “cheap-first, escalate on ambiguity” shape: no model in the hot path for the clear
 cases, abstention rather than a guess for the close ones.
+
+Until a boundary is configured the strategy **abstains** (`require_boundary`):
+an uncalibrated search must not route. Set `floor`, `gap` or `rel_gap`, or
+pass `require_boundary=False` to take the top candidate of any ranking.
+
+`dedup_key` collapses copies of one candidate (`'name@base'` records of the same
+skill) to the best-scoring one before the gap test, so twins cannot tie.
 
 ```pycon
 >>> ranked = {'open an issue': [('ge-write-issue', 0.9), ('ge', 0.4)],
@@ -94,6 +102,11 @@ True
 ```pycon
 >>> route.explain('do the thing')
 'ambiguous: a=0.5 over b=0.48 is below gap 0.1'
+>>> ConfidentRetrievalStrategy(search=ranked.get).explain('open an issue')
+'abstained: no boundary configured (set floor, gap or rel_gap)'
+>>> copies = lambda q: [('x@a', 10.0), ('x@b', 10.0), ('y', 7.0)]
+>>> ConfidentRetrievalStrategy(search=copies, rel_gap=0.9, dedup_key=lambda c: c.split('@')[0])('q')
+'x@a'
 ```
 
 #### explain(context)

@@ -204,6 +204,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../_autosummary/aw.html">aw</a><input aria-label="Toggle navigation of aw" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../_autosummary/aw.base.html">aw.base</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../_autosummary/aw.cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_autosummary/aw.dispatch.html">aw.dispatch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../_autosummary/aw.func_calling.html">aw.func_calling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../_autosummary/aw.loading.html">aw.loading</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../_autosummary/aw.orchestration.html">aw.orchestration</a></li>
@@ -402,11 +403,19 @@
 
 <span class="sd">    ``search(context)`` returns ``(candidate, score)`` pairs, best first (any retrieval</span>
 <span class="sd">    engine: ``ir.discover``, a BM25 index, a dict lookup). The strategy returns the top</span>
-<span class="sd">    candidate when its score reaches ``floor`` *and* beats the runner-up by at least</span>
-<span class="sd">    ``gap``; otherwise it returns ``None`` so a :class:`PriorityRouter` can fall through</span>
-<span class="sd">    to the next, more expensive, strategy (an LLM adjudicator, a human). That is the</span>
+<span class="sd">    candidate when its score reaches ``floor`` *and* beats the runner-up by ``gap``</span>
+<span class="sd">    (absolute) or keeps it at or below ``rel_gap`` times its own score (relative);</span>
+<span class="sd">    otherwise it returns ``None`` so a :class:`PriorityRouter` can fall through to the</span>
+<span class="sd">    next, more expensive, strategy (an LLM adjudicator, a human). That is the</span>
 <span class="sd">    "cheap-first, escalate on ambiguity" shape: no model in the hot path for the clear</span>
 <span class="sd">    cases, abstention rather than a guess for the close ones.</span>
+
+<span class="sd">    Until a boundary is configured the strategy **abstains** (``require_boundary``):</span>
+<span class="sd">    an uncalibrated search must not route. Set ``floor``, ``gap`` or ``rel_gap``, or</span>
+<span class="sd">    pass ``require_boundary=False`` to take the top candidate of any ranking.</span>
+
+<span class="sd">    ``dedup_key`` collapses copies of one candidate (``'name@base'`` records of the same</span>
+<span class="sd">    skill) to the best-scoring one before the gap test, so twins cannot tie.</span>
 
 <span class="sd">    &gt;&gt;&gt; ranked = {'open an issue': [('ge-write-issue', 0.9), ('ge', 0.4)],</span>
 <span class="sd">    ...           'do the thing': [('a', 0.5), ('b', 0.48)],</span>
@@ -426,23 +435,59 @@
 
 <span class="sd">    &gt;&gt;&gt; route.explain('do the thing')</span>
 <span class="sd">    'ambiguous: a=0.5 over b=0.48 is below gap 0.1'</span>
+<span class="sd">    &gt;&gt;&gt; ConfidentRetrievalStrategy(search=ranked.get).explain('open an issue')</span>
+<span class="sd">    'abstained: no boundary configured (set floor, gap or rel_gap)'</span>
+<span class="sd">    &gt;&gt;&gt; copies = lambda q: [('x@a', 10.0), ('x@b', 10.0), ('y', 7.0)]</span>
+<span class="sd">    &gt;&gt;&gt; ConfidentRetrievalStrategy(search=copies, rel_gap=0.9, dedup_key=lambda c: c.split('@')[0])('q')</span>
+<span class="sd">    'x@a'</span>
 <span class="sd">    """</span>
 
     <span class="n">search</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">list</span><span class="p">]</span>
     <span class="n">floor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">gap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">rel_gap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">require_boundary</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">dedup_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_ranked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[])</span>
+        <span class="n">ranked</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dedup_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ranked</span>
+        <span class="n">seen</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cand</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">ranked</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dedup_key</span><span class="p">(</span><span class="n">cand</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cand</span><span class="p">,</span> <span class="n">score</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_unconfigured</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">require_boundary</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">floor</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel_gap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ambiguous</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ranked</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ranked</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">best</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">ranked</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">ranked</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="ow">and</span> <span class="n">best</span> <span class="o">-</span> <span class="n">second</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel_gap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">best</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">second</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel_gap</span> <span class="o">*</span> <span class="n">best</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unconfigured</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">None</span>
         <span class="n">ranked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ranked</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ranked</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">best</span><span class="p">,</span> <span class="n">best_score</span> <span class="o">=</span> <span class="n">ranked</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">best_score</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">floor</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ranked</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">best_score</span> <span class="o">-</span> <span class="n">ranked</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ambiguous</span><span class="p">(</span><span class="n">ranked</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">best</span>
 
@@ -450,15 +495,24 @@
 <a class="viewcode-back" href="../../_autosummary/aw.routing.html#aw.routing.ConfidentRetrievalStrategy.explain">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">explain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Why the strategy answered or abstained, in one line."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unconfigured</span><span class="p">():</span>
+            <span class="k">return</span> <span class="s2">"abstained: no boundary configured (set floor, gap or rel_gap)"</span>
         <span class="n">ranked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ranked</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ranked</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">"abstained: no candidates"</span>
         <span class="n">best</span><span class="p">,</span> <span class="n">best_score</span> <span class="o">=</span> <span class="n">ranked</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">best_score</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">floor</span><span class="p">:</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s2">"abstained: </span><span class="si">{</span><span class="n">best</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">best_score</span><span class="si">}</span><span class="s2"> is below floor </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">floor</span><span class="si">}</span><span class="s2">"</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ranked</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">best_score</span> <span class="o">-</span> <span class="n">ranked</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ambiguous</span><span class="p">(</span><span class="n">ranked</span><span class="p">):</span>
             <span class="n">second</span><span class="p">,</span> <span class="n">second_score</span> <span class="o">=</span> <span class="n">ranked</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">"ambiguous: </span><span class="si">{</span><span class="n">best</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">best_score</span><span class="si">}</span><span class="s2"> over </span><span class="si">{</span><span class="n">second</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">second_score</span><span class="si">}</span><span class="s2"> is below gap </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">how</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"below gap </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="si">}</span><span class="s2">"</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="ow">and</span> <span class="n">best_score</span> <span class="o">-</span> <span class="n">second_score</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span>
+                <span class="k">else</span> <span class="sa">f</span><span class="s2">"within rel_gap </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rel_gap</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"ambiguous: </span><span class="si">{</span><span class="n">best</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">best_score</span><span class="si">}</span><span class="s2"> over </span><span class="si">{</span><span class="n">second</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">second_score</span><span class="si">}</span><span class="s2"> is </span><span class="si">{</span><span class="n">how</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"confident: </span><span class="si">{</span><span class="n">best</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">best_score</span><span class="si">}</span><span class="s2">"</span></div>
 </div>
 
@@ -873,7 +927,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=72e2dd8f"></script>
+</div><script src="../../_static/documentation_options.js?v=dba2a9e9"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

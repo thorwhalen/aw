@@ -1,4 +1,4 @@
-> built 2026-10-20 07:01 UTC from d3407f2 (main) · aw 0.1.8. Details: build_info.json
+> built 2026-10-20 07:05 UTC from d4269a9 (main) · aw 0.1.9. Details: build_info.json
 
 # index.html.md
 
@@ -336,6 +336,23 @@ print(f"Loaded {df.shape}")
 # Continue with preparing
 final_df, final_meta = workflow.run_partial(df, stop_after="preparing")
 ```
+
+## Dispatching to a skill (cheap-first)
+
+`aw.dispatch` assembles the chain decided in opsward ADR 0011: retrieval over a skills corpus answers only when its ranking is clear, and an LLM adjudicator sees the raw request plus the top-k candidates only on ambiguity. Nothing routes until a boundary is configured.
+
+```python
+from aw.dispatch import skills_dispatch_chain, Adjudicator
+
+chain = skills_dispatch_chain()  # needs `pip install aw[ir]`
+chain("open an issue for the client about the broken export")  # -> 'ge-write-issue'
+chain.trace("deploy the site")  # layer, ranked candidates, reason
+chain = skills_dispatch_chain(
+    adjudicate=Adjudicator()
+)  # escalate through oa.chat on ambiguity
+```
+
+`aw.routing.ConfidentRetrievalStrategy` is the generic piece (any `search(query) -> [(candidate, score)]`), with `floor`, absolute `gap`, relative `rel_gap`, and `dedup_key`.
 
 ## Design Principles
 
@@ -723,6 +740,130 @@ This is a functional validator that actually attempts the visualization.
 >>> from cosmograph import cosmo
 >>> success, info = try_cosmo_visualization(df, cosmo)
 ```
+
+
+# _autosummary/aw.dispatch.html.md
+
+# aw.dispatch
+
+Cheap-first dispatch to a skill: calibrated retrieval first, an LLM adjudicator only on ambiguity.
+
+The chain decided in opsward ADR 0011 (`misc/docs/decisions/0011-cheap-first-dispatch-no-router-agent.md`
+in thorwhalen/opsward): a route in the instructions and the host’s own skill listing are
+the first two layers and belong to the host; this module is layers three and four, as code:
+
+```default
+chain = skills_dispatch_chain(adjudicate=Adjudicator(ask=my_llm))
+chain("open an issue for the client about the broken export")   # -> 'ge-write-issue' or None
+chain.trace("…")   # which layer answered, the ranked candidates, the reason
+```
+
+- [`ir_search()`](_autosummary/aw.dispatch.html.md#aw.dispatch.ir_search) adapts `ir.discover` (lexical by default: the only mode fast enough
+  for a hot path) to the `search(query) -> [(candidate, score)]` shape, with copies of one
+  skill (`name@base`) collapsed to the best one.
+- [`aw.routing.ConfidentRetrievalStrategy`](_autosummary/aw.routing.html.md#aw.routing.ConfidentRetrievalStrategy) answers only on a clear ranking and
+  abstains until a boundary (floor, gap or relative gap) is configured.
+- [`Adjudicator`](_autosummary/aw.dispatch.html.md#aw.dispatch.Adjudicator) is the escalation: an LLM shown the raw request and the top-k
+  candidates with their descriptions, answering with one of them or none. Never the whole
+  catalog, never a summary of the request.
+- [`DispatchChain`](_autosummary/aw.dispatch.html.md#aw.dispatch.DispatchChain) wires them and keeps the ranked list between the two, which a
+  plain [`aw.routing.PriorityRouter`](_autosummary/aw.routing.html.md#aw.routing.PriorityRouter) cannot do.
+
+`ir` is an optional dependency (`pip install aw[ir]`); everything here is testable with
+a fake search and a fake `ask`.
+
+### Functions
+
+| [`ir_search`](_autosummary/aw.dispatch.html.md#aw.dispatch.ir_search)([corpus, mode, k, discover])            | A `search(query) -> [(name, score)]` over an `ir` corpus, copies collapsed.          |
+|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| [`skill_name`](_autosummary/aw.dispatch.html.md#aw.dispatch.skill_name)(candidate)                             | The skill a corpus record stands for: `'branch-hygiene@priv'` -> `'branch-hygiene'`. |
+| [`skills_dispatch_chain`](_autosummary/aw.dispatch.html.md#aw.dispatch.skills_dispatch_chain)(\*[, corpus, mode, k, ...]) | The ADR 0011 chain over the `ir` skills corpus, ready to call.                       |
+
+### Classes
+
+| [`Adjudicator`](_autosummary/aw.dispatch.html.md#aw.dispatch.Adjudicator)([ask, describe, k, none_token])       | The escalation layer: an LLM picks one of the top-k candidates for the raw request, or none.   |
+|----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| [`DispatchChain`](_autosummary/aw.dispatch.html.md#aw.dispatch.DispatchChain)(search[, floor, gap, rel_gap, ...]) | Retrieval, then confident selection, then adjudication; with a trace of which layer answered.  |
+
+### *class* aw.dispatch.Adjudicator(ask=<function \_default_ask>, describe=None, k=5, none_token='NONE')
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+The escalation layer: an LLM picks one of the top-k candidates for the raw request, or none.
+
+`ask(prompt) -> str` is the model call (default: `oa.chat`); `describe(name)`
+returns a candidate’s description so the model sees cards, not bare names. The model
+sees the user’s words verbatim: a summary is a lossy channel (opsward ADR 0011 §3).
+
+```pycon
+>>> adj = Adjudicator(ask=lambda p: 'ge-write-issue', describe={'ge-write-issue': 'Write an issue.'}.get)
+>>> adj('open an issue for the client', [('ge-write-issue', 9.0), ('ge', 8.9)])
+'ge-write-issue'
+>>> Adjudicator(ask=lambda p: 'NONE')('x', [('a', 1.0)]) is None
+True
+>>> Adjudicator(ask=lambda p: 'something-else')('x', [('a', 1.0)]) is None   # not a candidate: no guess
+True
+```
+
+### *class* aw.dispatch.DispatchChain(search, floor=0.0, gap=0.0, rel_gap=None, adjudicate=None, k_adjudicate=5)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+Retrieval, then confident selection, then adjudication; with a trace of which layer answered.
+
+```pycon
+>>> table = {'clear': [('a', 10.0), ('b', 5.0)], 'close': [('a', 10.0), ('b', 9.8)], 'none': []}
+>>> chain = DispatchChain(search=table.get, rel_gap=0.9, adjudicate=Adjudicator(ask=lambda p: 'b'))
+>>> chain('clear'), chain('close'), chain('none')
+('a', 'b', None)
+>>> chain.trace('close')['layer'], chain.trace('clear')['layer'], chain.trace('none')['layer']
+('adjudicate', 'retrieval', 'none')
+>>> DispatchChain(search=table.get, rel_gap=0.9)('close') is None   # no adjudicator: abstain
+True
+```
+
+#### trace(request)
+
+`{'layer', 'answer', 'ranked', 'reason'}` for *request*; the model is called only on ambiguity.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+### aw.dispatch.ir_search(corpus='skills', , mode='lexical', k=10, discover=None)
+
+A `search(query) -> [(name, score)]` over an `ir` corpus, copies collapsed.
+
+`discover` defaults to `ir.discover` (imported lazily, so `aw` itself does not
+depend on `ir`); pass any callable with the same result shape to test without it.
+Scores are the engine’s (BM25-like for lexical), so calibrate `floor` per corpus.
+
+* **Return type:**
+  [`Callable`](https://docs.python.org/3/library/typing.html#typing.Callable)[[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)], [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`float`](https://docs.python.org/3/builtins/functions.html#float)]]]
+
+### aw.dispatch.skill_name(candidate)
+
+The skill a corpus record stands for: `'branch-hygiene@priv'` -> `'branch-hygiene'`.
+
+```pycon
+>>> skill_name('ge-write-issue@g_ai'), skill_name('deslop')
+('ge-write-issue', 'deslop')
+```
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### aw.dispatch.skills_dispatch_chain(, corpus='skills', mode='lexical', k=10, floor=0.0, rel_gap=0.75, adjudicate=None, discover=None)
+
+The ADR 0011 chain over the `ir` skills corpus, ready to call.
+
+Defaults: lexical mode; a relative gap of 0.75 (the runner-up must score at most 75% of
+the top), the point on the 14-prompt probe set of opsward ADR 0011 where the chain
+gives no confident wrong answer (9 confident, 5 escalated; at 0.9 it answers 12 right
+and 2 wrong); no floor until `ir calibrate-min-score` has produced one for the
+corpus; no adjudicator (pass an [`Adjudicator`](_autosummary/aw.dispatch.html.md#aw.dispatch.Adjudicator) to escalate instead of abstaining).
+
+* **Return type:**
+  [`DispatchChain`](_autosummary/aw.dispatch.html.md#aw.dispatch.DispatchChain)
 
 
 # _autosummary/aw.func_calling.html.md
@@ -2159,6 +2300,7 @@ output_dir/
 | [`base`](_autosummary/aw.base.html.md#module-aw.base)                   | Core protocols and base classes for agentic workflows.                                                                                                                   |
 |----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`cosmo`](_autosummary/aw.cosmo.html.md#module-aw.cosmo)                 | Cosmograph-specific validator tool.                                                                                                                                      |
+| [`dispatch`](_autosummary/aw.dispatch.html.md#module-aw.dispatch)           | Cheap-first dispatch to a skill: calibrated retrieval first, an LLM adjudicator only on ambiguity.                                                                       |
 | [`func_calling`](_autosummary/aw.func_calling.html.md#module-aw.func_calling)   | This module provides robust templates for creating (python) code-generating functions that can translate natural language task descriptions into executable Python code. |
 | [`loading`](_autosummary/aw.loading.html.md#module-aw.loading)             | Loading agent for converting data sources to pandas DataFrames.                                                                                                          |
 | [`orchestration`](_autosummary/aw.orchestration.html.md#module-aw.orchestration) | Orchestration and workflow management for agentic steps.                                                                                                                 |
@@ -2639,7 +2781,7 @@ The key pattern is: provide sensible defaults, make them visible, keep them muta
 
 | [`ConditionalRouter`](_autosummary/aw.routing.html.md#aw.routing.ConditionalRouter)([strategies, short_circuit])   | Router with short-circuit conditions.                                                |
 |---------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
-| [`ConfidentRetrievalStrategy`](_autosummary/aw.routing.html.md#aw.routing.ConfidentRetrievalStrategy)(search[, floor, gap]) | A routing strategy backed by a ranked search: answer only when the ranking is clear. |
+| [`ConfidentRetrievalStrategy`](_autosummary/aw.routing.html.md#aw.routing.ConfidentRetrievalStrategy)(search[, floor, ...]) | A routing strategy backed by a ranked search: answer only when the ranking is clear. |
 | [`ExtensionContext`](_autosummary/aw.routing.html.md#aw.routing.ExtensionContext)(url[, content, ...])            | Context for extension detection.                                                     |
 | [`ExtensionRouter`](_autosummary/aw.routing.html.md#aw.routing.ExtensionRouter)([priority_extensions, ...])      | Route extension detection through configurable strategies.                           |
 | [`MappingRouter`](_autosummary/aw.routing.html.md#aw.routing.MappingRouter)([mapping, default, key_transform]) | Router based on a lookup mapping.                                                    |
@@ -2674,7 +2816,7 @@ otherwise continues to next strategy.
 '.md'
 ```
 
-### *class* aw.routing.ConfidentRetrievalStrategy(search, floor=0.0, gap=0.0)
+### *class* aw.routing.ConfidentRetrievalStrategy(search, floor=0.0, gap=0.0, rel_gap=None, require_boundary=True, dedup_key=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -2682,11 +2824,19 @@ A routing strategy backed by a ranked search: answer only when the ranking is cl
 
 `search(context)` returns `(candidate, score)` pairs, best first (any retrieval
 engine: `ir.discover`, a BM25 index, a dict lookup). The strategy returns the top
-candidate when its score reaches `floor` *and* beats the runner-up by at least
-`gap`; otherwise it returns `None` so a [`PriorityRouter`](_autosummary/aw.routing.html.md#aw.routing.PriorityRouter) can fall through
-to the next, more expensive, strategy (an LLM adjudicator, a human). That is the
+candidate when its score reaches `floor` *and* beats the runner-up by `gap`
+(absolute) or keeps it at or below `rel_gap` times its own score (relative);
+otherwise it returns `None` so a [`PriorityRouter`](_autosummary/aw.routing.html.md#aw.routing.PriorityRouter) can fall through to the
+next, more expensive, strategy (an LLM adjudicator, a human). That is the
 “cheap-first, escalate on ambiguity” shape: no model in the hot path for the clear
 cases, abstention rather than a guess for the close ones.
+
+Until a boundary is configured the strategy **abstains** (`require_boundary`):
+an uncalibrated search must not route. Set `floor`, `gap` or `rel_gap`, or
+pass `require_boundary=False` to take the top candidate of any ranking.
+
+`dedup_key` collapses copies of one candidate (`'name@base'` records of the same
+skill) to the best-scoring one before the gap test, so twins cannot tie.
 
 ```pycon
 >>> ranked = {'open an issue': [('ge-write-issue', 0.9), ('ge', 0.4)],
@@ -2709,6 +2859,11 @@ True
 ```pycon
 >>> route.explain('do the thing')
 'ambiguous: a=0.5 over b=0.48 is below gap 0.1'
+>>> ConfidentRetrievalStrategy(search=ranked.get).explain('open an issue')
+'abstained: no boundary configured (set floor, gap or rel_gap)'
+>>> copies = lambda q: [('x@a', 10.0), ('x@b', 10.0), ('y', 7.0)]
+>>> ConfidentRetrievalStrategy(search=copies, rel_gap=0.9, dedup_key=lambda c: c.split('@')[0])('q')
+'x@a'
 ```
 
 #### explain(context)
@@ -3792,20 +3947,20 @@ Create a validator from a schema (Pydantic, JSON Schema, etc.).
 
 # About this build
 
-This documentation was built on **2026-10-20 07:01 UTC** from commit <a href="https://github.com/thorwhalen/aw/commit/d3407f271bb37af2e4414280797e8e09ffef2dee"><code>d3407f2</code></a> on branch <code>main</code>, for **aw 0.1.8** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-20 07:05 UTC** from commit <a href="https://github.com/thorwhalen/aw/commit/d4269a9bf0f807ba48852b05d986f0939ec48ccf"><code>d4269a9</code></a> on branch <code>main</code>, for **aw 0.1.9** (from <code>pyproject.toml</code>).
 
 #### WARNING
 The documentation and the package may be misaligned:
 
-- The documented version (0.1.8) is ahead of the latest release on PyPI (0.1.7): these docs describe unreleased code.
+- The documented version (0.1.9) is ahead of the latest release on PyPI (0.1.7): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/aw/commit/d3407f271bb37af2e4414280797e8e09ffef2dee"><code>d3407f271bb37af2e4414280797e8e09ffef2dee</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/aw/commit/d4269a9bf0f807ba48852b05d986f0939ec48ccf"><code>d4269a9bf0f807ba48852b05d986f0939ec48ccf</code></a> |
 | Branch              | <code>main</code>                                                                                                                                    |
-| Tags at this commit | <code>0.1.8</code>                                                                                                                                   |
+| Tags at this commit | <code>0.1.9</code>                                                                                                                                   |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/thorwhalen/aw</code>                                                                                                        |
 
@@ -3814,9 +3969,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/aw</code>                                                                 |
-| Run          | <a href="https://github.com/thorwhalen/aw/actions/runs/39383633245">39383633245</a>        |
+| Run          | <a href="https://github.com/thorwhalen/aw/actions/runs/39384068283">39384068283</a>        |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>3e393885efbb021f8f10fcf4eb1e4ceb2a7606d7</code> (in the history of the built commit) |
+| Event commit | <code>717fca29fc0e212fa54600729a7f37ce77acbdc9</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -3841,13 +3996,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/aw/0.1.7/">0.1.7</a>, older than the documented version (0.1.8).
+Latest release: <a href="https://pypi.org/project/aw/0.1.7/">0.1.7</a>, older than the documented version (0.1.9).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/aw && cd aw
-git checkout d3407f271bb37af2e4414280797e8e09ffef2dee
+git checkout d4269a9bf0f807ba48852b05d986f0939ec48ccf
 pip install "epythet==0.2.18"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

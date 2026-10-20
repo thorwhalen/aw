@@ -10,6 +10,7 @@
 - [aw](_autosummary/aw.html.md): aw - Agentic Workflows for Data Preparation
 - [aw.base](_autosummary/aw.base.html.md): Core protocols and base classes for agentic workflows.
 - [aw.cosmo](_autosummary/aw.cosmo.html.md): Cosmograph-specific validator tool.
+- [aw.dispatch](_autosummary/aw.dispatch.html.md): Cheap-first dispatch to a skill: calibrated retrieval first, an LLM adjudicator only on ambiguity.
 - [aw.func_calling](_autosummary/aw.func_calling.html.md): This module provides robust templates for creating (python) code-generating functions
 - [aw.loading](_autosummary/aw.loading.html.md): Loading agent for converting data sources to pandas DataFrames.
 - [aw.orchestration](_autosummary/aw.orchestration.html.md): Orchestration and workflow management for agentic steps.
@@ -20,7 +21,7 @@
 - [aw.translators](_autosummary/aw.translators.html.md): Translators from aw agent specifications to other agent formats.
 - [aw.util](_autosummary/aw.util.html.md): Utility tools and helper functions for agents.
 - [aw.validation](_autosummary/aw.validation.html.md): Validation system supporting three flavors: schema, info-dict, and functional.
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-20 07:01 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-20 07:05 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
 
 ## Optional
 

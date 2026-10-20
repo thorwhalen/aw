@@ -207,6 +207,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/aw.html">aw</a><input aria-label="Toggle navigation of aw" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.base.html">aw.base</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.dispatch.html">aw.dispatch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.func_calling.html">aw.func_calling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.loading.html">aw.loading</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.orchestration.html">aw.orchestration</a></li>
@@ -595,6 +596,21 @@ pip<span class="w"> </span>install<span class="w"> </span>oa
 </div>
 </section>
 </section>
+<section id="dispatching-to-a-skill-cheap-first">
+<h2>Dispatching to a skill (cheap-first)<a class="headerlink" href="#dispatching-to-a-skill-cheap-first" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">aw.dispatch</span></code> assembles the chain decided in opsward ADR 0011: retrieval over a skills corpus answers only when its ranking is clear, and an LLM adjudicator sees the raw request plus the top-k candidates only on ambiguity. Nothing routes until a boundary is configured.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">aw.dispatch</span><span class="w"> </span><span class="kn">import</span> <span class="n">skills_dispatch_chain</span><span class="p">,</span> <span class="n">Adjudicator</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">skills_dispatch_chain</span><span class="p">()</span>  <span class="c1"># needs `pip install aw[ir]`</span>
+<span class="n">chain</span><span class="p">(</span><span class="s2">"open an issue for the client about the broken export"</span><span class="p">)</span>  <span class="c1"># -&gt; 'ge-write-issue'</span>
+<span class="n">chain</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">"deploy the site"</span><span class="p">)</span>  <span class="c1"># layer, ranked candidates, reason</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">skills_dispatch_chain</span><span class="p">(</span>
+    <span class="n">adjudicate</span><span class="o">=</span><span class="n">Adjudicator</span><span class="p">()</span>
+<span class="p">)</span>  <span class="c1"># escalate through oa.chat on ambiguity</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">aw.routing.ConfidentRetrievalStrategy</span></code> is the generic piece (any <code class="docutils literal notranslate"><span class="pre">search(query)</span> <span class="pre">-&gt;</span> <span class="pre">[(candidate,</span> <span class="pre">score)]</span></code>), with <code class="docutils literal notranslate"><span class="pre">floor</span></code>, absolute <code class="docutils literal notranslate"><span class="pre">gap</span></code>, relative <code class="docutils literal notranslate"><span class="pre">rel_gap</span></code>, and <code class="docutils literal notranslate"><span class="pre">dedup_key</span></code>.</p>
+</section>
 <section id="design-principles">
 <h2>Design Principles<a class="headerlink" href="#design-principles" title="Link to this heading">¶</a></h2>
 <p>The package follows these principles:</p>
@@ -653,7 +669,7 @@ pip<span class="w"> </span>install<span class="w"> </span>oa
 </section>
 </section>
 
-<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-10-20 07:01 UTC from <a href="https://github.com/thorwhalen/aw/commit/d3407f271bb37af2e4414280797e8e09ffef2dee">d3407f2</a> (main) · aw 0.1.8 · <a href="about-this-build.html">about this build</a></p>
+<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-10-20 07:05 UTC from <a href="https://github.com/thorwhalen/aw/commit/d4269a9bf0f807ba48852b05d986f0939ec48ccf">d4269a9</a> (main) · aw 0.1.9 · <a href="about-this-build.html">about this build</a></p>
         </article>
       </div>
       <footer>
@@ -729,6 +745,7 @@ pip<span class="w"> </span>install<span class="w"> </span>oa
 <li><a class="reference internal" href="#partial-workflow-execution">Partial Workflow Execution</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#dispatching-to-a-skill-cheap-first">Dispatching to a skill (cheap-first)</a></li>
 <li><a class="reference internal" href="#design-principles">Design Principles</a></li>
 <li><a class="reference internal" href="#project-structure">Project Structure</a></li>
 <li><a class="reference internal" href="#contributing">Contributing</a></li>
@@ -745,7 +762,7 @@ pip<span class="w"> </span>install<span class="w"> </span>oa
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=72e2dd8f"></script>
+</div><script src="_static/documentation_options.js?v=dba2a9e9"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

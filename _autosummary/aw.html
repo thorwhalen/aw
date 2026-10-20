@@ -207,6 +207,7 @@
 <li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">aw</a><input aria-label="Toggle navigation of aw" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="aw.base.html">aw.base</a></li>
 <li class="toctree-l3"><a class="reference internal" href="aw.cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aw.dispatch.html">aw.dispatch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="aw.func_calling.html">aw.func_calling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="aw.loading.html">aw.loading</a></li>
 <li class="toctree-l3"><a class="reference internal" href="aw.orchestration.html">aw.orchestration</a></li>
@@ -2023,34 +2024,37 @@ YAML-serializable config dicts</p>
 <tr class="row-even"><td><p><a class="reference internal" href="aw.cosmo.html#module-aw.cosmo" title="aw.cosmo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cosmo</span></code></a></p></td>
 <td><p>Cosmograph-specific validator tool.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="aw.func_calling.html#module-aw.func_calling" title="aw.func_calling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">func_calling</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="aw.dispatch.html#module-aw.dispatch" title="aw.dispatch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dispatch</span></code></a></p></td>
+<td><p>Cheap-first dispatch to a skill: calibrated retrieval first, an LLM adjudicator only on ambiguity.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="aw.func_calling.html#module-aw.func_calling" title="aw.func_calling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">func_calling</span></code></a></p></td>
 <td><p>This module provides robust templates for creating (python) code-generating functions that can translate natural language task descriptions into executable Python code.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="aw.loading.html#module-aw.loading" title="aw.loading"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loading</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="aw.loading.html#module-aw.loading" title="aw.loading"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loading</span></code></a></p></td>
 <td><p>Loading agent for converting data sources to pandas DataFrames.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="aw.orchestration.html#module-aw.orchestration" title="aw.orchestration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orchestration</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="aw.orchestration.html#module-aw.orchestration" title="aw.orchestration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orchestration</span></code></a></p></td>
 <td><p>Orchestration and workflow management for agentic steps.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="aw.preparing.html#module-aw.preparing" title="aw.preparing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preparing</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="aw.preparing.html#module-aw.preparing" title="aw.preparing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preparing</span></code></a></p></td>
 <td><p>Preparation agent for transforming data to meet target requirements.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="aw.py_gen.html#module-aw.py_gen" title="aw.py_gen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">py_gen</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="aw.py_gen.html#module-aw.py_gen" title="aw.py_gen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">py_gen</span></code></a></p></td>
 <td><p>Function makeing and calling</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="aw.routing.html#module-aw.routing" title="aw.routing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">routing</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="aw.routing.html#module-aw.routing" title="aw.routing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">routing</span></code></a></p></td>
 <td><p>Configurable routing and decision chains for agentic workflows.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="aw.tools.html#module-aw.tools" title="aw.tools"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tools</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="aw.tools.html#module-aw.tools" title="aw.tools"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tools</span></code></a></p></td>
 <td><p>Tools for executing code and other agent actions.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="aw.translators.html#module-aw.translators" title="aw.translators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">translators</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="aw.translators.html#module-aw.translators" title="aw.translators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">translators</span></code></a></p></td>
 <td><p>Translators from aw agent specifications to other agent formats.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="aw.util.html#module-aw.util" title="aw.util"><code class="xref py py-obj docutils literal notranslate"><span class="pre">util</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="aw.util.html#module-aw.util" title="aw.util"><code class="xref py py-obj docutils literal notranslate"><span class="pre">util</span></code></a></p></td>
 <td><p>Utility tools and helper functions for agents.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="aw.validation.html#module-aw.validation" title="aw.validation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validation</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="aw.validation.html#module-aw.validation" title="aw.validation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validation</span></code></a></p></td>
 <td><p>Validation system supporting three flavors: schema, info-dict, and functional.</p></td>
 </tr>
 </tbody>
@@ -2221,7 +2225,7 @@ YAML-serializable config dicts</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=72e2dd8f"></script>
+</div><script src="../_static/documentation_options.js?v=dba2a9e9"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

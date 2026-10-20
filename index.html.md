@@ -333,6 +333,23 @@ print(f"Loaded {df.shape}")
 final_df, final_meta = workflow.run_partial(df, stop_after="preparing")
 ```
 
+## Dispatching to a skill (cheap-first)
+
+`aw.dispatch` assembles the chain decided in opsward ADR 0011: retrieval over a skills corpus answers only when its ranking is clear, and an LLM adjudicator sees the raw request plus the top-k candidates only on ambiguity. Nothing routes until a boundary is configured.
+
+```python
+from aw.dispatch import skills_dispatch_chain, Adjudicator
+
+chain = skills_dispatch_chain()  # needs `pip install aw[ir]`
+chain("open an issue for the client about the broken export")  # -> 'ge-write-issue'
+chain.trace("deploy the site")  # layer, ranked candidates, reason
+chain = skills_dispatch_chain(
+    adjudicate=Adjudicator()
+)  # escalate through oa.chat on ambiguity
+```
+
+`aw.routing.ConfidentRetrievalStrategy` is the generic piece (any `search(query) -> [(candidate, score)]`), with `floor`, absolute `gap`, relative `rel_gap`, and `dedup_key`.
+
 ## Design Principles
 
 The package follows these principles:

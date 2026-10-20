@@ -8,6 +8,7 @@
 - [aw](aw.html.md): aw - Agentic Workflows for Data Preparation
 - [aw.base](aw.base.html.md): Core protocols and base classes for agentic workflows.
 - [aw.cosmo](aw.cosmo.html.md): Cosmograph-specific validator tool.
+- [aw.dispatch](aw.dispatch.html.md): Cheap-first dispatch to a skill: calibrated retrieval first, an LLM adjudicator only on ambiguity.
 - [aw.func_calling](aw.func_calling.html.md): This module provides robust templates for creating (python) code-generating functions
 - [aw.loading](aw.loading.html.md): Loading agent for converting data sources to pandas DataFrames.
 - [aw.orchestration](aw.orchestration.html.md): Orchestration and workflow management for agentic steps.

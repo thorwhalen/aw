@@ -1,0 +1,21 @@
+aw.dispatch
+===========
+
+.. automodule:: aw.dispatch
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      ir_search
+      skill_name
+      skills_dispatch_chain
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Adjudicator
+      DispatchChain
+   

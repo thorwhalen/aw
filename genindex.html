@@ -203,6 +203,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/aw.html">aw</a><input aria-label="Toggle navigation of aw" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.base.html">aw.base</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.cosmo.html">aw.cosmo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.dispatch.html">aw.dispatch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.func_calling.html">aw.func_calling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.loading.html">aw.loading</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/aw.orchestration.html">aw.orchestration</a></li>
@@ -268,6 +269,8 @@
           <li><a href="_autosummary/aw.orchestration.html#aw.orchestration.InteractiveWorkflow.add_step">(aw.orchestration.InteractiveWorkflow method)</a>
 </li>
         </ul></li>
+        <li><a href="_autosummary/aw.dispatch.html#aw.dispatch.Adjudicator">Adjudicator (class in aw.dispatch)</a>
+</li>
         <li><a href="_autosummary/aw.html#aw.AgenticStep">AgenticStep (class in aw)</a>
 
         <ul>
@@ -323,6 +326,13 @@
         </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li>
+    aw.dispatch
+
+        <ul>
+          <li><a href="_autosummary/aw.dispatch.html#module-aw.dispatch">module</a>
+</li>
+        </ul></li>
         <li>
     aw.func_calling
 
@@ -519,11 +529,13 @@
           <li><a href="_autosummary/aw.util.html#aw.util.default_llm_factory">(in module aw.util)</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="_autosummary/aw.routing.html#aw.routing.detect_explicit">detect_explicit() (in module aw.routing)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="_autosummary/aw.routing.html#aw.routing.detect_from_url">detect_from_url() (in module aw.routing)</a>
+</li>
+        <li><a href="_autosummary/aw.dispatch.html#aw.dispatch.DispatchChain">DispatchChain (class in aw.dispatch)</a>
 </li>
         <li><a href="_autosummary/aw.html#aw.djoin">djoin() (in module aw)</a>
 </li>
@@ -695,6 +707,8 @@
           <li><a href="_autosummary/aw.orchestration.html#aw.orchestration.InteractiveWorkflow">(class in aw.orchestration)</a>
 </li>
         </ul></li>
+        <li><a href="_autosummary/aw.dispatch.html#aw.dispatch.ir_search">ir_search() (in module aw.dispatch)</a>
+</li>
         <li><a href="_autosummary/aw.html#aw.is_not_empty">is_not_empty() (in module aw)</a>
 
         <ul>
@@ -782,6 +796,8 @@
           <li><a href="_autosummary/aw.base.html#module-aw.base">aw.base</a>
 </li>
           <li><a href="_autosummary/aw.cosmo.html#module-aw.cosmo">aw.cosmo</a>
+</li>
+          <li><a href="_autosummary/aw.dispatch.html#module-aw.dispatch">aw.dispatch</a>
 </li>
           <li><a href="_autosummary/aw.func_calling.html#module-aw.func_calling">aw.func_calling</a>
 </li>
@@ -932,14 +948,18 @@
           <li><a href="_autosummary/aw.orchestration.html#aw.orchestration.InteractiveWorkflow.set_approval_callback">(aw.orchestration.InteractiveWorkflow method)</a>
 </li>
         </ul></li>
+        <li><a href="_autosummary/aw.dispatch.html#aw.dispatch.skill_name">skill_name() (in module aw.dispatch)</a>
+</li>
+        <li><a href="_autosummary/aw.dispatch.html#aw.dispatch.skills_dispatch_chain">skills_dispatch_chain() (in module aw.dispatch)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="_autosummary/aw.base.html#aw.base.Context.snapshot">snapshot() (aw.base.Context method)</a>
 
         <ul>
           <li><a href="_autosummary/aw.html#aw.Context.snapshot">(aw.Context method)</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="_autosummary/aw.html#aw.StepConfig">StepConfig (class in aw)</a>
 
         <ul>
@@ -1016,6 +1036,8 @@
           <li><a href="_autosummary/aw.translators.html#aw.translators.ToolSpec">(class in aw.translators)</a>
 </li>
         </ul></li>
+        <li><a href="_autosummary/aw.dispatch.html#aw.dispatch.DispatchChain.trace">trace() (aw.dispatch.DispatchChain method)</a>
+</li>
         <li><a href="_autosummary/aw.html#aw.ExecutionResult.traceback">traceback (aw.ExecutionResult attribute)</a>
 
         <ul>
@@ -1130,7 +1152,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=72e2dd8f"></script>
+</div><script src="_static/documentation_options.js?v=dba2a9e9"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
