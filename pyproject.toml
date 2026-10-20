@@ -56,6 +56,9 @@ Issues = "https://github.com/thorwhalen/aw/issues"
 Changelog = "https://github.com/thorwhalen/aw/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
+ir = [
+    "ir",
+]
 llm = [
     "openai",
     "oa",

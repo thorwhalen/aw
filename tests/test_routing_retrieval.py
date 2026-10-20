@@ -39,6 +39,17 @@ def test_falls_through_to_the_next_strategy_in_a_priority_router():
     assert router("close") == "llm:close" and calls == ["close"]
 
 
-def test_defaults_answer_any_nonempty_ranking():
-    s = ConfidentRetrievalStrategy(search=_search_from({"q": [("a", 0.0), ("b", 0.0)]}))
-    assert s("q") == "a"  # floor 0 and gap 0: the top candidate, whatever its score
+def test_unconfigured_strategy_abstains_until_told_otherwise():
+    s = ConfidentRetrievalStrategy(search=_search_from({"q": [("a", 0.9), ("b", 0.1)]}))
+    assert s("q") is None and "no boundary" in s.explain("q")
+    assert ConfidentRetrievalStrategy(search=_search_from({"q": [("a", 0.0), ("b", 0.0)]}), require_boundary=False)("q") == "a"
+
+
+def test_relative_gap_and_dedup():
+    table = {"clear": [("x", 10.0), ("y", 7.0)], "close": [("x", 10.0), ("y", 9.5)], "twins": [("x@a", 10.0), ("x@b", 10.0), ("y", 7.0)]}
+    s = ConfidentRetrievalStrategy(search=_search_from(table), rel_gap=0.9)
+    assert s("clear") == "x"
+    assert s("close") is None and "rel_gap" in s.explain("close")
+    assert s("twins") is None  # copies tie
+    d = ConfidentRetrievalStrategy(search=_search_from(table), rel_gap=0.9, dedup_key=lambda c: c.split("@")[0])
+    assert d("twins") == "x@a"

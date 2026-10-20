@@ -129,11 +129,19 @@ class ConfidentRetrievalStrategy:
 
     ``search(context)`` returns ``(candidate, score)`` pairs, best first (any retrieval
     engine: ``ir.discover``, a BM25 index, a dict lookup). The strategy returns the top
-    candidate when its score reaches ``floor`` *and* beats the runner-up by at least
-    ``gap``; otherwise it returns ``None`` so a :class:`PriorityRouter` can fall through
-    to the next, more expensive, strategy (an LLM adjudicator, a human). That is the
+    candidate when its score reaches ``floor`` *and* beats the runner-up by ``gap``
+    (absolute) or keeps it at or below ``rel_gap`` times its own score (relative);
+    otherwise it returns ``None`` so a :class:`PriorityRouter` can fall through to the
+    next, more expensive, strategy (an LLM adjudicator, a human). That is the
     "cheap-first, escalate on ambiguity" shape: no model in the hot path for the clear
     cases, abstention rather than a guess for the close ones.
+
+    Until a boundary is configured the strategy **abstains** (``require_boundary``):
+    an uncalibrated search must not route. Set ``floor``, ``gap`` or ``rel_gap``, or
+    pass ``require_boundary=False`` to take the top candidate of any ranking.
+
+    ``dedup_key`` collapses copies of one candidate (``'name@base'`` records of the same
+    skill) to the best-scoring one before the gap test, so twins cannot tie.
 
     >>> ranked = {'open an issue': [('ge-write-issue', 0.9), ('ge', 0.4)],
     ...           'do the thing': [('a', 0.5), ('b', 0.48)],
@@ -153,37 +161,74 @@ class ConfidentRetrievalStrategy:
 
     >>> route.explain('do the thing')
     'ambiguous: a=0.5 over b=0.48 is below gap 0.1'
+    >>> ConfidentRetrievalStrategy(search=ranked.get).explain('open an issue')
+    'abstained: no boundary configured (set floor, gap or rel_gap)'
+    >>> copies = lambda q: [('x@a', 10.0), ('x@b', 10.0), ('y', 7.0)]
+    >>> ConfidentRetrievalStrategy(search=copies, rel_gap=0.9, dedup_key=lambda c: c.split('@')[0])('q')
+    'x@a'
     """
 
     search: Callable[[Any], list]
     floor: float = 0.0
     gap: float = 0.0
+    rel_gap: Optional[float] = None
+    require_boundary: bool = True
+    dedup_key: Optional[Callable[[Any], Any]] = None
 
     def _ranked(self, context: Any) -> list:
-        return list(self.search(context) or [])
+        ranked = list(self.search(context) or [])
+        if self.dedup_key is None:
+            return ranked
+        seen: set = set()
+        out = []
+        for cand, score in ranked:
+            key = self.dedup_key(cand)
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append((cand, score))
+        return out
+
+    def _unconfigured(self) -> bool:
+        return self.require_boundary and not (self.floor or self.gap or self.rel_gap is not None)
+
+    def _ambiguous(self, ranked: list) -> bool:
+        if len(ranked) < 2:
+            return False
+        best, second = ranked[0][1], ranked[1][1]
+        if self.gap and best - second < self.gap:
+            return True
+        if self.rel_gap is not None and best > 0 and second > self.rel_gap * best:
+            return True
+        return False
 
     def __call__(self, context: Any) -> Optional[Any]:
+        if self._unconfigured():
+            return None
         ranked = self._ranked(context)
         if not ranked:
             return None
         best, best_score = ranked[0]
         if best_score < self.floor:
             return None
-        if len(ranked) > 1 and best_score - ranked[1][1] < self.gap:
+        if self._ambiguous(ranked):
             return None
         return best
 
     def explain(self, context: Any) -> str:
         """Why the strategy answered or abstained, in one line."""
+        if self._unconfigured():
+            return "abstained: no boundary configured (set floor, gap or rel_gap)"
         ranked = self._ranked(context)
         if not ranked:
             return "abstained: no candidates"
         best, best_score = ranked[0]
         if best_score < self.floor:
             return f"abstained: {best}={best_score} is below floor {self.floor}"
-        if len(ranked) > 1 and best_score - ranked[1][1] < self.gap:
+        if self._ambiguous(ranked):
             second, second_score = ranked[1]
-            return f"ambiguous: {best}={best_score} over {second}={second_score} is below gap {self.gap}"
+            how = f"below gap {self.gap}" if self.gap and best_score - second_score < self.gap else f"within rel_gap {self.rel_gap}"
+            return f"ambiguous: {best}={best_score} over {second}={second_score} is {how}"
         return f"confident: {best}={best_score}"
 
 
