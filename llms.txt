@@ -20,7 +20,7 @@
 - [aw.translators](_autosummary/aw.translators.html.md): Translators from aw agent specifications to other agent formats.
 - [aw.util](_autosummary/aw.util.html.md): Utility tools and helper functions for agents.
 - [aw.validation](_autosummary/aw.validation.html.md): Validation system supporting three flavors: schema, info-dict, and functional.
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-19 12:43 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-20 07:01 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
 
 ## Optional
 

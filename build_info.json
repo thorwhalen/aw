@@ -1,39 +1,39 @@
 {
   "schema_version": 1,
-  "built_at": "2026-10-19T12:43:35Z",
+  "built_at": "2026-10-20T07:01:51Z",
   "package": {
     "name": "aw",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "display_name": "aw",
     "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "cf51aec055531b526d2349b56d96072b068a2684",
-    "short_commit": "cf51aec",
+    "commit": "d3407f271bb37af2e4414280797e8e09ffef2dee",
+    "short_commit": "d3407f2",
     "branch": "main",
     "tags": [
-      "0.1.7"
+      "0.1.8"
     ],
     "dirty": false,
     "remote_url": "https://github.com/thorwhalen/aw",
-    "commit_url": "https://github.com/thorwhalen/aw/commit/cf51aec055531b526d2349b56d96072b068a2684",
+    "commit_url": "https://github.com/thorwhalen/aw/commit/d3407f271bb37af2e4414280797e8e09ffef2dee",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "thorwhalen/aw",
-    "sha": "856cb4eef5f0d7b5fd1d9add2a11409f1236bacc",
+    "sha": "3e393885efbb021f8f10fcf4eb1e4ceb2a7606d7",
     "sha_in_history": true,
     "ref": "refs/heads/main",
     "ref_name": "main",
-    "run_id": "39253975270",
-    "run_url": "https://github.com/thorwhalen/aw/actions/runs/39253975270",
+    "run_id": "39383633245",
+    "run_url": "https://github.com/thorwhalen/aw/actions/runs/39383633245",
     "server_url": "https://github.com"
   },
   "tools": {
     "epythet": "0.2.18",
-    "sphinx": "9.1.0",
+    "sphinx": "9.1.1",
     "docutils": "0.22.4",
     "python": "3.12.15"
   },
@@ -63,13 +63,15 @@
   "pypi": {
     "checked": true,
     "latest": "0.1.7",
-    "relation": "same",
+    "relation": "ahead",
     "error": null
   },
-  "reproduce": "git clone https://github.com/thorwhalen/aw && cd aw\ngit checkout cf51aec055531b526d2349b56d96072b068a2684\npip install \"epythet==0.2.18\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/thorwhalen/aw && cd aw\ngit checkout d3407f271bb37af2e4414280797e8e09ffef2dee\npip install \"epythet==0.2.18\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
-    "aligned": true,
-    "notes": []
+    "aligned": false,
+    "notes": [
+      "The documented version (0.1.8) is ahead of the latest release on PyPI (0.1.7): these docs describe unreleased code."
+    ]
   }
 }

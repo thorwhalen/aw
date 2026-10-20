@@ -2,18 +2,20 @@
 
 # About this build
 
-This documentation was built on **2026-10-19 12:43 UTC** from commit <a href="https://github.com/thorwhalen/aw/commit/cf51aec055531b526d2349b56d96072b068a2684"><code>cf51aec</code></a> on branch <code>main</code>, for **aw 0.1.7** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-20 07:01 UTC** from commit <a href="https://github.com/thorwhalen/aw/commit/d3407f271bb37af2e4414280797e8e09ffef2dee"><code>d3407f2</code></a> on branch <code>main</code>, for **aw 0.1.8** (from <code>pyproject.toml</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.1.8) is ahead of the latest release on PyPI (0.1.7): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/aw/commit/cf51aec055531b526d2349b56d96072b068a2684"><code>cf51aec055531b526d2349b56d96072b068a2684</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/aw/commit/d3407f271bb37af2e4414280797e8e09ffef2dee"><code>d3407f271bb37af2e4414280797e8e09ffef2dee</code></a> |
 | Branch              | <code>main</code>                                                                                                                                    |
-| Tags at this commit | <code>0.1.7</code>                                                                                                                                   |
+| Tags at this commit | <code>0.1.8</code>                                                                                                                                   |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/thorwhalen/aw</code>                                                                                                        |
 
@@ -22,16 +24,16 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/aw</code>                                                                 |
-| Run          | <a href="https://github.com/thorwhalen/aw/actions/runs/39253975270">39253975270</a>        |
+| Run          | <a href="https://github.com/thorwhalen/aw/actions/runs/39383633245">39383633245</a>        |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>856cb4eef5f0d7b5fd1d9add2a11409f1236bacc</code> (in the history of the built commit) |
+| Event commit | <code>3e393885efbb021f8f10fcf4eb1e4ceb2a7606d7</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
 | epythet  | 0.2.18  |
-| Sphinx   | 9.1.0   |
+| Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
 | Python   | 3.12.15 |
 
@@ -49,13 +51,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/aw/0.1.7/">0.1.7</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/aw/0.1.7/">0.1.7</a>, older than the documented version (0.1.8).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/aw && cd aw
-git checkout cf51aec055531b526d2349b56d96072b068a2684
+git checkout d3407f271bb37af2e4414280797e8e09ffef2dee
 pip install "epythet==0.2.18"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
