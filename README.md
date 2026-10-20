@@ -338,10 +338,12 @@ final_df, final_meta = workflow.run_partial(df, stop_after="preparing")
 ```python
 from aw.dispatch import skills_dispatch_chain, Adjudicator
 
-chain = skills_dispatch_chain()                            # needs `pip install aw[ir]`
-chain("open an issue for the client about the broken export")   # -> 'ge-write-issue'
-chain.trace("deploy the site")                             # layer, ranked candidates, reason
-chain = skills_dispatch_chain(adjudicate=Adjudicator())   # escalate through oa.chat on ambiguity
+chain = skills_dispatch_chain()  # needs `pip install aw[ir]`
+chain("open an issue for the client about the broken export")  # -> 'ge-write-issue'
+chain.trace("deploy the site")  # layer, ranked candidates, reason
+chain = skills_dispatch_chain(
+    adjudicate=Adjudicator()
+)  # escalate through oa.chat on ambiguity
 ```
 
 `aw.routing.ConfidentRetrievalStrategy` is the generic piece (any `search(query) -> [(candidate, score)]`), with `floor`, absolute `gap`, relative `rel_gap`, and `dedup_key`.

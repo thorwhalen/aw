@@ -63,7 +63,9 @@ def ir_search(
             try:
                 import ir  # type: ignore
             except ImportError as e:  # pragma: no cover - depends on the environment
-                raise ImportError("ir_search needs the `ir` package: pip install 'aw[ir]'") from e
+                raise ImportError(
+                    "ir_search needs the `ir` package: pip install 'aw[ir]'"
+                ) from e
             fn = ir.discover
         result = fn(corpus, query, k=k, mode=mode, strategy="top_k", max_k=k)
         ranked: Ranked = []
@@ -165,17 +167,34 @@ class DispatchChain:
     def trace(self, request: str) -> dict:
         """``{'layer', 'answer', 'ranked', 'reason'}`` for *request*; the model is called only on ambiguity."""
         ranked = self._strategy._ranked(request)
-        strategy = replace(self._strategy, search=lambda _: ranked)  # one search per trace
+        strategy = replace(
+            self._strategy, search=lambda _: ranked
+        )  # one search per trace
         reason = strategy.explain(request)
         if not ranked:
             return {"layer": "none", "answer": None, "ranked": ranked, "reason": reason}
         answer = strategy(request)
         if answer is not None:
-            return {"layer": "retrieval", "answer": answer, "ranked": ranked, "reason": reason}
+            return {
+                "layer": "retrieval",
+                "answer": answer,
+                "ranked": ranked,
+                "reason": reason,
+            }
         if self.adjudicate is None:
-            return {"layer": "none", "answer": None, "ranked": ranked, "reason": reason + "; no adjudicator"}
+            return {
+                "layer": "none",
+                "answer": None,
+                "ranked": ranked,
+                "reason": reason + "; no adjudicator",
+            }
         verdict = self.adjudicate(request, ranked[: self.k_adjudicate])
-        return {"layer": "adjudicate", "answer": verdict, "ranked": ranked, "reason": reason}
+        return {
+            "layer": "adjudicate",
+            "answer": verdict,
+            "ranked": ranked,
+            "reason": reason,
+        }
 
     def __call__(self, request: str) -> Optional[str]:
         return self.trace(request)["answer"]

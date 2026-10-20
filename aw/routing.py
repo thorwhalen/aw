@@ -190,7 +190,9 @@ class ConfidentRetrievalStrategy:
         return out
 
     def _unconfigured(self) -> bool:
-        return self.require_boundary and not (self.floor or self.gap or self.rel_gap is not None)
+        return self.require_boundary and not (
+            self.floor or self.gap or self.rel_gap is not None
+        )
 
     def _ambiguous(self, ranked: list) -> bool:
         if len(ranked) < 2:
@@ -227,8 +229,14 @@ class ConfidentRetrievalStrategy:
             return f"abstained: {best}={best_score} is below floor {self.floor}"
         if self._ambiguous(ranked):
             second, second_score = ranked[1]
-            how = f"below gap {self.gap}" if self.gap and best_score - second_score < self.gap else f"within rel_gap {self.rel_gap}"
-            return f"ambiguous: {best}={best_score} over {second}={second_score} is {how}"
+            how = (
+                f"below gap {self.gap}"
+                if self.gap and best_score - second_score < self.gap
+                else f"within rel_gap {self.rel_gap}"
+            )
+            return (
+                f"ambiguous: {best}={best_score} over {second}={second_score} is {how}"
+            )
         return f"confident: {best}={best_score}"
 
 
