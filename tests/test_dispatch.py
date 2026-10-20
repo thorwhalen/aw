@@ -55,12 +55,12 @@ def test_adjudicator_prompt_shows_cards_and_parses_a_candidate_or_none():
 
     def ask(p):
         prompts.append(p)
-        return "I would pick `deslop` here."
+        return "`deslop`"
 
     adj = Adjudicator(ask=ask, describe={"deslop": "Remove AI tells.", "ductus": "Gauge AI-ness."}.get, k=2)
     assert adj("make it sound human", [("deslop", 9.0), ("ductus", 8.9), ("other", 1.0)]) == "deslop"
     assert "- deslop: Remove AI tells." in prompts[0] and "- ductus: Gauge AI-ness." in prompts[0] and "other" not in prompts[0]
-    assert prompts[0].rstrip().endswith("Request: make it sound human")
+    assert prompts[0].rstrip().endswith("<request>\nmake it sound human\n</request>")
     assert Adjudicator(ask=lambda p: "NONE of these")("x", [("a", 1.0)]) is None
     assert Adjudicator(ask=lambda p: "")("x", [("a", 1.0)]) is None
     assert Adjudicator(ask=lambda p: "a")("x", []) is None
@@ -72,3 +72,14 @@ def test_skills_dispatch_chain_wires_ir_search_with_defaults():
     assert chain.rel_gap == 0.75 and chain.floor == 0.0 and chain.adjudicate is None
     assert chain("land it") == "landing-a-branch"
     assert chain.trace("land it")["ranked"] == [("landing-a-branch", 40.0), ("branch-hygiene", 20.0)]
+
+
+def test_adjudicator_strict_reply_parsing():
+    from aw.dispatch import Adjudicator
+
+    cands = [('ge-write-issue', 1.0), ('ge', 0.9)]
+    pick = lambda reply: Adjudicator(ask=lambda p: reply)('x', cands)
+    assert pick('ge-write-issue.') == 'ge-write-issue'
+    assert pick('`ge`') == 'ge'
+    assert pick('none') is None
+    assert pick('NONE of these; closest is ge-write-issue') is None
