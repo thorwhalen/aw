@@ -1,5 +1,6 @@
 """Tests for LoadingAgent with mock and real LLMs."""
 
+import os
 import pytest
 import pandas as pd
 from pathlib import Path
@@ -55,6 +56,10 @@ class TestLoadingAgentWithRealLLM:
     """Test LoadingAgent with real LLM (gpt-4o-mini)."""
 
     @pytest.mark.real_llm
+    @pytest.mark.skipif(
+        not os.environ.get("AW_RUN_REAL_LLM_TESTS"),
+        reason="live-LLM test; set AW_RUN_REAL_LLM_TESTS=1 to run",
+    )
     def test_loading_with_real_llm(self, tmp_path):
         """Test loading with real LLM - economical test.
 
